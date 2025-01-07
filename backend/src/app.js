@@ -1,6 +1,7 @@
 import cors from "cors"
 import express from "express"
 
+
 const app = express();
 //configs
 app.use(cors({
@@ -21,10 +22,13 @@ app.use(express.urlencoded({
 import UserRouter from "./routes/user.routes.js"
 import SongRouter from "./routes/song.routes.js"
 import playlistRouter from "./routes/playlist.routes.js"
+import errorHandler from "./middlewares/apiErrorHandler.js";
 
 app.use("/api/user", UserRouter)
 app.use("/api/song", SongRouter)
 app.use("/api/playlist", playlistRouter)
+
+app.use(errorHandler)
 
 
 export {app};

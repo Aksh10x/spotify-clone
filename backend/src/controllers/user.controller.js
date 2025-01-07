@@ -5,10 +5,24 @@ import {User} from "../models/user.model.js"
 import { getToken } from "../utils/getToken.js"
 
 
+const checkMailUnique = asyncErrorHandler(async(req,res) => {
+    const {email} = req.body
+
+    const userByEmailExists = await User.findOne({email: email})
+
+    if(userByEmailExists){
+        throw new ApiError(400, "User wih email already exists")
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200,{},"Email is unique")
+    )
+})
+
 
 const Register = asyncErrorHandler(async(req,res) => {
     const {email,username,firstName,secondName,password} = req.body;
-
+    
     if([email,username,password,firstName].some((el) => {
         el.trim() === ""
     })){
@@ -37,16 +51,21 @@ const Register = asyncErrorHandler(async(req,res) => {
 
 })
 
-const Login =asyncErrorHandler(async(req,res) => {
-    const {email, password} = req.body
+const Login = asyncErrorHandler(async(req,res) => {
+    const {identifier, password} = req.body
 
-    if([email,password].some((el) => {
+    if([identifier,password].some((el) => {
         el.trim() === ""
     })){
-        throw new ApiError(400,"Fields email and password are required")
+        throw new ApiError(400,"Email and password are required")
     }
 
-    const user = await User.findOne({email: email})
+    const user = await User.findOne({
+        $or: [
+            {email: identifier},
+            {username: identifier}
+        ]
+    })
 
     if(!user){
         throw new ApiError(400, "User does not exist")
@@ -69,6 +88,7 @@ const Login =asyncErrorHandler(async(req,res) => {
 })
 
 export {
+    checkMailUnique,
     Register,
-    Login
+    Login,
 }
