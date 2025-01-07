@@ -3,6 +3,7 @@ import {ApiResponse} from "../utils/ApiResponse.js"
 import {ApiError} from "../utils/ApiError.js"
 import {User} from "../models/user.model.js"
 import { getToken } from "../utils/getToken.js"
+import {Song} from "../models/song.model.js"
 
 
 const checkMailUnique = asyncErrorHandler(async(req,res) => {
@@ -77,7 +78,8 @@ const Login = asyncErrorHandler(async(req,res) => {
         throw new ApiError(401, "Password is invalid")
     }
 
-    const token = await getToken(user.email, user)
+    const token = getToken(user.email, user)
+
 
     delete user.password
 
@@ -87,8 +89,49 @@ const Login = asyncErrorHandler(async(req,res) => {
 
 })
 
+const ToggleArtist = asyncErrorHandler(async(req,res) => {
+    const currentUser = req.user
+
+    const user = await User.findById(currentUser._id)
+
+    if(!user){
+        throw new ApiError(404,"User does not success")
+    }
+
+    if(user.isArtist){
+        user.isArtist = false
+        await Song.deleteMany({artist: user._id})
+        await user.save({validateBeforeSave: false})
+
+        return res.status(200).json(
+            new ApiResponse(200,{},"User is no more an artist, all songs deleted")
+        )
+    }
+    else{
+        user.isArtist = true
+        await user.save()
+        return res.status(200).json(
+            new ApiResponse(200,{},"User is now an artist")
+        )
+    }   
+
+})
+
+const getUserDetails = asyncErrorHandler(async(req, res) => {
+
+    const currentUser = req.user
+
+    delete currentUser.password
+
+    return res.status(200).json(
+        new ApiResponse(200,currentUser,"User details fetched successfully")
+    )
+});
+
 export {
     checkMailUnique,
     Register,
     Login,
+    getUserDetails,
+    ToggleArtist
 }

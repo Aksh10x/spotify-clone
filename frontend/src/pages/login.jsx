@@ -38,6 +38,8 @@ const LogIn = () => {
 
         const res = await UnauthenticatedPOSTReq("/user/login",userData)
 
+        console.log(res?.data?.token)
+
         if(res.success){
             const date = new Date()
             date.setDate(date.getDate() + 30)
@@ -104,7 +106,7 @@ const LogIn = () => {
                             </div>
                         </div>
 
-                        {errMessage && <diiv className="text-red-500 mt-2 text-center h-5">{errMessage}</diiv>}
+                        {errMessage ? <diiv className="text-red-500 mt-2 text-center h-5">{errMessage}</diiv> : <diiv className="text-red-500 mt-2 text-center h-5"></diiv>}
 
                     </div>
 
@@ -112,7 +114,7 @@ const LogIn = () => {
                         <button onClick={(e) => {
                             e.preventDefault()
                             LoginCall(identifier, password)
-                        }} className="bg-green-500 text-black w-full h-[50px] mt-8 font-bold rounded-full hover:scale-105 transition hover:bg-green-400">Log in</button>
+                        }} className="bg-green-500 text-black w-full h-[50px] mt-4 font-bold rounded-full hover:scale-105 transition hover:bg-green-400">Log in</button>
                     </div>
 
                     <div className="flex flex-grow relative text-sm">

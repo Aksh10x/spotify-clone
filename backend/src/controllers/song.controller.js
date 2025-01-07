@@ -5,6 +5,13 @@ import { ApiError } from "../utils/ApiError.js";
 import asyncErrorHandler from "../utils/asyncErrorHandler.js";
 
 const createSong = asyncErrorHandler(async(req,res) => {
+    
+    const currentUser = req.user
+
+    if(!currentUser.isArtist){
+        throw new ApiError(403,"User is not an artist")
+    }
+
     const {thumbnail,name,track} = req.body
     const artist = req.user._id
 

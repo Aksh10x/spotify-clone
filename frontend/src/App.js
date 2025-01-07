@@ -4,6 +4,8 @@ import SignUp from "./pages/signup";
 import Home from "./pages/home";
 import { useCookies } from "react-cookie";
 import { useEffect } from "react";
+import Profile from "./pages/profile";
+import Upload from "./pages/uploadSong";
 
 function App() {
 
@@ -17,7 +19,10 @@ function App() {
           cookie.token ? 
         <Routes>
           <Route path="/home" element={<Home />} />
+          <Route path="/profile" element={<Profile/>}/>
+          <Route path="/uploadSong" element={<Upload/>} />
           <Route path="*" element={<Navigate to="/home"/>} />
+          
         </Routes> :
         <Routes>
           <Route path="/login" element={<LogIn />} />

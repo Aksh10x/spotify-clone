@@ -24,22 +24,26 @@ import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import {User} from "./models/user.model.js" // Adjust the import path based on your project structure
 
-const opts = {};
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = process.env.PASSPORT_SECRET;
+const opts = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.PASSPORT_SECRET,
+};
 
 const jwtStrategy = new JwtStrategy(opts, async (jwt_payload, done) => {
   try {
-    const user = await User.findOne({ id: jwt_payload.sub });
+    // Use the field that matches your token's payload structure
+    const user = await User.findById(jwt_payload.id);
     if (user) {
       return done(null, user);
     } else {
-      return done(null, false); // Optionally, create a new account here
+      return done(null, false); // No user found
     }
   } catch (err) {
-    return done(err, false);
+    return done(err, false); // Handle errors
   }
 });
+
+passport.use(jwtStrategy);
 
 passport.use(jwtStrategy);
 
