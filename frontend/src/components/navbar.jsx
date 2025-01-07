@@ -3,8 +3,23 @@ import { Link, useLocation } from "react-router-dom";
 import { GoHomeFill } from "react-icons/go";
 import { IoIosSearch } from "react-icons/io";
 import { MdOutlineDownloadForOffline } from "react-icons/md";
+import { useEffect, useState } from "react";
+import { AuthenticatedGETReq } from "../utils/server.helpers";
 
 const Navbar = () => {
+
+    const [logo, setLogo] = useState("")
+
+    async function DataFetch(){
+        const res = await AuthenticatedGETReq("/user/get-user")
+        console.log(res)
+        setLogo(res.data.firstName[0] + res.data.secondName[0])
+    }
+
+    //get all details
+    useEffect(() => {
+        DataFetch()
+    },[]) 
 
     const location = useLocation()
 
@@ -29,7 +44,7 @@ const Navbar = () => {
            </div>
            <div className="flex items-center w-[20%] gap-4 justify-end">
                     <div className="text-xs w-fit flex items-center justify-between font-semibold"><div className="text-xl mr-1"><MdOutlineDownloadForOffline /></div>Install App</div>
-                    <Link to={"/profile"} className="w-8 h-full text-2xl bg-pink-300 rounded-full flex items-center text-black justify-center font-semibold">A</Link> 
+                    <Link to={"/profile"} className="w-[35px] h-[35px] text-xl bg-pink-300 rounded-full flex items-center text-black justify-center font-semibold">{logo}</Link> 
             </div>
         </div>
     );

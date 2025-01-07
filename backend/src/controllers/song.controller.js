@@ -3,36 +3,55 @@ import {Song} from "../models/song.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import asyncErrorHandler from "../utils/asyncErrorHandler.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
+
 
 const createSong = asyncErrorHandler(async(req,res) => {
     
     const currentUser = req.user
 
     if(!currentUser.isArtist){
-        throw new ApiError(403,"User is not an artist")
+        throw new ApiError(400,"User is not an artist")
     }
 
-    const {thumbnail,name,track} = req.body
-    const artist = req.user._id
+    const {name} = req.body
+    const artistId = req.user._id
 
-    if([thumbnail,name,track].some((el) => {
-        el.trim() === ""
-    })){
+    const thumbnailLocalPath = req.files?.thumbnail?.[0].path || ""
+    const trackLocalPath = req.files?.track?.[0].path || ""
+
+    if(name.trim() === ""
+    ){
         throw new ApiError(400,"All fields are required")
     }
 
-    const userExists = await User.findById(artist)
+    if(!(thumbnailLocalPath || trackLocalPath)){
+        throw new ApiError(403,"Thumbnail and track are required")
+    }
+
+    const userExists = await User.findById(artistId)
 
     if(!userExists){
         throw new ApiError(401, "Artist does not exist")
     }
 
-    const songDetails = {thumbnail,name,track,artist}
+    const thumbnail = await uploadOnCloudinary(thumbnailLocalPath)
+    const track = await uploadOnCloudinary(trackLocalPath)
 
-    const createdSong = await Song.create(songDetails)
+
+    if(!(thumbnail || track)){
+        throw new ApiError(400,"Thumbnail and track are required")
+    }
+
+    const createdSong = await Song.create({
+        name,
+        thumbnail: thumbnail.url,
+        track: track.url,
+        artist: artistId,
+    })
 
     return res.status(200).json(
-        new ApiResponse(200,createdSong,"Song created successfully")
+        new ApiResponse(200,createdSong,"Song successfully uploaded")
     )
 
 })

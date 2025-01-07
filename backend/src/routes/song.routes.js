@@ -1,10 +1,22 @@
 import { Router } from "express";
 import { createSong, getMySongs, searchByArtist, searchByName } from "../controllers/song.controller.js";
 import passport from "passport";
+import { upload } from "../middlewares/multer.js";
 
 const router = new Router()
 
-router.route("/create").post(passport.authenticate("jwt", {session: false}),createSong)
+router.route("/create").post(passport.authenticate("jwt", {session: false}),
+upload.fields([
+    {
+        name: "thumbnail",
+        maxCount: 1,
+    },
+    {
+        name: "track",
+        maxCount: 1
+    }
+]),
+createSong)
 
 router.route("/get-my-songs").get(passport.authenticate("jwt", {session: false}), getMySongs)
 

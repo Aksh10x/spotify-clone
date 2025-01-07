@@ -15,25 +15,36 @@ function App() {
   return (
     <div className="App font-poppins">
       <Router>
-        {
-          cookie.token ? 
-        <Routes>
-          <Route path="/home" element={<Home />} />
-          <Route path="/profile" element={<Profile/>}/>
-          <Route path="/uploadSong" element={<Upload/>} />
-          <Route path="*" element={<Navigate to="/home"/>} />
-          
-        </Routes> :
+        <NavProvider/>
         <Routes>
           <Route path="/login" element={<LogIn />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="*" element={<Navigate to="/login"/>} />
+          <Route path="/profile" element={<Profile/>} />
+          <Route path="/uploadSong" element={<Upload/>} />
+          <Route path="/home" element={<Home/>} />
         </Routes>
-        } 
+        
       </Router>
     </div>
   );
 }
 
+const NavProvider = () => {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [cookie] = useCookies(["token"])
+
+  useEffect(() => {
+    if (
+      ( location.pathname === "/signup" || 
+        location.pathname === "/login" || 
+        location.pathname === "/") && cookie.token
+    ) {
+      navigate("/home");
+    }
+  }, [location.pathname, cookie.token, navigate]);
+
+  return null;
+}
 
 export default App;

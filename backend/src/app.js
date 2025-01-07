@@ -17,6 +17,8 @@ app.use(express.urlencoded({
     extended: true,
 }))
 
+app.use(express.static('public')); //to store public assets in the server(backend)
+
 
 //routes
 import UserRouter from "./routes/user.routes.js"
