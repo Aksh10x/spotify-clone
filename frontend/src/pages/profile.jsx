@@ -5,7 +5,7 @@ import { AuthenticatedGETReq, AuthenticatedPATCHReq, AuthenticatedPOSTReq } from
 import { Link } from "react-router-dom";
 import { LuLoaderCircle } from "react-icons/lu";
 import { IoPersonOutline } from "react-icons/io5";
-import { BsPencil } from "react-icons/bs";
+import { BsPencil, BsThreeDots } from "react-icons/bs";
 import { CgClose } from "react-icons/cg";
 
 const Profile = () => {
@@ -98,7 +98,9 @@ const Profile = () => {
                             </div>}
                             <div className="px-8 flex flex-col justify-start">
                                 <div className="text-white">Profile</div>
-                                <div className="text-4xl font-bold text-white">{firstName + " " + secondName}</div>
+                                <div className="text-4xl font-bold text-white flex gap-3 justify-center">{firstName + " " + secondName}
+                                    <button className="text-white text-opacity-40 hover:text-opacity-100 transition-all"><BsThreeDots /></button>
+                                </div>
                                 <div className="text-white text-opacity-35 font-semibold text-sm">@{username}</div>
                                 <button className="mr-auto mt-4 text-black font-semibold bg-white px-4 py-3 rounded-full hover:bg-opacity-90 transition-all hover:scale-105"
                                 onClick={() => {setPopup(true)}}
