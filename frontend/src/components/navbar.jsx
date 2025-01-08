@@ -13,7 +13,9 @@ const Navbar = () => {
     async function DataFetch(){
         const res = await AuthenticatedGETReq("/user/get-user")
         console.log(res)
-        setLogo(res.data.firstName[0] + res.data.secondName[0])
+        const first = res?.data?.firstName?.[0]
+        const second = res?.data?.secondName?.[0] || ""
+        setLogo(`${first} ${second}`)
     }
 
     //get all details

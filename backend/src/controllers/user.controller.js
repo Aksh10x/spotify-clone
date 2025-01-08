@@ -128,10 +128,15 @@ const getUserDetails = asyncErrorHandler(async(req, res) => {
     )
 });
 
+const changeAvatar = asyncErrorHandler(async(req,res) => {
+    
+})
+
 export {
     checkMailUnique,
     Register,
     Login,
     getUserDetails,
-    ToggleArtist
+    ToggleArtist,
+    changeAvatar
 }
