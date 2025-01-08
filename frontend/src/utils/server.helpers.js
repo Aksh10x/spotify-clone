@@ -49,6 +49,23 @@ const AuthenticatedPATCHReq =  async (route) => {
 
 }
 
+const AuthenticatedPOSTReq =  async (route, body) => {
+    const token = getToken()
+
+    const res = await fetch(server + route,{
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        body: body
+    })
+
+    const data = await res.json()
+
+    return data;
+
+}
+
 const getToken = () => {
     const accessToken = document.cookie.replace(
         /(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/,
@@ -60,5 +77,6 @@ const getToken = () => {
 export {
     UnauthenticatedPOSTReq,
     AuthenticatedGETReq,
-    AuthenticatedPATCHReq
+    AuthenticatedPATCHReq,
+    AuthenticatedPOSTReq
 }

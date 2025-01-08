@@ -4,6 +4,7 @@ import {ApiError} from "../utils/ApiError.js"
 import {User} from "../models/user.model.js"
 import { getToken } from "../utils/getToken.js"
 import {Song} from "../models/song.model.js"
+import { uploadOnCloudinary } from "../utils/cloudinary.js"
 
 
 const checkMailUnique = asyncErrorHandler(async(req,res) => {
@@ -128,8 +129,39 @@ const getUserDetails = asyncErrorHandler(async(req, res) => {
     )
 });
 
-const changeAvatar = asyncErrorHandler(async(req,res) => {
+const becomeArtist = asyncErrorHandler(async(req,res) => {
+    const currentUser = req.user
+    const {firstName,secondName} = req.body
+    const avatarLocalPath = req.file?.path 
+
+    console.log(req.file)
+    console.log(firstName,secondName)
+
+    if(firstName.trim() === ""){
+        throw new ApiError(400,"First name is required")
+    }
+
+    if(!avatarLocalPath){
+        throw new ApiError("Avatar is required for an artist profile")
+    }
+
     
+    const avatar = await uploadOnCloudinary(avatarLocalPath)
+    if(!avatar){
+        throw new ApiError(400,"Avatar is required for an artist profile")
+    }
+
+    const user = await User.findById(currentUser._id)
+    user.avatar = avatar.url
+    user.firstName = firstName
+    user.secondName = secondName
+    user.isArtist = true
+
+    const newArtist = user.save({validateBeforeSave: false})
+
+    return res.status(200).json(
+        new ApiResponse(200,newArtist,"Artist account successfully created")
+    )
 })
 
 export {
@@ -138,5 +170,5 @@ export {
     Login,
     getUserDetails,
     ToggleArtist,
-    changeAvatar
+    becomeArtist
 }

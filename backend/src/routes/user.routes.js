@@ -5,9 +5,11 @@ import {
     checkMailUnique,
     getUserDetails,
     ToggleArtist,
-    changeAvatar,
+    becomeArtist,
+    
  } from "../controllers/user.controller.js";
 import passport from "passport";
+import { upload } from "../middlewares/multer.js";
 
 const router = new Router()
 
@@ -21,6 +23,6 @@ router.route("/get-user").get(passport.authenticate("jwt", {session: false}), ge
 
 router.route("/toggle-artist").patch(passport.authenticate("jwt", {session: false}), ToggleArtist)
 
-router.route("/change-avtar").patch(passport.authenticate("jwt",{session: false}), changeAvatar)
+router.route("/become-artist").post(passport.authenticate("jwt",{session: false}),upload.single("avatar"), becomeArtist)
 
 export default router;

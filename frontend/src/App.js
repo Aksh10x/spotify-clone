@@ -43,6 +43,16 @@ const NavProvider = () => {
     ) {
       navigate("/home");
     }
+
+    if(!cookie.token &&
+      
+      !(location.pathname === "/signup" || 
+      location.pathname === "/login" || 
+      location.pathname === "/")
+
+    ){
+      navigate("/signup")
+    }
   }, [location.pathname, cookie.token, navigate]);
 
   return null;
