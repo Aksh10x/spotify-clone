@@ -3,6 +3,7 @@ import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
 import { AuthenticatedGETReq, AuthenticatedPATCHReq } from "../utils/server.helpers.js";
 import { Link } from "react-router-dom";
+import { LuLoaderCircle } from "react-icons/lu";
 
 const Profile = () => {
 
@@ -10,9 +11,11 @@ const Profile = () => {
     const [secondName, setSecondName] = useState("")
     const [username,setUsername] = useState("")
     const [isArtist, setIsArtist] = useState(null)
+    const [isLoading,setIsLoading] = useState(true)
 
     async function DataFetch(){
         const res = await AuthenticatedGETReq("/user/get-user")
+        setIsLoading(false)
         console.log(res)
         setFirstName(res.data.firstName)
         setSecondName(res.data.secondName)
@@ -22,7 +25,7 @@ const Profile = () => {
 
     //get all details
     useEffect(() => {
-        DataFetch()
+        setTimeout(DataFetch,1500)
     },[isArtist]) 
 
 
@@ -30,6 +33,17 @@ const Profile = () => {
         const res = await AuthenticatedPATCHReq("/user/toggle-artist")
         setIsArtist((prev) => !prev)
         console.log(res)
+    }
+
+    if(isLoading){
+        return (
+            
+            <div className="bg-black w-full h-screen flex justify-center flex-col items-center">
+                <div className="text-4xl text-green-500 animate-spin"><LuLoaderCircle/></div>
+                <div className="text-white mt-6 font-semibold text-3xl">Loading...</div>
+            </div>
+                
+        );
     }
 
 

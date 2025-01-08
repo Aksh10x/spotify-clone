@@ -22,6 +22,7 @@ function App() {
           <Route path="/profile" element={<Profile/>} />
           <Route path="/uploadSong" element={<Upload/>} />
           <Route path="/home" element={<Home/>} />
+          <Route path="*" element={<Navigate to={"/signup"} />} />
         </Routes>
         
       </Router>
