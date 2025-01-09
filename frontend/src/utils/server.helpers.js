@@ -49,7 +49,7 @@ const AuthenticatedPATCHReq =  async (route) => {
 
 }
 
-const AuthenticatedPOSTReq =  async (route, body) => {
+const AuthenticatedPOSTFormReq =  async (route, body) => {
     const token = getToken()
 
     const res = await fetch(server + route,{
@@ -78,5 +78,5 @@ export {
     UnauthenticatedPOSTReq,
     AuthenticatedGETReq,
     AuthenticatedPATCHReq,
-    AuthenticatedPOSTReq
+    AuthenticatedPOSTFormReq
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
-import { AuthenticatedGETReq, AuthenticatedPATCHReq, AuthenticatedPOSTReq } from "../utils/server.helpers.js";
+import { AuthenticatedGETReq, AuthenticatedPATCHReq, AuthenticatedPOSTFormReq } from "../utils/server.helpers.js";
 import { Link } from "react-router-dom";
 import { LuLoaderCircle } from "react-icons/lu";
 import { IoPersonOutline } from "react-icons/io5";
@@ -20,11 +20,13 @@ const Profile = () => {
     const[popup,setPopup] = useState(false)
     const [file, setFile] = useState(null)
     const [avatar, setAvatar] = useState("")
+    const [isError, setIsError] = useState(false)
+    const [editProfile, setEditProfile] = useState(false)
+    const [deletePhoto, setDeletePhoto] = useState(false)
 
     async function DataFetch(){
         const res = await AuthenticatedGETReq("/user/get-user")
         setIsLoading(false)
-        console.log(res)
         setFirstName(res.data.firstName)
         setSecondName(res.data.secondName)
         setUsername(res.data.username)
@@ -45,8 +47,9 @@ const Profile = () => {
 
     const toggleArtist = async() => {
         const res = await AuthenticatedPATCHReq("/user/toggle-artist")
+        if(res.success)
         setIsArtist((prev) => !prev)
-        console.log(res)
+        
     }
 
     if(isLoading){
@@ -64,20 +67,36 @@ const Profile = () => {
 
     const becomeArtist = async(firstName,secondName,file) => {
         const formData = new FormData()
-        formData.append("avatar",file)
+        formData.append("avatar", file)
         formData.append("firstName", firstName)
         formData.append("secondName", secondName)
-        console.log(formData)
-        const res = await AuthenticatedPOSTReq("/user/become-artist",formData)
+        const res = await AuthenticatedPOSTFormReq("/user/become-artist",formData)
         if(res.success){
+            setIsError("")
             setPopup(false)
+            window.location.reload()
         }
         else{
-            alert("Something went wrong, please try again")
+            setIsError(res.message)
         }
     }
 
-    
+    const callEditProfile = async(firstName,secondName,file,deletePhoto) => {
+        const formData = new FormData()
+        formData.append("avatar", file)
+        formData.append("firstName", firstName)
+        formData.append("secondName", secondName)
+        formData.append("deletePhoto", deletePhoto)
+        const res = await AuthenticatedPOSTFormReq("/user/edit-details",formData)
+        if(res.success){
+            setIsError("")
+            setPopup(false)
+            window.location.reload()
+        }
+        else{
+            setIsError(res.message)
+        }
+    }
 
 
 
@@ -98,8 +117,12 @@ const Profile = () => {
                             </div>}
                             <div className="px-8 flex flex-col justify-start">
                                 <div className="text-white">Profile</div>
-                                <div className="text-4xl font-bold text-white flex gap-3 justify-center">{firstName + " " + secondName}
-                                    <button className="text-white text-opacity-40 hover:text-opacity-100 transition-all"><BsThreeDots /></button>
+                                <div className="text-4xl font-bold text-white flex gap-3 justify-center mr-auto">{firstName + " " + secondName}
+                                    <button className="text-white text-2xl  text-opacity-40 hover:text-opacity-100 transition-all group relative" onClick={() => {setPopup(true)
+                                        setEditProfile(true)
+                                    }}><BsThreeDots />
+                                    <div className="opacity-0 group-hover:opacity-100 text-sm absolute top-0 left-8 w-[100px] transition-all bg-black bg-opacity-35 rounded-sm py-1 font-light">Edit Profile</div>
+                                    </button>
                                 </div>
                                 <div className="text-white text-opacity-35 font-semibold text-sm">@{username}</div>
                                 <button className="mr-auto mt-4 text-black font-semibold bg-white px-4 py-3 rounded-full hover:bg-opacity-90 transition-all hover:scale-105"
@@ -133,7 +156,7 @@ const Profile = () => {
         </div>
 
 
-        {(popup && !isArtist) &&
+        {(popup && !isArtist && !editProfile) &&
             <div className="bg-black w-full h-screen bg-opacity-40 backdrop-blur-md absolute top-0 flex justify-center items-center">
                 <div className="bg-black w-[40%] h-[60%] min-h-[350px] min-w-[600px] max-w-[800px] rounded-xl">
                     <div className="w-full h-full bg-white bg-opacity-10 rounded-xl flex flex-col p-8 gap-4">
@@ -186,7 +209,8 @@ const Profile = () => {
                             </div>
                         </div>
                         
-                        <div className="text-white font-semibold text-xs flex flex-grow">
+                        <div className="text-white font-semibold text-xs flex flex-grow flex-col">
+                            {isError && <div className="text-xs text-red-500 text-center">{isError}</div>}
                             <div className="mt-auto">Artists are required to have a profile picture. Please make sure you have the right to upload the image.</div>
                         </div>
                     </div>
@@ -195,7 +219,7 @@ const Profile = () => {
             </div>
         }
 
-        {(popup && isArtist) &&
+        {(popup && isArtist && !editProfile) &&
             <div className="bg-black w-full h-screen bg-opacity-40 backdrop-blur-md absolute top-0 flex justify-center items-center">
                 <div className="bg-black w-[40%] h-[50%] min-h-[330px] min-w-[600px] max-w-[800px] rounded-xl max-h-[350px]">
                     <div className="w-full h-full bg-white bg-opacity-10 rounded-xl flex flex-col p-8 gap-4">
@@ -212,6 +236,75 @@ const Profile = () => {
                                 toggleArtist()
                                 setPopup(false)
                             }}>Confirm</button>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        }
+
+        {(popup && editProfile) &&
+            <div className="bg-black w-full h-screen bg-opacity-40 backdrop-blur-md absolute top-0 flex justify-center items-center">
+                <div className="bg-black w-[40%] h-[60%] min-h-[350px] min-w-[600px] max-w-[800px] rounded-xl">
+                    <div className="w-full h-full bg-white bg-opacity-10 rounded-xl flex flex-col p-8 gap-4">
+                        <div className="text-white font-semibold text-3xl flex justify-between items-start">Profile details
+
+                            <button onClick={() => {setPopup(false)
+                            setEditProfile(false)}}
+                                className="text-base text-white text-opacity-55 hover:text-opacity-100 transition-all"><CgClose/></button>
+                        </div>
+                        <div className="flex gap-12">
+                            <input type="file" accept="image/*" hidden id="pfpInput" onChange={(e) => {
+                                const validImageTypes = ["image/jpeg", "image/png", "image/gif"];
+                                if (!validImageTypes.includes(e.target.files?.[0]?.type)) {
+                                alert("Only image files are allowed!");
+                                return;
+                                }
+                                setFile(e.target.files?.[0])
+                            }}>
+                                
+                            </input>
+                            {(!deletePhoto) ?
+                            <label for="pfpInput" className="bg-black relative w-40 h-40 text-7xl text-white text-opacity-50 bg-opacity-15 rounded-full flex flex-col justify-center items-center cursor-pointer group shadow-lg">
+                                <img src={avatar} className="h-36 w-36 rounded-full shadow-xl flex justify-center items-center"/>
+                                <div className="absolute group-hover:visible invisible w-36 h-36 bg-black bg-opacity-45 transition-all flex justify-center items-center rounded-full"><BsPencil/></div>
+                                {file && <div className="text-xs text-green-400 absolute -bottom-4">Picture uploaded!</div>}
+                            </label>
+                            
+                            : <label for="pfpInput" className="bg-black relative w-40 h-40 text-7xl text-white text-opacity-50 bg-opacity-15 rounded-full flex justify-center items-center cursor-pointer group shadow-lg">
+                                <IoPersonOutline />
+                                <div className="absolute group-hover:visible invisible w-40 h-40 bg-black bg-opacity-45 transition-all flex justify-center items-center rounded-full"><BsPencil/></div>
+                                
+                            </label>}
+                            
+
+                            <div className="text-white mt-3 font-semibold">
+                                <div className="text-sm font-semibold">First Name</div>
+                                <input className="w-full px-3 bg-transparent rounded h-[35px] transition bg-white bg-opacity-15 hover:bg-opacity-20"
+                                type="text" 
+                                onChange={(e) => {setFirstName(e.target.value)}}
+                                defaultValue={firstName}
+                                ></input>
+                                <div className="text-sm font-semibold mt-2">Second Name</div>
+                                <input className="w-full px-3 bg-transparent rounded h-[35px] transition bg-white bg-opacity-15 hover:bg-opacity-20"
+                                type="text" 
+                                onChange={(e) => {setSecondName(e.target.value)}}
+                                defaultValue={secondName}
+                                ></input>
+                                <button onClick={() => {callEditProfile(firstName,secondName,file,deletePhoto)}}
+                                className="text-black font-semibold bg-white px-3 py-3 mt-3 rounded-full hover:bg-opacity-90 transition-all hover:scale-105 text-sm"
+                                >Save Changes</button>
+                            </div>
+                        </div>
+                        {!isArtist && <button onClick={() => {
+                            setFile(null)
+                            setDeletePhoto(true)
+                        }} className="font-semibold w-fit mr-auto text-sm text-white hover:underline">
+                            OR Delete prfoile picture?
+                        </button>}
+                        <div className="text-white font-semibold text-xs flex flex-grow flex-col">
+                            {isError && <div className="text-xs text-red-500 text-center">{isError}</div>}
+                            <div className="mt-auto">By proceeding, you agree to give Spotify access to the image you choose to upload. Please make sure you have the right to upload the image.</div>
                         </div>
                     </div>
                     

@@ -6,6 +6,7 @@ import {
     getUserDetails,
     ToggleArtist,
     becomeArtist,
+    editUserDetails,
     
  } from "../controllers/user.controller.js";
 import passport from "passport";
@@ -24,5 +25,7 @@ router.route("/get-user").get(passport.authenticate("jwt", {session: false}), ge
 router.route("/toggle-artist").patch(passport.authenticate("jwt", {session: false}), ToggleArtist)
 
 router.route("/become-artist").post(passport.authenticate("jwt",{session: false}),upload.single("avatar"), becomeArtist)
+
+router.route("/edit-details").post(passport.authenticate("jwt",{session: false}), upload.single("avatar"), editUserDetails)
 
 export default router;

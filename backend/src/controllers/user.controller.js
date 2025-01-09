@@ -134,34 +134,99 @@ const becomeArtist = asyncErrorHandler(async(req,res) => {
     const {firstName,secondName} = req.body
     const avatarLocalPath = req.file?.path 
 
-    console.log(req.file)
-    console.log(firstName,secondName)
+
+    const user = await User.findById(currentUser._id)
 
     if(firstName.trim() === ""){
         throw new ApiError(400,"First name is required")
     }
 
-    if(!avatarLocalPath){
-        throw new ApiError("Avatar is required for an artist profile")
-    }
-
-    
-    const avatar = await uploadOnCloudinary(avatarLocalPath)
-    if(!avatar){
+    if(!avatarLocalPath && !user.avatar){
         throw new ApiError(400,"Avatar is required for an artist profile")
     }
 
-    const user = await User.findById(currentUser._id)
-    user.avatar = avatar.url
-    user.firstName = firstName
-    user.secondName = secondName
-    user.isArtist = true
+    
+    if(avatarLocalPath){
+        const avatar = await uploadOnCloudinary(avatarLocalPath)
+        if(!avatar){
+        throw new ApiError(400,"Avatar is required for an artist profile")
+        }
+        user.avatar = avatar.url
+        user.firstName = firstName
+        user.secondName = secondName
+        user.isArtist = true
+    }else{
+        user.firstName = firstName
+        user.secondName = secondName
+        user.isArtist = true
+    }
 
     const newArtist = user.save({validateBeforeSave: false})
 
     return res.status(200).json(
         new ApiResponse(200,newArtist,"Artist account successfully created")
+
+        
     )
+})
+
+const editUserDetails = asyncErrorHandler(async(req,res) => {
+    const currentUser = req.user
+    const {firstName,secondName} = req.body
+    const avatarLocalPath = req.file?.path
+    const deletePhoto = req.body.deletePhoto === "true";
+
+    if(firstName.trim() === ""){
+        throw new ApiError(400,"First name is required")
+    }
+
+    const user = await User.findById(currentUser._id)
+
+    const currentURL = user.avatar
+
+    if(deletePhoto){
+        user.avatar = ""
+        user.firstName = firstName
+        user.secondName = secondName
+        const newArtist = user.save({validateBeforeSave: false})
+
+        return res.status(200).json(
+            new ApiResponse(200,newArtist,"Details updated successfully")
+        )
+    }
+
+    if(!avatarLocalPath && currentURL){
+        user.avatar = currentURL
+        user.firstName = firstName
+        user.secondName = secondName
+
+        const newArtist = user.save({validateBeforeSave: false})
+
+        return res.status(200).json(
+            new ApiResponse(200,newArtist,"Details updated successfully")
+        )
+    }
+
+    if(avatarLocalPath){
+        const avatar = await uploadOnCloudinary(avatarLocalPath)
+
+        if(!avatar){
+            throw new ApiError(400,"Something went wrong, try again later.")
+        }
+    
+        const user = await User.findById(currentUser._id)
+        user.avatar = avatar.url
+        user.firstName = firstName
+        user.secondName = secondName
+    
+        const newArtist = user.save({validateBeforeSave: false})
+    
+        return res.status(200).json(
+            new ApiResponse(200,newArtist,"Details updated successfully")
+    
+            
+        )
+    }
 })
 
 export {
@@ -170,5 +235,6 @@ export {
     Login,
     getUserDetails,
     ToggleArtist,
-    becomeArtist
+    becomeArtist,
+    editUserDetails
 }
