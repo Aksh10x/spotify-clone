@@ -20,10 +20,11 @@ const createSong = asyncErrorHandler(async(req,res) => {
     const thumbnailLocalPath = req.files?.thumbnail?.[0].path || ""
     const trackLocalPath = req.files?.track?.[0].path || ""
 
-    if(name.trim() === ""
-    ){
+    
+    if(name.trim() === ""){
         throw new ApiError(400,"All fields are required")
     }
+    console.log("name:", name)
 
     if(!(thumbnailLocalPath || trackLocalPath)){
         throw new ApiError(403,"Thumbnail and track are required")

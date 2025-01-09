@@ -255,7 +255,7 @@ const Profile = () => {
                         </div>
                         <div className="flex gap-12">
                             <input type="file" accept="image/*" hidden id="pfpInput" onChange={(e) => {
-                                const validImageTypes = ["image/jpeg", "image/png", "image/gif"];
+                                const validImageTypes = ["image/jpeg", "image/png", "image/jpg"];
                                 if (!validImageTypes.includes(e.target.files?.[0]?.type)) {
                                 alert("Only image files are allowed!");
                                 return;
