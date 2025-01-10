@@ -1,4 +1,5 @@
 import mongoose, {Schema} from "mongoose"
+import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2"
 
 const songSchema = new Schema({
     name: {
@@ -18,5 +19,7 @@ const songSchema = new Schema({
         required: true
     }
 })
+
+songSchema.plugin(mongooseAggregatePaginate)
 
 export const Song = mongoose.model("Song", songSchema)

@@ -4,6 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import asyncErrorHandler from "../utils/asyncErrorHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import mongoose from "mongoose";
 
 
 const createSong = asyncErrorHandler(async(req,res) => {
@@ -24,7 +25,6 @@ const createSong = asyncErrorHandler(async(req,res) => {
     if(name.trim() === ""){
         throw new ApiError(400,"All fields are required")
     }
-    console.log("name:", name)
 
     if(!(thumbnailLocalPath || trackLocalPath)){
         throw new ApiError(403,"Thumbnail and track are required")
@@ -60,7 +60,41 @@ const createSong = asyncErrorHandler(async(req,res) => {
 const getMySongs = asyncErrorHandler(async(req,res) => {
     const currentUser = req.user
 
-    const userSongs = await Song.find({artist: currentUser._id}) //agregation pagination required
+    //const userSongs = await Song.find({artist: currentUser._id}) //agregation pagination required
+
+    const userSongs = await Song.aggregate([
+        {
+            $match: {
+                artist: new mongoose.Types.ObjectId(currentUser._id)
+            }
+        },
+        {
+            $lookup:{
+                from: "users",
+                localField: "artist",
+                foreignField: "_id",
+                as: "owner"
+            }
+        },
+        {
+            $unwind: "$owner"
+        },
+        {
+            $addFields: {
+                artistFirstName: "$owner.firstName",
+                artistSecondName: "$owner.secondName"
+            }
+        },
+        {
+            $project: {
+                artistFirstName: 1,
+                artistSecondName: 1,
+                track: 1,
+                thumbnail: 1,
+                name: 1,
+            }
+        }
+    ])
 
     return res.status(200).json(
         new ApiResponse(200,userSongs,"Songs fetched successfully")

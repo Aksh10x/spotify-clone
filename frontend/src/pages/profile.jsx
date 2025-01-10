@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
-import { AuthenticatedGETReq, AuthenticatedPATCHReq, AuthenticatedPOSTFormReq } from "../utils/server.helpers.js";
+import { AuthenticatedGETReq, AuthenticatedPATCHReq, AuthenticatedPOSTFormReq, getAudioDurationFromURL } from "../utils/server.helpers.js";
 import { Link } from "react-router-dom";
 import { LuLoaderCircle } from "react-icons/lu";
 import { IoPersonOutline } from "react-icons/io5";
 import { BsPencil, BsThreeDots } from "react-icons/bs";
 import { CgClose } from "react-icons/cg";
+import HorizontalCard from "../components/songHorizontalCard.jsx";
 
 const Profile = () => {
 
@@ -23,6 +24,7 @@ const Profile = () => {
     const [isError, setIsError] = useState(false)
     const [editProfile, setEditProfile] = useState(false)
     const [deletePhoto, setDeletePhoto] = useState(false)
+    const [songs,setSongs] = useState([])
 
     async function DataFetch(){
         const res = await AuthenticatedGETReq("/user/get-user")
@@ -39,9 +41,18 @@ const Profile = () => {
         setLogo(`${first}${second}`)
     }
 
+    const fetchUserSongs = async() => {
+        const res = await AuthenticatedGETReq("/song/get-my-songs")
+        setSongs(res.data)
+        console.log(songs)
+    }
+
     //get all details
     useEffect(() => {
-        setTimeout(DataFetch,1500)
+        fetchUserSongs()
+        setTimeout(() => {
+            DataFetch()
+        },1500)
     },[isArtist]) 
 
 
@@ -98,6 +109,24 @@ const Profile = () => {
         }
     }
 
+    
+
+    const displayAudioDuration = async (url) => {
+        try {
+            const duration = await getAudioDurationFromURL(url);
+            console.log(`Audio duration: ${duration} seconds`);
+            // Format duration into minutes and seconds (optional)
+            const minutes = Math.floor(duration / 60);
+            const seconds = Math.floor(duration % 60);
+            return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        } catch (error) {
+            console.error(error);
+            return "00:00"
+        }
+    };
+
+    
+
 
 
     return (
@@ -106,7 +135,7 @@ const Profile = () => {
             <Navbar/>
             <div className="w-full h-[calc(100vh-60px)] text-black bg-black relative p-2 pt-0 flex gap-2">
                 <Sidebar/>
-                <div className="w-full h-[100%] bg-white bg-opacity-10 rounded-lg flex gap-2 flex-col overflow-y-auto scrollbar-hide">
+                <div className="w-full h-[100%] bg-white bg-opacity-5 rounded-lg flex gap-2 flex-col overflow-y-auto scrollbar-hide justify-evenly">
                     <div className="w-full bg-gradient-to-b from-white/25 to-white/5 min-h-[280px] px-6 py-3 flex justify-end flex-col">
                         <div className="w-full flex pb-4 ">
                             {avatar ? 
@@ -132,8 +161,23 @@ const Profile = () => {
                         </div>
                     </div>
                     {isArtist && 
-                        <div className="p-6 min-h-[200px]">
-                            <div className="text-white font-semibold text-3xl">Your Songs</div> {/*No songs? upload first one now ts*/}
+                        <div className="p-6 ">
+                            <div className="text-white font-semibold text-2xl">Your Songs</div>
+                            <div className="text-sm font-normal text-opacity-60 text-white mb-2">Visible to everybody</div>
+                            {songs != [] ? 
+                                songs?.map((song, index) => (
+                                    <HorizontalCard 
+                                    name={song.name} 
+                                    artistFirstName={song.artistFirstName}
+                                    artistSecondName={song.artistSecondName}
+                                    thumbnail={song.thumbnail}
+                                    trackUrl={song.track}
+                                    index={index}
+                                    />
+                                ))
+                                :
+                                <div className="text-sm text-white text-opacity-60">Upload your first song!</div>
+                            }
                             <div className="mt-6">
                                 <Link className="mr-auto text-black font-semibold bg-white px-4 py-3 rounded-full hover:bg-opacity-90 transition-all hover:scale-105"
                                 to={"/uploadSong"}
@@ -144,8 +188,9 @@ const Profile = () => {
                         </div>
                     }
 
-                    <div className="text-white p-6 font-bold text-3xl w-full min-h-[800px]">
-                        Your Library
+                    <div className="text-white p-6 font-semibold text-2xl w-full min-h-[800px]">
+                        <div>Your Library</div>
+                        <div className="text-sm font-normal text-opacity-60 text-white">Visible to everybody</div>
                     </div>
 
                 </div>

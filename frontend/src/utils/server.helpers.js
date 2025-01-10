@@ -74,9 +74,24 @@ const getToken = () => {
     return accessToken;
 };
 
+const getAudioDurationFromURL = (url) => {
+    return new Promise((resolve, reject) => {
+        const audio = new Audio(url);
+
+        audio.addEventListener("loadedmetadata", () => {
+            resolve(audio.duration); 
+        });
+
+        audio.addEventListener("error", () => {
+            reject("Error loading audio from URL");
+        });
+    });
+};
+
 export {
     UnauthenticatedPOSTReq,
     AuthenticatedGETReq,
     AuthenticatedPATCHReq,
-    AuthenticatedPOSTFormReq
+    AuthenticatedPOSTFormReq,
+    getAudioDurationFromURL
 }

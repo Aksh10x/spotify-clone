@@ -23,7 +23,7 @@ const Home = () => {
             <Navbar/>
             <div className="w-full h-[calc(100vh-60px)] text-black bg-black relative p-2 pt-0 flex gap-2">
                 <Sidebar/>
-                <div className="w-full h-[100%] bg-white bg-opacity-10 rounded-lg p-6 flex gap-2 flex-col overflow-auto scrollbar-hide">
+                <div className="w-full h-[100%] bg-white bg-opacity-5 rounded-lg p-6 flex gap-2 flex-col overflow-auto scrollbar-hide">
 
                     <div className="space-y-3 h-fit overflow-scroll scrollbar-hide flex-nowrap min-h-fit">
                         <div className="text-white font-semibold text-xl">Popular Artists</div>
