@@ -66,7 +66,7 @@ const Profile = () => {
     if(isLoading){
         return (
             
-            <div className="bg-black w-full h-screen flex justify-center flex-col items-center">
+            <div className="bg-black w-full h-screen flex justify-center flex-col items-center absolute z-10">
                 <div className="text-4xl text-green-500 animate-spin"><LuLoaderCircle/></div>
                 <div className="text-white mt-6 font-semibold text-3xl">Loading...</div>
             </div>
@@ -135,7 +135,7 @@ const Profile = () => {
             <Navbar/>
             <div className="w-full h-[calc(100vh-60px)] text-black bg-black relative p-2 pt-0 flex gap-2">
                 <Sidebar/>
-                <div className="w-full h-[100%] bg-white bg-opacity-5 rounded-lg flex gap-2 flex-col overflow-y-auto scrollbar-hide justify-evenly">
+                <div className="w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg flex gap-2 flex-col overflow-y-auto scrollbar-hide justify-evenly">
                     <div className="w-full bg-gradient-to-b from-white/25 to-white/5 min-h-[280px] px-6 py-3 flex justify-end flex-col">
                         <div className="w-full flex pb-4 ">
                             {avatar ? 

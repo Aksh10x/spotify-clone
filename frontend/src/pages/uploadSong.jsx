@@ -45,7 +45,7 @@ const Upload = () => {
 
 
     return (
-        <div className="w-full h-screen overflow-hidden">
+        <div className="w-full h-screen overflow-hidden absolute z-10">
             <div className="w-full h-full text-white bg-black relative pt-0 flex">
                 <div className="w-full h-[100%] bg-white bg-opacity-10 p-6 flex gap-2 flex-col overflow-auto scrollbar-hide items-center justify-evenly">
                     <Link to={"/profile"} className="text-white text-opacity-40 text-4xl font-semibold
