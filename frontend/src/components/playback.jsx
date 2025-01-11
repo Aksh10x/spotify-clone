@@ -11,7 +11,7 @@ const Playback = () => {
     } = useContext(SongContext)
 
     return (
-        <div className="h-[75px] bg-black w-full absolute bottom-0 text-white">
+        <div className="h-[75px] bg-black w-full absolute bottom-0 text-white max-h-[14vh]">
             {songName}
         </div>
     );
