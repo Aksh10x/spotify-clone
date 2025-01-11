@@ -6,16 +6,20 @@ import { useCookies } from "react-cookie";
 import { useEffect } from "react";
 import Profile from "./pages/profile";
 import Upload from "./pages/uploadSong";
+import { SongProvider } from "./utils/songContext";
+import Playback from "./components/playback";
 
 function App() {
 
-  const [cookie, setCookie] = useCookies()
-
+  const [cookie] = useCookies(["token"])
 
   return (
     <div className="App font-poppins">
+      <SongProvider>
       <Router>
         <NavProvider/>
+        {cookie.token ? 
+        <>
         <Routes>
           <Route path="/login" element={<LogIn />} />
           <Route path="/signup" element={<SignUp />} />
@@ -23,9 +27,23 @@ function App() {
           <Route path="/uploadSong" element={<Upload/>} />
           <Route path="/home" element={<Home/>} />
           <Route path="*" element={<Navigate to={"/signup"} />} />
-        </Routes>
-        
+        </Routes> 
+        <Playback/>
+        </>
+        :
+        <>
+        <Routes>
+          <Route path="/login" element={<LogIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/profile" element={<Profile/>} />
+          <Route path="/uploadSong" element={<Upload/>} />
+          <Route path="/home" element={<Home/>} />
+          <Route path="*" element={<Navigate to={"/signup"} />} />
+        </Routes> 
+        </>
+        }
       </Router>
+      </SongProvider>
     </div>
   );
 }
