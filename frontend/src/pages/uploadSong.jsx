@@ -108,9 +108,9 @@ const Upload = () => {
                                     class="hidden"
                                     onChange={(e) => {
                                         setError("")
-                                        const validFileTypes = ["audio/mpeg","audio/wav"]
+                                        const validFileTypes = ["audio/mpeg"]
                                         if(!validFileTypes.includes(e.target.files?.[0]?.type)){
-                                            alert("Please upload a valid audio track(mp3 or wav).")
+                                            alert("Please upload a valid audio track(mp3 only).")
                                             return;
                                         }
                                         setTrack(e.target.files?.[0])
