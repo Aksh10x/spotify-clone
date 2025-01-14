@@ -8,9 +8,8 @@ import { IoPersonOutline } from "react-icons/io5";
 import { BsPencil, BsThreeDots } from "react-icons/bs";
 import { CgClose } from "react-icons/cg";
 import HorizontalCard from "../components/songHorizontalCard.jsx";
-import SongCard from "../components/songCard.jsx";
-import { FaCirclePlay } from "react-icons/fa6";
 import { BiPlus } from "react-icons/bi";
+import PlaylistCard from "../components/PlaylistCard.jsx";
 
 const Profile = () => {
 
@@ -29,7 +28,7 @@ const Profile = () => {
     const [editProfile, setEditProfile] = useState(false)
     const [deletePhoto, setDeletePhoto] = useState(false)
     const [songs,setSongs] = useState([])
-    const [playlists, setPlaylists] = useState([1,2,3,4,5,6,7,8])
+    const [playlists, setPlaylists] = useState([])
     const [newPlaylist, setNewPlaylist] = useState(false)
 
     const [playlistThumbnail, setPlaylistThumbnail] = useState(null)
@@ -55,26 +54,31 @@ const Profile = () => {
 
     const fetchPlaylists = async() => {
         const res = await AuthenticatedGETReq(`/playlist/user-playlists/${id}`)
+        console.log(res)
         if(res.success){
-            setPlaylists(res.data)
+            const plists = res.data
+            setPlaylists(plists)
+            
+            
         }else{
             setPlaylists([])
         }
+        
     }
 
     const fetchUserSongs = async() => {
         const res = await AuthenticatedGETReq("/song/get-my-songs")
         setSongs(res.data)
-        console.log(songs)
     }
 
     //get all details
     useEffect(() => {
         fetchUserSongs()
+        fetchPlaylists()
         setTimeout(() => {
-            fetchPlaylists()
             DataFetch()
         },1500)
+        console.log(playlists)
     },[isArtist]) 
 
 
@@ -191,7 +195,7 @@ const Profile = () => {
                         <div className="p-6 ">
                             <div className="text-white font-semibold text-2xl">Your Songs</div>
                             <div className="text-sm font-normal text-opacity-60 text-white mb-2">Visible to everybody</div>
-                            {songs != [] ? 
+                            {songs && songs.length > 0 ? 
                                 songs?.map((song, index) => (
                                     <HorizontalCard 
                                     name={song.name} 
@@ -215,8 +219,8 @@ const Profile = () => {
                         </div>
                     }
 
-                    <div className="text-white p-6 font-semibold text-2xl w-full min-h-[800px]">
-                        <div>Public Playlists</div>
+                    <div className="text-white p-6 text-2xl w-full min-h-[800px]">
+                        <div className="font-semibold">Public Playlists</div>
                         <div className="text-sm font-normal text-opacity-60 text-white">Visible to everybody</div>
                         <div className="h-[580px] flex mt-3 gap-2 overflow-x-scroll scrollbar-hide">
                             {playlists && playlists.length > 0 ? 
@@ -229,11 +233,11 @@ const Profile = () => {
                                     <div className="h-[70%] w-full rounded-lg shadow-xl bg-gradient-to-br from-purple-500 via-purple-400 to-white flex justify-center items-center text-6xl"> 
                                         <BiPlus/>
                                     </div>
-                                    <div className="text-white font-semibold text-lg mt-2">New Playlist</div>
+                                    <div className="text-white text-lg mt-2">New Playlist</div>
                                     <div className="text-white text-opacity-25 font-semibold text-sm mt-1"></div>
                                 </div>   
-                                {playlists.map((playlist) => (
-                                    <SongCard image={playlist.thumbnail} name={playlist.name} artist={playlist.owner}/>
+                                {playlists.map((playlist) => (  
+                                    <PlaylistCard image={playlist.thumbnail} name={playlist.name} owner={playlist.owner}/>
                                 ))}
                                 </>
                             :
@@ -245,7 +249,7 @@ const Profile = () => {
                                     <div className="h-[70%] w-full rounded-lg shadow-xl bg-gradient-to-br from-purple-500 via-purple-400 to-white flex justify-center items-center text-6xl"> 
                                         <BiPlus/>
                                     </div>
-                                    <div className="text-white font-semibold text-lg mt-2">New Playlist</div>
+                                    <div className="text-white text-lg mt-2">New Playlist</div>
                                     <div className="text-white text-opacity-25 font-semibold text-sm mt-1"></div>
                                 </div>   
                             }
@@ -474,7 +478,7 @@ const Profile = () => {
                     <div className="text-white font-semibold text-xs flex flex-grow flex-col">
                         {playlistThumbnail && !isError && <div className="text-xs text-green-500 text-center  mb-auto">Image uploaded!</div>}
                         {loading && <div className="text-sm text-white text-center mb-auto flex items-center justify-center w-full gap-1">
-                            <div className="text-2xl text-green-400 animate-spin"><LuLoaderCircle/></div>Uploading your song...
+                            <div className="text-2xl text-green-400 animate-spin"><LuLoaderCircle/></div>Creating your playlist...
                         </div>}
                         {isError && <div className="text-xs text-red-500 text-center">{isError}</div>}
                         <div className="mt-auto">By proceeding, you agree to give Spotify access to the image you choose to upload. Please make sure you have the right to upload the image.</div>

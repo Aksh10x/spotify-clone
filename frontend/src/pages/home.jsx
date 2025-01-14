@@ -2,7 +2,7 @@ import { useCookies } from "react-cookie";
 import ArtistCard from "../components/artistCard";
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
-import SongCard from "../components/songCard";
+import PlaylistCard from "../components/PlaylistCard";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 

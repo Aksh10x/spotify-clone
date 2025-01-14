@@ -70,18 +70,13 @@ const getPlaylist = asyncErrorHandler(async(req,res) => {
 
 
 const getUserPlaylists = asyncErrorHandler(async(req,res) => {
-    console.log("hello")
     const {userId} = req.params
-
-    console.log(userId)
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         throw new ApiError(400, "Invalid User ID");
     }
 
     const user = await User.findById(new mongoose.Types.ObjectId(userId))
-
-    console.log(user)
 
     if(!user){
         throw new ApiError(404,"User does not exist, not found")
@@ -94,7 +89,7 @@ const getUserPlaylists = asyncErrorHandler(async(req,res) => {
         name: p.name,
         description: p.description,
         thumbnail: p.thumbnail,    
-        owner: user.firstName + user.secondName
+        owner: user.firstName + " " + user.secondName
         }
     })
 
