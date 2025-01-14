@@ -11,7 +11,6 @@ const playlistSchema = new Schema({
     },
     thumbnail: {
         type: String,
-        required: true
     },
     songs: [{
         type: Schema.Types.ObjectId,
@@ -20,7 +19,10 @@ const playlistSchema = new Schema({
     collaborators: [{
         type: Schema.Types.ObjectId,
         ref: "User"
-    }]
+    }],
+    description: {
+        type: String,
+    }
 
 })
 

@@ -49,10 +49,10 @@ const Playback = () => {
     }, [songTrack]);
 
     return (
-        <div className="h-[70px] bg-black w-full absolute bottom-0 text-white max-h-[14vh] px-3 pb-3 flex gap-3">
+        <div className="h-[70px] bg-black w-full absolute bottom-0 text-white max-h-[14vh] px-4 pb-4 flex gap-3">
             {songName ? 
             <div className="flex justify-start items-center gap-3 w-1/4">
-                <img src={songThumbnail} className="h-full rounded-sm" alt="Song Thumbnail" />
+                <img src={songThumbnail} className="h-full rounded-md" alt="Song Thumbnail" />
                 <div className="flex flex-col justify-center h-full">
                     <p className="text-sm hover:underline cursor-pointer">{songName}</p>
                     <p className="text-xs text-white/60 hover:text-white hover:underline cursor-pointer flex justify-center items-center">{artist}</p>
@@ -60,7 +60,7 @@ const Playback = () => {
             </div>
             :
             <div className="flex justify-start items-center gap-3 w-1/4">
-                <div className="h-full rounded-sm bg-white/5 w-[60px]"></div>
+                <div className="h-full rounded-md bg-white/5 w-[55px]"></div>
                 <div className="flex flex-col justify-center h-full">
                     <p className="text-sm hover:underline cursor-pointer">--</p>
                     <p className="text-xs text-white/60 hover:text-white hover:underline cursor-pointer flex justify-center items-center">--</p>

@@ -8,6 +8,9 @@ import { IoPersonOutline } from "react-icons/io5";
 import { BsPencil, BsThreeDots } from "react-icons/bs";
 import { CgClose } from "react-icons/cg";
 import HorizontalCard from "../components/songHorizontalCard.jsx";
+import SongCard from "../components/songCard.jsx";
+import { FaCirclePlay } from "react-icons/fa6";
+import { BiPlus } from "react-icons/bi";
 
 const Profile = () => {
 
@@ -17,14 +20,22 @@ const Profile = () => {
     const [isArtist, setIsArtist] = useState(null)
     const [isLoading,setIsLoading] = useState(true)
     const [logo,setLogo] = useState("")
+    const [id,setId] = useState("")
 
-    const[popup,setPopup] = useState(false)
+    const [popup,setPopup] = useState(false)
     const [file, setFile] = useState(null)
     const [avatar, setAvatar] = useState("")
     const [isError, setIsError] = useState(false)
     const [editProfile, setEditProfile] = useState(false)
     const [deletePhoto, setDeletePhoto] = useState(false)
     const [songs,setSongs] = useState([])
+    const [playlists, setPlaylists] = useState([1,2,3,4,5,6,7,8])
+    const [newPlaylist, setNewPlaylist] = useState(false)
+
+    const [playlistThumbnail, setPlaylistThumbnail] = useState(null)
+    const [playlistName, setPlaylistName] = useState("My Playlist")
+    const [playlistDesc, setPlaylistDesc] = useState("")
+    const [loading, setLoading] = useState(false)
 
     async function DataFetch(){
         const res = await AuthenticatedGETReq("/user/get-user")
@@ -33,12 +44,22 @@ const Profile = () => {
         setSecondName(res.data.secondName)
         setUsername(res.data.username)
         setIsArtist(res.data.isArtist)
+        setId(res.data._id)
         if(res.data.avatar){
             setAvatar(res.data.avatar)
         }
         const first = res?.data?.firstName?.[0]
         const second = res?.data?.secondName?.[0] || ""
         setLogo(`${first}${second}`)
+    }
+
+    const fetchPlaylists = async() => {
+        const res = await AuthenticatedGETReq(`/playlist/user-playlists/${id}`)
+        if(res.success){
+            setPlaylists(res.data)
+        }else{
+            setPlaylists([])
+        }
     }
 
     const fetchUserSongs = async() => {
@@ -51,6 +72,7 @@ const Profile = () => {
     useEffect(() => {
         fetchUserSongs()
         setTimeout(() => {
+            fetchPlaylists()
             DataFetch()
         },1500)
     },[isArtist]) 
@@ -109,22 +131,27 @@ const Profile = () => {
         }
     }
 
-    
 
-    const displayAudioDuration = async (url) => {
-        try {
-            const duration = await getAudioDurationFromURL(url);
-            console.log(`Audio duration: ${duration} seconds`);
-            // Format duration into minutes and seconds (optional)
-            const minutes = Math.floor(duration / 60);
-            const seconds = Math.floor(duration % 60);
-            return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-        } catch (error) {
-            console.error(error);
-            return "00:00"
+    const addPlaylist = async(playlistName,playlistDesc,playlistThumbnail) => {
+        const formData = new FormData()
+        formData.append("thumbnail", playlistThumbnail)
+        formData.append("name", playlistName)
+        formData.append("description", playlistDesc)
+
+        setLoading(true)
+        const res = await AuthenticatedPOSTFormReq("/playlist/create",formData)
+        setLoading(false)
+        if(res.success){
+            console.log(res)
+            setNewPlaylist(false)
+            window.location.reload()
         }
-    };
+        else{
+            setIsError(res.message)
+        }
+    }
 
+    
     
 
 
@@ -189,8 +216,40 @@ const Profile = () => {
                     }
 
                     <div className="text-white p-6 font-semibold text-2xl w-full min-h-[800px]">
-                        <div>Your Library</div>
+                        <div>Public Playlists</div>
                         <div className="text-sm font-normal text-opacity-60 text-white">Visible to everybody</div>
+                        <div className="h-[580px] flex mt-3 gap-2 overflow-x-scroll scrollbar-hide">
+                            {playlists && playlists.length > 0 ? 
+                                <>
+                                <div className="min-w-[190px] h-[45%] relative p-4 bg-black bg-opacity-15 hover:bg-white rounded-lg hover:bg-opacity-15 transition-all cursor-pointer group"
+                                onClick={() => {
+                                    setNewPlaylist(true)
+                                }}
+                                >
+                                    <div className="h-[70%] w-full rounded-lg shadow-xl bg-gradient-to-br from-purple-500 via-purple-400 to-white flex justify-center items-center text-6xl"> 
+                                        <BiPlus/>
+                                    </div>
+                                    <div className="text-white font-semibold text-lg mt-2">New Playlist</div>
+                                    <div className="text-white text-opacity-25 font-semibold text-sm mt-1"></div>
+                                </div>   
+                                {playlists.map((playlist) => (
+                                    <SongCard image={playlist.thumbnail} name={playlist.name} artist={playlist.owner}/>
+                                ))}
+                                </>
+                            :
+                                <div className="min-w-[190px] h-[45%] relative p-4 bg-black bg-opacity-15 hover:bg-white rounded-lg hover:bg-opacity-15 transition-all cursor-pointer group"
+                                onClick={() => {
+                                    setNewPlaylist(true)
+                                }}
+                                >
+                                    <div className="h-[70%] w-full rounded-lg shadow-xl bg-gradient-to-br from-purple-500 via-purple-400 to-white flex justify-center items-center text-6xl"> 
+                                        <BiPlus/>
+                                    </div>
+                                    <div className="text-white font-semibold text-lg mt-2">New Playlist</div>
+                                    <div className="text-white text-opacity-25 font-semibold text-sm mt-1"></div>
+                                </div>   
+                            }
+                        </div>
                     </div>
 
                 </div>
@@ -355,6 +414,74 @@ const Profile = () => {
                     
                 </div>
             </div>
+        }
+
+
+        {newPlaylist && 
+        <div className="bg-black w-full h-screen bg-opacity-40 backdrop-blur-md absolute top-0 flex justify-center items-center">
+            <div className="bg-black w-[40%] h-[60%] min-h-[450px] max-h-[500px] min-w-[600px] max-w-[800px] rounded-xl">
+                <div className="w-full h-full bg-white bg-opacity-10 rounded-xl flex flex-col p-8 gap-4">
+                    <div className="text-white font-semibold text-3xl flex justify-between items-start">Playlist details
+                    <button onClick={() => {setNewPlaylist(false)
+                    setPlaylistDesc("")
+                    setPlaylistName("Playlist")
+                    setPlaylistThumbnail(null)
+                    }}
+                        className="text-base text-white text-opacity-55 hover:text-opacity-100 transition-all"><CgClose/></button>
+                    </div>
+                    <div className="h-[70%] w-full flex gap-4">
+                    <input type="file" accept="image/*" hidden id="thumbnailInput" onChange={(e) => {
+                                const validImageTypes = ["image/jpeg", "image/png", "image/jpg"];
+                                if (!validImageTypes.includes(e.target.files?.[0]?.type)) {
+                                alert("Only image files are allowed!");
+                                return;
+                                }
+                                setPlaylistThumbnail(e.target.files?.[0])
+                                
+                    }}
+                    
+                    defaultValue={playlistThumbnail}></input>
+                    <label for="thumbnailInput" className="">
+                        <div className="w-[200px] h-[200px] bg-white/10 rounded-md text-6xl flex justify-center items-center hover:bg-white/15 transition-all text-white">
+                        <BiPlus/>
+                        </div>
+                    </label>
+                    
+                    <div className="text-white w-full">
+                        <div className="text-sm font-semibold">Playlist Name</div>
+                        <input className="w-full px-3 bg-transparent rounded h-[35px] transition bg-white bg-opacity-15 hover:bg-opacity-20 text-sm "
+                        type="text" 
+                        onChange={(e) => {setPlaylistName(e.target.value)}}
+                        defaultValue={playlistName}
+                        ></input>
+
+                        <div className="text-sm font-semibold mt-2">Description</div>
+                        <textarea className="w-full px-3 bg-transparent rounded max-h-[115px] min-h-[115px] transition bg-white bg-opacity-15 hover:bg-opacity-20 text-sm p-2"
+                        type="text" 
+                        onChange={(e) => {setPlaylistDesc(e.target.value)}}
+                        defaultValue={playlistDesc}
+                        ></textarea>
+                        <div className="w-full flex justify-end">
+                            <button onClick={() => {addPlaylist(playlistName,playlistDesc,playlistThumbnail)}}
+                            className="text-black font-semibold bg-white px-6 py-3 rounded-full hover:bg-opacity-90 transition-all hover:scale-105 text-sm"
+                            >Save</button>
+                        </div>
+                    </div>
+                    
+                    </div>
+
+
+                    <div className="text-white font-semibold text-xs flex flex-grow flex-col">
+                        {playlistThumbnail && !isError && <div className="text-xs text-green-500 text-center  mb-auto">Image uploaded!</div>}
+                        {loading && <div className="text-sm text-white text-center mb-auto flex items-center justify-center w-full gap-1">
+                            <div className="text-2xl text-green-400 animate-spin"><LuLoaderCircle/></div>Uploading your song...
+                        </div>}
+                        {isError && <div className="text-xs text-red-500 text-center">{isError}</div>}
+                        <div className="mt-auto">By proceeding, you agree to give Spotify access to the image you choose to upload. Please make sure you have the right to upload the image.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
         }
         
 
