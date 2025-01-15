@@ -8,6 +8,7 @@ import Profile from "./pages/profile";
 import Upload from "./pages/uploadSong";
 import { SongProvider } from "./utils/songContext";
 import Playback from "./components/playback";
+import Playlist from "./pages/playlist";
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
           <Route path="/uploadSong" element={<Upload/>} />
           <Route path="/home" element={<Home/>} />
           <Route path="*" element={<Navigate to={"/signup"} />} />
+          <Route path="/playlist/:playlistId" element={<Playlist/>}/>
         </Routes> 
         <Playback/>
         </>

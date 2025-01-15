@@ -57,7 +57,21 @@ const createPlaylist = asyncErrorHandler(async(req,res) => {
 const getPlaylist = asyncErrorHandler(async(req,res) => {
     const {playlistId} = req.params
 
-    const playlist = await Playlist.findById(playlistId)
+    const playlist = await Playlist.aggregate([
+        {
+            $match: {
+                _id: new mongoose.Types.ObjectId(playlistId) 
+            }
+        },
+        {
+            $lookup: {
+                from: "songs",
+                localField: "songs",
+                foreignField: "_id",
+                as: "songs"
+            }
+        }
+    ])
 
     if(!playlist){
         throw new ApiError(404, "Playlist does not exist, not found")
@@ -89,7 +103,8 @@ const getUserPlaylists = asyncErrorHandler(async(req,res) => {
         name: p.name,
         description: p.description,
         thumbnail: p.thumbnail,    
-        owner: user.firstName + " " + user.secondName
+        owner: user.firstName + " " + user.secondName,
+        _id: p._id
         }
     })
 

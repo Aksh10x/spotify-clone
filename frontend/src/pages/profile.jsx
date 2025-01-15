@@ -222,10 +222,10 @@ const Profile = () => {
                     <div className="text-white p-6 text-2xl w-full min-h-[800px]">
                         <div className="font-semibold">Public Playlists</div>
                         <div className="text-sm font-normal text-opacity-60 text-white">Visible to everybody</div>
-                        <div className="h-[580px] flex mt-3 gap-2 overflow-x-scroll scrollbar-hide">
+                        <div className="h-[580px] flex mt-3 overflow-x-scroll scrollbar-hide">
                             {playlists && playlists.length > 0 ? 
                                 <>
-                                <div className="min-w-[190px] h-[45%] relative p-4 bg-black bg-opacity-15 hover:bg-white rounded-lg hover:bg-opacity-15 transition-all cursor-pointer group"
+                                <div className="min-w-[190px] h-[45%] relative p-3 hover:bg-white/10 rounded-lg transition-all cursor-pointer group"
                                 onClick={() => {
                                     setNewPlaylist(true)
                                 }}
@@ -237,11 +237,11 @@ const Profile = () => {
                                     <div className="text-white text-opacity-25 font-semibold text-sm mt-1"></div>
                                 </div>   
                                 {playlists.map((playlist) => (  
-                                    <PlaylistCard image={playlist.thumbnail} name={playlist.name} owner={playlist.owner}/>
+                                    <PlaylistCard image={playlist.thumbnail} name={playlist.name} owner={playlist.owner} id={playlist._id}/>
                                 ))}
                                 </>
                             :
-                                <div className="min-w-[190px] h-[45%] relative p-4 bg-black bg-opacity-15 hover:bg-white rounded-lg hover:bg-opacity-15 transition-all cursor-pointer group"
+                                <div className="min-w-[190px] h-[45%] relative p-3 hover:bg-white/10 rounded-lg transition-all cursor-pointer group"
                                 onClick={() => {
                                     setNewPlaylist(true)
                                 }}
