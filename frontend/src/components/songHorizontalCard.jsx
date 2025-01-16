@@ -23,7 +23,7 @@ const HorizontalCard = ({index,thumbnail,name,artistFirstName,artistSecondName,t
           setDuration(`${minutes}:${seconds < 10 ? "0" : ""}${seconds}`);
         } catch (error) {
           console.error(error);
-          setDuration("N/A"); // Fallback if duration cannot be determined
+          setDuration("N/A");
         }
     };
 

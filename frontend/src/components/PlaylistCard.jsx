@@ -1,4 +1,7 @@
 import { FaCirclePlay } from "react-icons/fa6";
+import { IoIosPlay, IoIosPlayCircle } from "react-icons/io";
+import { IoPlayCircleSharp } from "react-icons/io5";
+import { MdPlayCircle } from "react-icons/md";
 import { PiMusicNotesSimple } from "react-icons/pi";
 import { Link } from "react-router-dom";
 
@@ -14,7 +17,7 @@ const PlaylistCard = ({image,name,owner,id}) => {
             </div>
             <div className="text-white text-lg mt-2 hover:underline truncate">{name || "Playlist"}</div>
             <div className="text-white/60 text-sm mt-1">{"By " + (owner || "User")}</div>
-            <div className="absolute right-4 top-[50%] text-green-500 bg-gray-950 text-5xl rounded-full shadow-xl text-opacity-0 group-hover:text-opacity-100 bg-opacity-0 group-hover:bg-opacity-100 transition-all"><FaCirclePlay /></div>
+            <div className="absolute text-3xl w-12 h-12 flex justify-center items-center right-4 top-[50%] bg-green-500 text-gray-950 rounded-full shadow-xl text-opacity-0 group-hover:text-opacity-100 bg-opacity-0 group-hover:bg-opacity-100 transition-all pl-1"><IoIosPlay /></div>
         </Link>
     );
 }
