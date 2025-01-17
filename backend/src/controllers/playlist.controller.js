@@ -60,18 +60,45 @@ const getPlaylist = asyncErrorHandler(async(req,res) => {
     const playlist = await Playlist.aggregate([
         {
             $match: {
-                _id: new mongoose.Types.ObjectId(playlistId) 
-            }
+                _id: new mongoose.Types.ObjectId(playlistId),
+            },
         },
         {
             $lookup: {
-                from: "songs",
-                localField: "songs",
-                foreignField: "_id",
-                as: "songs"
-            }
-        }
-    ])
+                from: "songs", 
+                localField: "songs", 
+                foreignField: "_id", 
+                as: "songs",
+                pipeline: [ 
+                    {
+                        $lookup: {
+                            from: "users", 
+                            localField: "artist",
+                            foreignField: "_id", 
+                            as: "artistDetails",
+                        },
+                    },
+                    {
+                        $unwind: {
+                            path: "$artistDetails", 
+                        },
+                    },
+                    {
+                        $addFields: {
+                            artistFirstName: "$artistDetails.firstName",
+                            artistSecondName: "$artistDetails.secondName",
+                        },
+                    },
+                    {
+                        $project: {
+                            artistDetails: 0, // Exclude the artistDetails field from the output
+                        },
+                    },
+                ],
+            },
+        },
+    ]);
+    
 
     if(!playlist){
         throw new ApiError(404, "Playlist does not exist, not found")

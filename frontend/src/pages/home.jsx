@@ -19,7 +19,7 @@ const Home = () => {
 
 
     return (
-        <div className="relative w-full h-screen overflow-hidden">
+        <div className="relative w-full overflow-hidden h-screen">
             <Navbar/>
             <div className="w-full h-[calc(100vh-60px)] text-black bg-black relative p-2 pt-0 flex gap-2">
                 <Sidebar/>

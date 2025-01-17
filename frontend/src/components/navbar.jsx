@@ -36,7 +36,7 @@ const Navbar = () => {
     }
 
     return (
-        <div className="bg-black w-full sticky top-0 flex text-white items-center px-6 py-2 justify-evenly h-[60px]">
+        <div className="bg-black w-full sticky top-0 flex text-white items-center px-6 py-2 justify-evenly h-[60px] min-w-[700px]">
            <div className="text-4xl flex justify-start w-[10%] ml-0"><FaSpotify/></div> 
            <div className="flex gap-2 w-[60%] flex-grow justify-center ml-40 h-full">
                 <Link to="/home" className={`text-3xl p-2 w-fit rounded-full h-full ${location.pathname === "/home" ? "bg-white bg-opacity-15" : "bg-white bg-opacity-5"} hover:bg-white hover:bg-opacity-15 transition-all flex justify-items-center`}>
