@@ -1,7 +1,4 @@
-import { FaCirclePlay } from "react-icons/fa6";
-import { IoIosPlay, IoIosPlayCircle } from "react-icons/io";
-import { IoPlayCircleSharp } from "react-icons/io5";
-import { MdPlayCircle } from "react-icons/md";
+import { IoIosPlay } from "react-icons/io";
 import { PiMusicNotesSimple } from "react-icons/pi";
 import { Link } from "react-router-dom";
 

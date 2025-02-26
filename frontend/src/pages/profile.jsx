@@ -69,6 +69,7 @@ const Profile = () => {
     const fetchUserSongs = async() => {
         const res = await AuthenticatedGETReq("/song/get-my-songs")
         setSongs(res.data)
+        console.log(songs)
     }
 
     //get all details
@@ -197,7 +198,8 @@ const Profile = () => {
                             <div className="text-sm font-normal text-opacity-60 text-white mb-2">Visible to everybody</div>
                             {songs && songs.length > 0 ? 
                                 songs?.map((song, index) => (
-                                    <HorizontalCard 
+                                    <HorizontalCard
+                                    songId={song._id} 
                                     name={song.name} 
                                     artistFirstName={song.artistFirstName}
                                     artistSecondName={song.artistSecondName}

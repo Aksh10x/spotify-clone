@@ -66,6 +66,24 @@ const AuthenticatedPOSTFormReq =  async (route, body) => {
 
 }
 
+const AuthenticatedPOSTReq =  async (route, body) => {
+    const token = getToken()
+
+    const res = await fetch(server + route,{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(body),
+    })
+
+    const data = await res.json()
+
+    return data;
+
+}
+
 const getToken = () => {
     const accessToken = document.cookie.replace(
         /(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/,
@@ -93,5 +111,6 @@ export {
     AuthenticatedGETReq,
     AuthenticatedPATCHReq,
     AuthenticatedPOSTFormReq,
-    getAudioDurationFromURL
+    getAudioDurationFromURL,
+    AuthenticatedPOSTReq,
 }
