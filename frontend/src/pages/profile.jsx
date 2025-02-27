@@ -221,18 +221,18 @@ const Profile = () => {
                         </div>
                     }
 
-                    <div className="text-white p-6 text-2xl w-full min-h-[800px]">
+                    <div className="text-white p-6 text-2xl w-full min-h-[350px]">
                         <div className="font-semibold">Public Playlists</div>
                         <div className="text-sm font-normal text-opacity-60 text-white">Visible to everybody</div>
-                        <div className="h-[580px] flex mt-3 overflow-x-scroll scrollbar-hide">
+                        <div className="h-fit flex mt-3 overflow-x-scroll scrollbar-hide">
                             {playlists && playlists.length > 0 ? 
                                 <>
-                                <div className="min-w-[190px] h-[45%] relative p-3 hover:bg-white/10 rounded-lg transition-all cursor-pointer group"
+                                <div className="min-w-[190px] min-h-[200px] relative p-3 hover:bg-white/10 rounded-lg transition-all cursor-pointer group"
                                 onClick={() => {
                                     setNewPlaylist(true)
                                 }}
                                 >
-                                    <div className="h-[70%] w-full rounded-lg shadow-xl bg-gradient-to-br from-purple-500 via-purple-400 to-white flex justify-center items-center text-6xl"> 
+                                    <div className="h-[165px] w-full rounded-lg shadow-xl bg-gradient-to-br from-purple-500 via-purple-400 to-white flex justify-center items-center text-6xl"> 
                                         <BiPlus/>
                                     </div>
                                     <div className="text-white text-lg mt-2">New Playlist</div>

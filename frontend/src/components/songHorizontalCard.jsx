@@ -7,6 +7,7 @@ import { BiPlusCircle } from "react-icons/bi";
 import { CgClose } from "react-icons/cg";
 import { PiMusicNotesSimple } from "react-icons/pi";
 import { LuLoaderCircle } from "react-icons/lu";
+import { useLocation, useNavigate } from "react-router-dom";
 
 
 const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecondName,trackUrl}) => {
@@ -21,6 +22,7 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
     const [loading,setLoading] = useState(false)
     const [toast, setToast] = useState("")
     const [songInPlaylist, setSongInPlaylist] = useState([])
+    const location = useLocation()
 
     const {
         songName, setSongName,
@@ -110,6 +112,10 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
         setLoading(false)
         setPlaylistsSelected([])
         setSongToAdd("")
+
+        if(location.pathname.startsWith("/playlist/")){
+            window.location.reload()
+        }
     }
 
     const songExists = async (songId) => {

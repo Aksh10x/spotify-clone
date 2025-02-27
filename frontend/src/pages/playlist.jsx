@@ -1,13 +1,14 @@
 import { useParams } from "react-router-dom";
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AuthenticatedGETReq } from "../utils/server.helpers";
 import { PiMusicNotesSimple } from "react-icons/pi";
 import { IoIosPlay} from "react-icons/io";
 import { BsThreeDots } from "react-icons/bs";
 import HorizontalCard from "../components/songHorizontalCard";
 import { WiTime3 } from "react-icons/wi";
+import { LuCircleMinus } from "react-icons/lu";
 
 const Playlist = () => {
     const {playlistId} = useParams()
@@ -16,6 +17,8 @@ const Playlist = () => {
     const [description, setDescription] = useState("")
     const [songNumber, setSongNumber] = useState(0)
     const [songs, setSongs] = useState([])
+    const [deletePopUp, setDeletePopUp] = useState(false)
+    const menuRef = useRef(null)
 
     const fetchData = async() => {
         const res = await AuthenticatedGETReq(`/playlist/get-playlist/${playlistId}`)
@@ -30,6 +33,22 @@ const Playlist = () => {
             alert("Error loading playlist.")
         }
     }
+
+    useEffect(() => {
+        const handleMouseClick = (event) => {
+            if(menuRef.current && !menuRef.current.contains(event.target)){
+                setDeletePopUp(false)
+            }
+        }
+
+        if(deletePopUp){
+            document.addEventListener("mousedown", handleMouseClick)
+        }
+
+        return () => {
+            document.removeEventListener("mousedown",handleMouseClick)
+        }
+    },[deletePopUp])
 
     useEffect(() => {
         fetchData()
@@ -77,17 +96,27 @@ const Playlist = () => {
 
                     <div className="flex min-h-[80px] w-full items-center px-4 gap-6">
                         <div className="text-4xl w-14 h-14 flex justify-center items-center bg-green-500 text-gray-950 rounded-full shadow-xl pl-1 hover:scale-105 transition-all cursor-pointer hover:bg-green-400"><IoIosPlay /></div>
-                        <div className="text-white/60 hover:text-white text-2xl hover:scale-105 transition-all cursor-pointer"><BsThreeDots/></div>
+                        <button onClick={() => setDeletePopUp((prev) => !prev)} className="text-white/60 relative text-2xl transition-all cursor-pointer group"><div className="group-hover:scale-105 group-hover:text-white"><BsThreeDots/></div>
+                            {deletePopUp && 
+                            (<div ref={menuRef} className="absolute left-8 top-[-5px] bg-black min-w-[160px] rounded-md shadow-xl">
+                                <div className="w-full h-full bg-white/15 flex flex-col items-start px-2 py-2 rounded-md shadow-xl">
+                                    <button className="text-sm text-white flex"><div className="text-lg mr-1 flex items-center justify-center"><LuCircleMinus /></div> Delete Playlist</button>
+                                </div>
+                            </div>
+                            )}
+                        </button>
                     </div>
 
-                    <div className="px-4 text-white/60 flex flex-col gap-2 items-center">
-                        <div className="flex w-full text-sm items-center">
-                            <div className="w-[5%] flex justify-center ml-2">#</div>
-                            <div className="w-10">Title</div>
-                            <div className="flex flex-col ml-4 flex-grow"></div>
-                            <div className="w-[25%]">Artist</div>
-                            <div className="w-[15%] flex justify-center pr-3 text-xl mb-1"><WiTime3 /></div>
-                        </div>
+                    <div className="px-4 text-white/60 flex flex-col items-center">
+                        {songs.length!=0 && 
+                            <div className="flex w-full text-sm items-center">
+                                <div className="w-[5%] flex justify-center ml-2">#</div>
+                                <div className="w-10">Title</div>
+                                <div className="flex flex-col ml-4 flex-grow"></div>
+                                <div className="w-[25%]">Artist</div>
+                                <div className="w-[15%] flex justify-center pr-3 text-xl mb-1"><WiTime3 /></div>
+                            </div>
+                        }
                         <div className="w-full bg-white/15 h-[0.8px] "></div>
                         {songs && songs.length > 0 ? 
                             songs?.map((song, index) => (
@@ -102,7 +131,7 @@ const Playlist = () => {
                                 />
                             ))
                             :
-                            <div className="text-sm text-white text-opacity-60">Upload your first song!</div>
+                            <div className="text-sm text-white/50 mt-12">Fill up your playlist with your favourite songs!</div>
                         }
                     </div>
                     
