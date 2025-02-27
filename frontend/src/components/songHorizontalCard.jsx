@@ -19,6 +19,8 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
     const [playlistsSelected,setPlaylistsSelected] = useState([])
     const [playlistError,setPlaylistError] = useState("")
     const [loading,setLoading] = useState(false)
+    const [toast, setToast] = useState("")
+    const [songInPlaylist, setSongInPlaylist] = useState([])
 
     const {
         songName, setSongName,
@@ -81,27 +83,27 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
 
     const handleCheckboxChange = (e) => {
         if (e.target.checked) {
-            setPlaylistsSelected((prev) => [...prev, e.target.id]); // Add to the array
+            setPlaylistsSelected((prev) => [...prev, {id: e.target.id, add: true}]); // Add to the array
         } else {
-            setPlaylistsSelected((prev) => prev.filter((id) => id !== e.target.id)); // Remove from the array
+            setPlaylistsSelected((prev) => [...prev, {id: e.target.id, add: false}]); // Remove from the array
         }
     };
 
     const addToPlaylist = async () => {
-        for (let i = 0; i < playlistsSelected.length; i++) {
-            const data = await AuthenticatedPOSTReq("/playlist/add-song-playlist", {
-                songId: songToAdd,
-                playlistId: playlistsSelected[i]
-            })
-            console.log(data)
-            if(data.success){
-                continue;
-            }else{
-                setPlaylistError("Oops, error in adding song to the playlists...")
-                return 0;
-            }
-        
+        console.log(playlistsSelected)
+        const data = await AuthenticatedPOSTReq("/playlist/add-song-playlist", {
+            songId: songToAdd,
+            playlists: playlistsSelected
+        })
+        console.log(data)
+        if(data.success){
+            setToast("Song added to selected playlists!")
+        }else{
+            setPlaylistError("Oops, error in adding song to the playlists...")
+            return 0;
         }
+    
+        
 
         setAddSong(false)
         setPlaylistError("")
@@ -109,6 +111,28 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
         setPlaylistsSelected([])
         setSongToAdd("")
     }
+
+    const songExists = async (songId) => {
+        const existsArray = await Promise.all(
+            playlists.map(async (playlist) => {
+                const res = await AuthenticatedPOSTReq("/playlist/song-exists-playlist", {
+                    songId,
+                    playlistId: playlist._id
+                });
+                return res.success ? res.data.exists : false;
+            })
+        );
+      
+        setSongInPlaylist(existsArray);
+        
+    };
+    
+
+    useEffect(() => {
+        console.log("im enetring the set song exists effect and song id is", songToAdd)
+        if(!songToAdd) return;
+        songExists(songToAdd)
+    },[addSong, songToAdd])
 
 
     return (
@@ -126,9 +150,12 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
             </div>
             <p className="text-white/60 hover:underline text-sm w-[25%] group-hover:text-white">{artistFirstName + " " + artistSecondName}</p>
             <p className="text-white/60 text-sm w-[10%] text-center group-hover:text-white">{duration}</p>
-            <div onClick={() => {setAddSong(true)
+            <div onClick={() => {
                 setSongToAdd(songId)
-                console.log(songToAdd)
+                setTimeout(() => setAddSong(true), 1500)
+                
+                
+                
             }} className="text-white/60 w-[5%] opacity-0 group-hover:opacity-100 transition-all text-xl hover:text-white"><BiPlusCircle/></div>
             
         </div>
@@ -141,13 +168,18 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
                     <div className="text-white font-semibold text-xl flex justify-between items-start">Add to playlist
                         <button onClick={() => {
                             setAddSong(false)
+                            setPlaylistError("")
+                            setLoading(false)
+                            setPlaylistsSelected([])
+                            setSongToAdd("")
+                            setSongInPlaylist([])
                         }}
                             className="text-base text-white text-opacity-55 hover:text-opacity-100 transition-all"><CgClose/>
                         </button>
                     </div>    
                     <div className="flex flex-col w-full p-[8px] overflow-auto scrollbar-hide max-h-[95%]">
                         {playlists && playlists.length > 0 ? 
-                            playlists.map((playlist) => (
+                            playlists.map((playlist, index) => (
                                 <div className="w-[100%] h-[65px] rounded-md flex p-[8px] hover:bg-white/10 gap-2  cursor-pointer">
                                     {playlist.thumbnail ? 
                                         <img src={playlist.thumbnail} className="h-full rounded-sm max-w-[50px]"/>
@@ -164,6 +196,7 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
                                         <input type="checkbox" class="hidden peer" id={playlist._id}
                                         onChange={handleCheckboxChange
                                         }
+                                        defaultChecked={!!songInPlaylist[index]}
                                         ></input>
                                         <label for={playlist._id}
                                         className={`w-[20px] h-[20px] cursor-pointer border-[1px] border-white/60 rounded-full peer-checked:bg-green-500 peer-checked:border-green-500 text-white/50 text-xs justify-center items-center flex`}

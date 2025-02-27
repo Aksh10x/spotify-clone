@@ -4,9 +4,7 @@ import Sidebar from "../components/sidebar";
 import { useEffect, useState } from "react";
 import { AuthenticatedGETReq } from "../utils/server.helpers";
 import { PiMusicNotesSimple } from "react-icons/pi";
-import { FaCirclePlay } from "react-icons/fa6";
-import { IoIosPlay, IoIosPlayCircle } from "react-icons/io";
-import { IoPlayCircleSharp } from "react-icons/io5";
+import { IoIosPlay} from "react-icons/io";
 import { BsThreeDots } from "react-icons/bs";
 import HorizontalCard from "../components/songHorizontalCard";
 import { WiTime3 } from "react-icons/wi";
@@ -41,7 +39,7 @@ const Playlist = () => {
             <Navbar/>
             <div className="w-full h-[calc(100vh-60px)] text-black bg-black relative p-2 pt-0 flex gap-2">
                 <Sidebar/>
-                <div className="w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg flex gap-2 flex-col">
+                <div className="w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg flex gap-2 flex-col overflow-y-auto scrollbar-hide">
 
                     {/*playlist details */}
                     <div className="w-full bg-gradient-to-b rounded-t-lg from-white/40 to-white/10 min-h-[200px] max-h-[300px] px-5 pb-3 pt-6 flex justify-end flex-col">
@@ -94,6 +92,7 @@ const Playlist = () => {
                         {songs && songs.length > 0 ? 
                             songs?.map((song, index) => (
                                 <HorizontalCard 
+                                songId={song._id}
                                 name={song.name} 
                                 artistFirstName={song.artistFirstName}
                                 artistSecondName={song.artistSecondName}

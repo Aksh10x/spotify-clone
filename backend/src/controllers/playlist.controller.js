@@ -142,31 +142,70 @@ const getUserPlaylists = asyncErrorHandler(async(req,res) => {
 
 const addSongToPlaylist = asyncErrorHandler(async(req,res) => {
     const currentUser = req.user
+    const {songId, playlists} = req.body
+
+    console.log(playlists)
+
+    for (let i = 0; i < playlists.length; i++) {
+        const playlist = await Playlist.findById(playlists[i].id)
+
+        if(!playlist){
+            throw new ApiError(404,"Playlist doesnt exist, not found")
+        }
+
+        if(playlist.owner.toString() != currentUser._id.toString() && 
+        !playlist.collaborators.includes(currentUser._id)){
+            throw new ApiError(401,"User does not own playlist")
+        }
+
+        const song = await Song.findById(songId)
+
+        if(playlists[i].add){
+
+            if(!song){
+                throw new ApiError(404,"Song doesnt exist, not found")
+            }
+
+            playlist.songs.push(songId)
+
+            await playlist.save({validateBeforeSave: false})
+        }else{
+            playlist.songs = playlist.songs.filter(id => id.toString() !== songId.toString());
+
+            await playlist.save({validateBeforeSave: false})
+        }       
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200,{}, "Song added/removed to/from playlist successfully")
+    )
+})
+
+const songExistsInPlaylist = asyncErrorHandler(async(req,res) => {
     const {songId, playlistId} = req.body
 
     const playlist = await Playlist.findById(playlistId)
 
     if(!playlist){
-        throw new ApiError(404,"Playlist doesnt exist, not found")
-    }
-
-    if(playlist.owner.toString() != currentUser._id.toString() && 
-    !playlist.collaborators.includes(currentUser._id)){
-        throw new ApiError(401,"User does not own playlist")
+        throw new ApiError(404, "Playlist not found")
     }
 
     const song = await Song.findById(songId)
 
     if(!song){
-        throw new ApiError(404,"Song doesnt exist, not found")
+        throw new ApiError(404, "Song not found")
     }
 
-    playlist.songs.push(songId)
+    const songExists = playlist.songs.some((song) => song.toString() === songId.toString())
 
-    await playlist.save({validateBeforeSave: false})
+    if(songExists){
+        return res.status(200).json(
+            new ApiResponse(200,{exists: true},"Song exists in playlist")
+        )
+    }
 
     return res.status(200).json(
-        new ApiResponse(200, playlist, "Song added to playlist successfully")
+        new ApiResponse(200,{exists: false},"Song does not exist in playlist")
     )
 })
 
@@ -174,5 +213,6 @@ export {
     createPlaylist,
     getPlaylist,
     addSongToPlaylist,
-    getUserPlaylists
+    getUserPlaylists,
+    songExistsInPlaylist,
 }
