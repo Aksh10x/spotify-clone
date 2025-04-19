@@ -45,7 +45,5 @@ const jwtStrategy = new JwtStrategy(opts, async (jwt_payload, done) => {
 
 passport.use(jwtStrategy);
 
-passport.use(jwtStrategy);
-
 export default passport;
 

@@ -229,6 +229,41 @@ const editUserDetails = asyncErrorHandler(async(req,res) => {
     }
 })
 
+const getRandomArtists= asyncErrorHandler(async(req,res)=>{
+    console.log("hello")
+    const currentUser = req.user
+
+    const userExists = await User.findById(currentUser._id)
+
+    if(!userExists){
+        throw new ApiError(404,"Unauthorized access")
+    }
+
+    const artists = await User.aggregate([
+        {
+            $match: {
+                isArtist: true
+            }
+        },
+        {
+            $sample: { size: 10 }
+        },
+        {
+            $project: {
+                _id: 1,
+                username: 1,
+                firstName: 1,
+                secondName: 1,
+                avatar: 1
+            }
+        }
+    ])
+
+    return res.status(200).json(
+        new ApiResponse(200,artists,"Random artists fetched successfully")
+    )
+})
+
 export {
     checkMailUnique,
     Register,
@@ -236,5 +271,6 @@ export {
     getUserDetails,
     ToggleArtist,
     becomeArtist,
-    editUserDetails
+    editUserDetails,
+    getRandomArtists
 }

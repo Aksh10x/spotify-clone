@@ -7,6 +7,7 @@ import {
     ToggleArtist,
     becomeArtist,
     editUserDetails,
+    getRandomArtists
     
  } from "../controllers/user.controller.js";
 import passport from "passport";
@@ -27,5 +28,7 @@ router.route("/toggle-artist").patch(passport.authenticate("jwt", {session: fals
 router.route("/become-artist").post(passport.authenticate("jwt",{session: false}),upload.single("avatar"), becomeArtist)
 
 router.route("/edit-details").post(passport.authenticate("jwt",{session: false}), upload.single("avatar"), editUserDetails)
+
+router.route("/get-random-artists").get(passport.authenticate("jwt",{session: false}), getRandomArtists)
 
 export default router;
