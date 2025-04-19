@@ -33,18 +33,22 @@ const Home = () => {
 
 
     return (
-        <div className="relative w-full overflow-hidden h-screen">
-            <Navbar/>
+        <div className="absolute w-[76%] right-0 overflow-hidden h-[calc(100%-75px)]">
+            
             <div className="w-full h-[calc(100vh-60px)] text-black bg-black relative p-2 pt-0 flex gap-2">
-                <Sidebar/>
+                
                 <div className="w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg p-6 flex gap-2 flex-col overflow-auto scrollbar-hide">
 
                     <div className="space-y-3 h-fit overflow-scroll scrollbar-hide flex-nowrap min-h-fit">
                         <div className="text-white font-semibold text-xl">Popular Artists</div>
                         <div className="seciton flex gap-2 h-fit overflow-x-auto scrollbar-hide shadow-inner">
-                            {
+                            {artists.length === 0 ?
+                                [...Array(10)].map((_, index) => (
+                                    <ArtistCard key={index}/>
+                                )) 
+                                :
                                 artists.map((artist, index) => (
-                                    <ArtistCard name={artist.firstName + " " + artist.secondName} avatar={artist.avatar}/>
+                                    <ArtistCard name={artist.firstName + " " + artist.secondName} avatar={artist.avatar} key={index}/>
                                 ))
                             }
                         </div>

@@ -230,7 +230,6 @@ const editUserDetails = asyncErrorHandler(async(req,res) => {
 })
 
 const getRandomArtists= asyncErrorHandler(async(req,res)=>{
-    console.log("hello")
     const currentUser = req.user
 
     const userExists = await User.findById(currentUser._id)

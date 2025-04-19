@@ -49,7 +49,7 @@ const Playback = () => {
     }, [songTrack]);
 
     return (
-        <div className="h-[70px] bg-black w-full absolute bottom-0 text-white max-h-[14vh] px-4 pb-4 flex gap-3">
+        <div className="h-[70px] bg-black w-full absolute bottom-0 text-white max-h-[14vh] px-4 pb-4 flex gap-3 mt-3">
             {songName ? 
             <div className="flex justify-start items-center gap-3 w-1/4">
                 <img src={songThumbnail} className="h-full rounded-md" alt="Song Thumbnail" />

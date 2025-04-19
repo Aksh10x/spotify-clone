@@ -9,18 +9,24 @@ import Upload from "./pages/uploadSong";
 import { SongProvider } from "./utils/songContext";
 import Playback from "./components/playback";
 import Playlist from "./pages/playlist";
+import Sidebar from "./components/sidebar";
+import Navbar from "./components/navbar";
 
 function App() {
 
   const [cookie] = useCookies(["token"])
 
   return (
-    <div className="App font-poppins">
+    <div className="App font-poppins bg-black h-screen w-full overflow-hidden scrollbar-hide">
       <SongProvider>
+        
       <Router>
         <NavProvider/>
+        
         {cookie.token ? 
         <>
+        <Navbar/>
+        <Sidebar/>
         <Routes>
           <Route path="/login" element={<LogIn />} />
           <Route path="/signup" element={<SignUp />} />

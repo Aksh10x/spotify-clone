@@ -54,10 +54,8 @@ const Playlist = () => {
         fetchData()
     },[playlistId])
     return (
-        <div className="relative w-full h-screen overflow-hidden">
-            <Navbar/>
+        <div className="absolute right-0 w-[76%] h-[calc(100%-75px)] overflow-hidden">
             <div className="w-full h-[calc(100vh-60px)] text-black bg-black relative p-2 pt-0 flex gap-2">
-                <Sidebar/>
                 <div className="w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg flex gap-2 flex-col overflow-y-auto scrollbar-hide">
 
                     {/*playlist details */}
