@@ -32,30 +32,30 @@ const Library = () => {
         fetchPlaylists()
     },[id])
     return (
-        <div className="w-full h-[90%] rounded-b-lg text-white flex flex-grow max-w-[300px]">
-          <div className="flex flex-col w-full p-[8px] overflow-auto scrollbar-hide max-h-[95%]">
+        <div className="w-full h-[90%] rounded-lg text-white flex flex-grow">
+          <div className="flex flex-col w-full p-[8px] overflow-auto scrollbar-hide max-h-[95%] rounded-lg">
             {playlists && playlists.length > 0 ? (
               playlists.map((playlist) => (
                 <Link
                   to={`/playlist/${playlist._id}`}
                   key={playlist._id}
-                  className="w-full h-[65px] rounded-md flex p-[8px] hover:bg-white/10 gap-2 cursor-pointer"
+                  className="min-w-full flex-shrink xl:h-[75px] lg:h-[65px] rounded-md flex p-[8px] hover:bg-white/10 gap-2 cursor-pointer"
                 >
                   {playlist.thumbnail ? (
                     <img
-                      src={playlist.thumbnail}
-                      className="h-full rounded-sm max-w-[50px]"
+                      src={playlist.thumbnail} 
+                      className="xl:h-[60px] xl:min-w-[60px] lg:h-[50px] lg:w-[50px] object-cover rounded-sm max-w-[50px] md:w-[30px] md:h-[30px] "
                     />
                   ) : (
-                    <div className="w-[50px] min-h-[50px] h-full flex justify-center items-center text-lg bg-white/5 rounded-sm text-white/60">
+                    <div className="xl:min-w-[60px] xl:min-h-[60px] lg:min-w-[50px] lg:min-h-[50px] md:min-w-[30px] md:min-h-[30px] h-full flex justify-center items-center text-lg bg-white/5 rounded-sm text-white/60">
                       <PiMusicNotesSimple />
                     </div>
                   )}
-                  <div className="flex flex-col justify-center items-start">
-                    <div className="text-white text-sm truncate overflow-hidden text-ellipsis w-[200px]">
+                  <div className="flex flex-col justify-center items-start max-w-full w-full">
+                    <div className="text-white md:text-[9px] lg:text-sm truncate overflow-hidden text-ellipsis md:max-w-[120px]">
                       {playlist.name}
                     </div>
-                    <div className="text-white/60 text-xs">{playlist.owner}</div>
+                    <div className="text-white/60 lg:text-xs md:text-[7px] md:-mt-1 xl:mt-1">{playlist.owner}</div>
                   </div>
                 </Link>
               ))

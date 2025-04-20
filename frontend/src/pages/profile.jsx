@@ -163,9 +163,9 @@ const Profile = () => {
 
     return (
         <>
-        <div className="absolute w-[76%] right-0 h-[calc(100%-75px)] overflow-hidden">
+        <div className="absolute lg:w-[75.5%] md:w-[75%] sm:w-[75%] 2xl:w-[82%] right-0 h-[calc(100%-75px)] overflow-hidden flex justify-center bg-white bg-opacity-5">
             
-            <div className="w-full h-[calc(100vh-60px)] text-black bg-black relative p-2 pt-0 flex gap-2">
+            <div className="w-full h-[calc(100vh-68px)] max-w-[2000px] rounded-lg text-black bg-black relative pt-0 flex gap-2">
                 
                 <div className="w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg flex gap-2 flex-col overflow-y-auto scrollbar-hide justify-evenly">
                     <div className="w-full bg-gradient-to-b from-white/25 to-white/5 min-h-[280px] px-6 py-3 flex justify-end flex-col">

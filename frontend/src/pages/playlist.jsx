@@ -54,8 +54,8 @@ const Playlist = () => {
         fetchData()
     },[playlistId])
     return (
-        <div className="absolute right-0 w-[76%] h-[calc(100%-75px)] overflow-hidden">
-            <div className="w-full h-[calc(100vh-60px)] text-black bg-black relative p-2 pt-0 flex gap-2">
+        <div className="absolute right-0 lg:w-[75.5%] md:w-[75%] sm:w-[75%] 2xl:w-[82%] h-[calc(100%-75px)] flex justify-center bg-white/5 overflow-hidden">
+            <div className="w-full h-[calc(100vh-68px)] max-w-[2000px] text-black bg-black relative pt-0 flex gap-2">
                 <div className="w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg flex gap-2 flex-col overflow-y-auto scrollbar-hide">
 
                     {/*playlist details */}
