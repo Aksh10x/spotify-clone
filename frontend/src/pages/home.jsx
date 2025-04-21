@@ -38,7 +38,7 @@ const Home = () => {
             
             <div className="w-full h-[calc(100vh-68px)] max-w-[2000px] text-black bg-black relative  pt-0 flex gap-2">
                 
-                <div className="w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg p-6 flex gap-2 flex-col overflow-auto scrollbar-hide">
+                <div className="w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg p-6 flex gap-2 flex-col overflow-auto custom-scrollbar">
 
                     <div className="space-y-3 h-fit overflow-scroll scrollbar-hide flex-nowrap min-h-fit">
                         <div className="text-white font-semibold text-xl">Popular Artists</div>

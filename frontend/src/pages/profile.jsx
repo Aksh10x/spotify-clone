@@ -196,6 +196,7 @@ const Profile = () => {
                         <div className="p-6 ">
                             <div className="text-white font-semibold text-2xl">Your Songs</div>
                             <div className="text-sm font-normal text-opacity-60 text-white mb-2">Visible to everybody</div>
+                            <div className="flex flex-col w-full max-h-[200px] overflow-y-scroll scrollbar-hide">
                             {songs && songs.length > 0 ? 
                                 songs?.map((song, index) => (
                                     <HorizontalCard
@@ -211,6 +212,7 @@ const Profile = () => {
                                 :
                                 <div className="text-sm text-white text-opacity-60">Upload your first song!</div>
                             }
+                            </div>
                             <div className="mt-6">
                                 <Link className="mr-auto text-black font-semibold bg-white px-4 py-3 rounded-full hover:bg-opacity-90 transition-all hover:scale-105"
                                 to={"/uploadSong"}
