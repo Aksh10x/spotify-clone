@@ -69,7 +69,7 @@ const Playlist = () => {
     return (
         <div className="absolute right-0 lg:w-[75.5%] md:w-[75%] sm:w-[75%] 2xl:w-[82%] h-[calc(100%-75px)] flex justify-center bg-white/5 overflow-hidden">
             <div className="w-full h-[calc(100vh-68px)] max-w-[2000px] text-black bg-black relative pt-0 flex gap-2">
-                <div className="w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg flex gap-2 flex-col overflow-y-auto scrollbar-hide">
+                <div className="w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg flex gap-2 flex-col overflow-y-auto custom-scrollbar">
 
                     {/*playlist details */}
                     <div className="w-full bg-gradient-to-b rounded-t-lg from-white/40 to-white/10 min-h-[200px] max-h-[300px] px-5 pb-3 pt-6 flex justify-end flex-col">
@@ -125,7 +125,7 @@ const Playlist = () => {
                                 <div className="w-10">Title</div>
                                 <div className="flex flex-col ml-4 flex-grow"></div>
                                 <div className="w-[25%]">Artist</div>
-                                <div className="w-[15%] flex justify-center pr-3 text-xl mb-1"><WiTime3 /></div>
+                                <div className="w-[15%] flex justify-center pr-16 text-xl mb-1"><WiTime3 /></div>
                             </div>
                         }
                         <div className="w-full bg-white/15 h-[0.8px] "></div>
