@@ -1,6 +1,8 @@
 import { Router } from "express";
 import passport from "passport";
-import { addSongToPlaylist, createPlaylist, getPlaylist, getUserPlaylists, songExistsInPlaylist } from "../controllers/playlist.controller.js";
+import { addSongToPlaylist, createPlaylist, getPlaylist, getUserPlaylists, songExistsInPlaylist,
+    deletePlaylist
+ } from "../controllers/playlist.controller.js";
 import { upload } from "../middlewares/multer.js";
 
 const router = new Router()
@@ -14,5 +16,7 @@ router.route("/add-song-playlist").post(passport.authenticate("jwt", {session: f
 router.route("/user-playlists/:userId").get(passport.authenticate("jwt", {session: false}), getUserPlaylists)
 
 router.route("/song-exists-playlist").post(passport.authenticate("jwt", {session: false}), songExistsInPlaylist)
+
+router.route("/delete-playlist/:playlistId").delete(passport.authenticate("jwt", {session: false}), deletePlaylist)
 
 export default router

@@ -106,6 +106,22 @@ const getAudioDurationFromURL = (url) => {
     });
 };
 
+const AuthenticatedDELETEReq = async(route) => {
+    const token = getToken()
+
+    const res = await fetch(server + route, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        }
+    })
+
+    const data = await res.json()
+
+    return data;
+}
+
 export {
     UnauthenticatedPOSTReq,
     AuthenticatedGETReq,
@@ -113,4 +129,5 @@ export {
     AuthenticatedPOSTFormReq,
     getAudioDurationFromURL,
     AuthenticatedPOSTReq,
+    AuthenticatedDELETEReq
 }

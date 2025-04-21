@@ -209,6 +209,26 @@ const songExistsInPlaylist = asyncErrorHandler(async(req,res) => {
     )
 })
 
+const deletePlaylist = asyncErrorHandler(async(req,res) => {
+    const {playlistId} = req.params
+
+    const currentUser = req.user
+
+    const playlist = await Playlist.findById(playlistId)
+
+    if(!playlist){
+        throw new ApiError(404,"Playlist does not exist, not found")
+    }
+    if(playlist.owner.toString() != currentUser._id.toString()){
+        throw new ApiError(401,"User does not own playlist")
+    }
+
+    await Playlist.findByIdAndDelete(playlistId)
+
+    return res.status(200).json(
+        new ApiResponse(200,{}, "Playlist deleted successfully.")
+    )
+})
 
 export {
     createPlaylist,
@@ -216,4 +236,5 @@ export {
     addSongToPlaylist,
     getUserPlaylists,
     songExistsInPlaylist,
+    deletePlaylist
 }

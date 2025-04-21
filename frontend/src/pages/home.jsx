@@ -3,9 +3,10 @@ import ArtistCard from "../components/artistCard";
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
 import PlaylistCard from "../components/PlaylistCard";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AuthenticatedGETReq } from "../utils/server.helpers";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 const Home = () => {
 
@@ -86,9 +87,23 @@ const Home = () => {
                             <ArtistCard/>
                             <ArtistCard/>
                         </div>
+                        
                     </div>
 
+                    
+                    <div className="w-full h-[0.6px] bg-white/20 flex-shrink-0 rounded mt-8"></div>
+                    <div className="flex justify-center items-center pt-6 pb-4 gap-2">
+                        <div className="text-white/60 text-md">Made by Aksh10x</div>
+                        <a target="_blank" 
+                        rel="noopener noreferrer" 
+                        href="https://github.com/Aksh10x" className="text-white text-2xl flex items-center"><FaGithub /></a>
+                        <a target="_blank" 
+                        rel="noopener noreferrer" 
+                        href="https://www.linkedin.com/in/akshath-surwase-867842274/"
+                        className="text-white text-2xl flex items-center"><FaLinkedin /></a>
+                    </div>
                 </div>
+                
             </div>
         
         </div>

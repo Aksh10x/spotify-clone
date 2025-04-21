@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthenticatedGETReq } from "../utils/server.helpers";
 import { PiMusicNotesSimple } from "react-icons/pi";
 import { Link } from "react-router-dom";
+import { PlaylistContext } from "../utils/playlistContext";
 
 const Library = () => {
 
     const [playlists, setPlaylists] = useState([])
     const [id,setId] = useState("")
+
+    const {deleted, setDeleted} = useContext(PlaylistContext)
 
     async function DataFetch(){
         const res = await AuthenticatedGETReq("/user/get-user")
@@ -30,7 +33,7 @@ const Library = () => {
 
     useEffect(() => {
         fetchPlaylists()
-    },[id])
+    },[id,deleted])
     return (
         <div className="w-full h-[90%] rounded-lg text-white flex flex-grow">
           <div className="flex flex-col w-full p-[8px] overflow-auto scrollbar-hide max-h-[95%] rounded-lg">

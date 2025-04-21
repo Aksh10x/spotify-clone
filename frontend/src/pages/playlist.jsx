@@ -1,14 +1,15 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
-import { useEffect, useRef, useState } from "react";
-import { AuthenticatedGETReq } from "../utils/server.helpers";
+import { useContext, useEffect, useRef, useState } from "react";
+import { AuthenticatedDELETEReq, AuthenticatedGETReq } from "../utils/server.helpers";
 import { PiMusicNotesSimple } from "react-icons/pi";
 import { IoIosPlay} from "react-icons/io";
 import { BsThreeDots } from "react-icons/bs";
 import HorizontalCard from "../components/songHorizontalCard";
 import { WiTime3 } from "react-icons/wi";
 import { LuCircleMinus } from "react-icons/lu";
+import { PlaylistContext } from "../utils/playlistContext";
 
 const Playlist = () => {
     const {playlistId} = useParams()
@@ -19,6 +20,9 @@ const Playlist = () => {
     const [songs, setSongs] = useState([])
     const [deletePopUp, setDeletePopUp] = useState(false)
     const menuRef = useRef(null)
+    const navigate = useNavigate()
+
+    const {deleted, setDeleted} = useContext(PlaylistContext)
 
     const fetchData = async() => {
         const res = await AuthenticatedGETReq(`/playlist/get-playlist/${playlistId}`)
@@ -49,6 +53,15 @@ const Playlist = () => {
             document.removeEventListener("mousedown",handleMouseClick)
         }
     },[deletePopUp])
+
+    const deletePlaylist = async() => {
+        const res = await AuthenticatedDELETEReq(`/playlist/delete-playlist/${playlistId}`)
+
+        if(res.success){
+            setDeleted((prev) => !prev)
+            navigate("/home")
+        }
+    }
 
     useEffect(() => {
         fetchData()
@@ -96,9 +109,9 @@ const Playlist = () => {
                         <div className="text-4xl w-14 h-14 flex justify-center items-center bg-green-500 text-gray-950 rounded-full shadow-xl pl-1 hover:scale-105 transition-all cursor-pointer hover:bg-green-400"><IoIosPlay /></div>
                         <button onClick={() => setDeletePopUp((prev) => !prev)} className="text-white/60 relative text-2xl transition-all cursor-pointer group"><div className="group-hover:scale-105 group-hover:text-white"><BsThreeDots/></div>
                             {deletePopUp && 
-                            (<div ref={menuRef} className="absolute left-8 top-[-5px] bg-black min-w-[160px] rounded-md shadow-xl">
-                                <div className="w-full h-full bg-white/15 flex flex-col items-start px-2 py-2 rounded-md shadow-xl">
-                                    <button className="text-sm text-white flex"><div className="text-lg mr-1 flex items-center justify-center"><LuCircleMinus /></div> Delete Playlist</button>
+                            (<div ref={menuRef} className="absolute left-8 top-[-5px] bg-black min-w-[160px] rounded-sm shadow-xl">
+                                <div className="w-full h-full bg-white/15 flex flex-col items-start rounded-sm shadow-xl">
+                                    <button onClick={deletePlaylist} className="text-sm text-white flex rounded-xs hover:bg-white/5 transition-all w-full p-2"><div className="text-lg mr-1 flex items-center justify-center"><LuCircleMinus /></div> Delete Playlist</button>
                                 </div>
                             </div>
                             )}

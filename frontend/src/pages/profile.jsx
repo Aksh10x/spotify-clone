@@ -267,7 +267,7 @@ const Profile = () => {
 
 
         {(popup && !isArtist && !editProfile) &&
-            <div className="bg-black w-full h-screen bg-opacity-40 backdrop-blur-md absolute top-0 flex justify-center items-center">
+            <div className="bg-black w-full min-h-screen bg-opacity-40 backdrop-blur-md absolute top-0 flex justify-center items-center">
                 <div className="bg-black w-[40%] h-[60%] min-h-[350px] min-w-[600px] max-w-[800px] rounded-xl">
                     <div className="w-full h-full bg-white bg-opacity-10 rounded-xl flex flex-col p-8 gap-4">
                         <div className="text-white font-semibold text-3xl flex justify-between items-start">Profile details
@@ -330,7 +330,7 @@ const Profile = () => {
         }
 
         {(popup && isArtist && !editProfile) &&
-            <div className="bg-black w-full h-screen bg-opacity-40 backdrop-blur-md absolute top-0 flex justify-center items-center">
+            <div className="bg-black w-full min-h-screen bg-opacity-40 backdrop-blur-md absolute top-0 flex justify-center items-center">
                 <div className="bg-black w-[40%] h-[50%] min-h-[330px] min-w-[600px] max-w-[800px] rounded-xl max-h-[350px]">
                     <div className="w-full h-full bg-white bg-opacity-10 rounded-xl flex flex-col p-8 gap-4">
                         <div className="text-white font-semibold text-3xl flex justify-between items-start">Delete your artist profile?
@@ -354,7 +354,7 @@ const Profile = () => {
         }
 
         {(popup && editProfile) &&
-            <div className="bg-black w-full h-screen bg-opacity-40 backdrop-blur-md absolute top-0 flex justify-center items-center">
+            <div className="bg-black w-full min-h-screen bg-opacity-40 backdrop-blur-md absolute top-0 flex justify-center items-center">
                 <div className="bg-black w-[40%] h-[60%] min-h-[350px] min-w-[600px] max-w-[800px] rounded-xl">
                     <div className="w-full h-full bg-white bg-opacity-10 rounded-xl flex flex-col p-8 gap-4">
                         <div className="text-white font-semibold text-3xl flex justify-between items-start">Profile details
@@ -424,8 +424,8 @@ const Profile = () => {
 
 
         {newPlaylist && 
-        <div className="bg-black w-full h-screen bg-opacity-40 backdrop-blur-md absolute top-0 flex justify-center items-center">
-            <div className="bg-black w-[40%] h-[60%] min-h-[450px] max-h-[500px] min-w-[600px] max-w-[800px] rounded-xl">
+        <div className="bg-black w-full min-h-screen bg-opacity-40 backdrop-blur-md absolute top-0 flex justify-center items-center">
+            <div className="bg-black w-[40%] h-[60%]  max-h-[500px] min-w-[600px] max-w-[800px] rounded-xl">
                 <div className="w-full h-full bg-white bg-opacity-10 rounded-xl flex flex-col p-8 gap-4">
                     <div className="text-white font-semibold text-3xl flex justify-between items-start">Playlist details
                     <button onClick={() => {setNewPlaylist(false)

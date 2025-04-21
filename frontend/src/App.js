@@ -11,6 +11,7 @@ import Playback from "./components/playback";
 import Playlist from "./pages/playlist";
 import Sidebar from "./components/sidebar";
 import Navbar from "./components/navbar";
+import { PlaylistProvider } from "./utils/playlistContext";
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
   return (
     <div className="App font-poppins bg-black h-screen w-full overflow-hidden scrollbar-hide">
       <SongProvider>
+      <PlaylistProvider>
         
       <Router>
         <NavProvider/>
@@ -51,6 +53,7 @@ function App() {
         </>
         }
       </Router>
+      </PlaylistProvider>  
       </SongProvider>
     </div>
   );
