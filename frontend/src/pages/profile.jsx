@@ -250,7 +250,7 @@ const Profile = () => {
                                     setNewPlaylist(true)
                                 }}
                                 >
-                                    <div className="h-[70%] w-full rounded-lg shadow-xl bg-gradient-to-br from-purple-500 via-purple-400 to-white flex justify-center items-center text-6xl"> 
+                                    <div className="h-[70%] w-full min-h-[170px] rounded-lg shadow-xl bg-gradient-to-br from-purple-500 via-purple-400 to-white flex justify-center items-center text-6xl"> 
                                         <BiPlus/>
                                     </div>
                                     <div className="text-white text-lg mt-2">New Playlist</div>

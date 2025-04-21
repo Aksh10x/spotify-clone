@@ -72,11 +72,11 @@ const Playlist = () => {
                 <div className="w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg flex gap-2 flex-col overflow-y-auto custom-scrollbar">
 
                     {/*playlist details */}
-                    <div className="w-full bg-gradient-to-b rounded-t-lg from-white/40 to-white/10 min-h-[200px] max-h-[300px] px-5 pb-3 pt-6 flex justify-end flex-col">
+                    <div className="w-full bg-gradient-to-b rounded-t-lg from-white/40 to-white/10 min-h-[200px]  px-5 pb-3 pt-6 flex justify-end flex-col">
                     
                         <div className="w-full flex pb-2">
                             
-                            
+                            <div className="h-full flex items-center">
                             {thumbnail ? 
                                 <div className="h-36 w-36 bg-pink-300 rounded-md shadow-xl flex justify-center items-center text-5xl font-semibold">
                                     <img src={thumbnail} className="h-full w-36 rounded-md"/>
@@ -86,12 +86,15 @@ const Playlist = () => {
                                     <PiMusicNotesSimple />
                                 </div>
                             }
+                            </div>
 
 
                             
                             <div className="px-8 flex flex-col justify-start gap-2 max-w-[calc(100%-200px)]">
                                 <div className="text-white text-sm">Playlist</div>
-                                <div className="font-bold text-white flex gap-3 justify-center mr-auto text-4xl break-words text-ellipsis">{name}</div>
+                                <div className="text-white font-bold text-4xl max-w-full overflow-hidden break-all">
+                                {name}
+                                </div>
                                 <div className="text-white text-opacity-40 text-sm">{description}</div>
                                 <div className="flex gap-1 items-center">
                                     <p className="text-white text-xs font-semibold">Akshath Surwase</p>

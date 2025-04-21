@@ -8,6 +8,7 @@ const Library = () => {
 
     const [playlists, setPlaylists] = useState([])
     const [id,setId] = useState("")
+    const [loading, setLoading] = useState(true);
 
     const {deleted, setDeleted} = useContext(PlaylistContext)
 
@@ -17,10 +18,14 @@ const Library = () => {
     }
 
     const fetchPlaylists = async() => {
+        setLoading(true)
         const res = await AuthenticatedGETReq(`/playlist/user-playlists/${id}`)
         console.log(res)
         if(res.success){
             const plists = res.data
+            if(plists.length == 0){
+              setLoading(false)
+            }
             setPlaylists(plists)
         }else{
             setPlaylists([])
@@ -55,7 +60,7 @@ const Library = () => {
                     </div>
                   )}
                   <div className="flex flex-col justify-center items-start max-w-full w-full">
-                    <div className="text-white md:text-[9px] lg:text-sm truncate overflow-hidden text-ellipsis md:max-w-[120px]">
+                    <div className="text-white md:text-[9px] lg:text-sm truncate overflow-hidden text-ellipsis md:max-w-[60%]">
                       {playlist.name}
                     </div>
                     <div className="text-white/60 lg:text-xs md:text-[7px] md:-mt-1 xl:mt-1">{playlist.owner}</div>
@@ -63,7 +68,8 @@ const Library = () => {
                 </Link>
               ))
             ) : (
-              <>
+              loading ? 
+                (<>
                 {[...Array(8)].map((_, index) => (
                   <div
                     key={index}
@@ -76,7 +82,11 @@ const Library = () => {
                     </div>
                   </div>
                 ))}
-              </>
+              </>) :
+              <div className="w-full text-sm font-semibold flex justify-center items-center py-4">
+                Your library is empty...
+              </div>
+              
             )}
           </div>
         </div>
