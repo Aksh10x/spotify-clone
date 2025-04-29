@@ -8,6 +8,7 @@ import { CgClose } from "react-icons/cg";
 import { PiMusicNotesSimple } from "react-icons/pi";
 import { LuLoaderCircle } from "react-icons/lu";
 import { useLocation, useNavigate } from "react-router-dom";
+import { FiBarChart2 } from "react-icons/fi";
 
 
 const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecondName,trackUrl,queueGiven}) => {
@@ -27,6 +28,7 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
 
 
     const {
+        playingId, setPlayingId,
         songName, setSongName,
         songThumbnail, setSongThumbnail,
         songTrack,setSongTrack,
@@ -55,6 +57,7 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
     }, [trackUrl]);
 
     const playSong = (name,thumbnail,trackUrl,artistFirstName,artistSecondName) => {
+        setPlayingId(songId)
         setSongName(name)
         setSongThumbnail(thumbnail)
         setSongTrack(trackUrl)
@@ -156,14 +159,14 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
         <>
         <div className="w-full text-white flex h-[60px] hover:bg-white/10 rounded-md items-center p-2 cursor-pointer mt-1 group">
             <div className="w-[5%] text-center text-white/60 group-hover:text-white relative">
-                <div className="group-hover:hidden text-sm">{index +1}</div>
+                <div className={`group-hover:hidden text-sm flex justify-center items-center ${songId == playingId ? "text-green-500 text-xl" : "text-white/60"}`}>{songId == playingId ? <FiBarChart2 /> : index +1 }</div>
                 <button className="group-hover:block hidden hover:flex justify-center items-center text-2xl absolute h-full -top-3 left-3"
                 onClick={() => playSong(name,thumbnail,trackUrl,artistFirstName,artistSecondName)}
                 ><IoIosPlay /></button>
             </div>
             <img src={thumbnail} className="w-10 h-10 rounded-sm"/>
             <div className="flex flex-col ml-4 flex-grow">
-                <p className="text-white text-sm">{name}</p>    
+                <p className={` text-sm ${songId == playingId ? "text-green-500" : "text-white"}`}>{name}</p>    
             </div>
             <p className="text-white/60 hover:underline text-sm w-[25%] group-hover:text-white">{artistFirstName + " " + artistSecondName}</p>
             <p className="text-white/60 text-sm w-[10%] text-center group-hover:text-white">{duration}</p>

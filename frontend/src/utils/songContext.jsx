@@ -6,6 +6,8 @@ export const SongProvider = ({children}) => {
 
     const [searchQuery, setSearchQuery] = useState("")
 
+    const [playingId, setPlayingId] = useState("")
+
     const [songName, setSongName] = useState("")
 
     const [songThumbnail, setSongThumbnail] = useState("")
@@ -22,6 +24,7 @@ export const SongProvider = ({children}) => {
 
     return (
         <SongContext.Provider value={{
+            playingId, setPlayingId,
             searchQuery, setSearchQuery,
             songName, setSongName,
             songThumbnail, setSongThumbnail,

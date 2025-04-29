@@ -7,6 +7,7 @@ import { FaBackwardStep, FaForwardStep } from "react-icons/fa6";
 
 const Playback = () => {
     const {
+        playingId, setPlayingId,
         songName, setSongName,
         songThumbnail, setSongThumbnail,
         songTrack, setSongTrack,
@@ -43,6 +44,7 @@ const Playback = () => {
         setSoundPlayed(sound);
         sound.play();
         setIsPlaying(true);
+
     };
 
     useEffect(() => {
@@ -56,6 +58,7 @@ const Playback = () => {
             const nextSong = queue[currentIndex+1];
 
             if(nextSong){
+                setPlayingId(nextSong._id);
                 setSongName(nextSong.name);
                 setSongThumbnail(nextSong.thumbnail);
                 setSongTrack(nextSong.track);
@@ -70,6 +73,7 @@ const Playback = () => {
             const prevSong = queue[currentIndex-1];
 
             if(prevSong){
+                setPlayingId(prevSong._id);
                 setSongName(prevSong.name);
                 setSongThumbnail(prevSong.thumbnail);
                 setSongTrack(prevSong.track);
