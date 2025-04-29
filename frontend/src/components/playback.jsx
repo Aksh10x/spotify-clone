@@ -83,7 +83,7 @@ const Playback = () => {
         <div className="h-[70px] bg-black w-full absolute bottom-0 text-white max-h-[14vh] px-4 pb-4 flex gap-3 mt-3">
             {songName ? 
             <div className="flex justify-start items-center gap-3 w-1/4">
-                <img src={songThumbnail} className="h-full rounded-md" alt="Song Thumbnail" />
+                <img src={songThumbnail} className="h-[57px] rounded-md min-w-[57px]" alt="Song Thumbnail" />
                 <div className="flex flex-col justify-center h-full">
                     <p className="text-sm hover:underline cursor-pointer">{songName}</p>
                     <p className="text-xs text-white/60 hover:text-white hover:underline cursor-pointer flex justify-center items-center">{artist}</p>
