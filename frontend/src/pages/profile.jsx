@@ -215,6 +215,7 @@ const Profile = () => {
                                         thumbnail={song.thumbnail}
                                         trackUrl={song.track}
                                         index={index}
+                                        queueGiven={[]}
                                         />
                                     ))
                                     :

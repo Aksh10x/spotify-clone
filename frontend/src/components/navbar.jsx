@@ -73,7 +73,7 @@ const Navbar = () => {
                     hover:scale-110 hover:text-white transition group-hover:text-white w-fit h-fit">
                         <IoIosSearch />
                     </button>
-                    <input onChange={(e) => setQuery(e.target.value)} className="w-[85%] px-12 bg-white bg-opacity-15 hover:bg-opacity-20 focus:bg-opacity-20  border-white border-opacity-25 rounded-full h-[100%] transition hover:border-white/30 hover:border-[0.7px] focus:outline-none focus:border-white focus:border-[1px]"
+                    <input onChange={(e) => setQuery(e.target.value)} className="w-[85%] px-12 bg-white bg-opacity-15 hover:bg-opacity-20 focus:bg-opacity-20  border-white border-opacity-25 rounded-full h-[100%] transition-all hover:border-white/30 hover:border-[0.7px] focus:outline-none focus:border-white focus:border-[2px]"
                     placeholder="What do you want to play?"
                     >
                     </input>

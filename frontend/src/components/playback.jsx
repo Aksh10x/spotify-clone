@@ -3,6 +3,7 @@ import { SongContext } from "../utils/songContext";
 import { IoIosPlayCircle } from "react-icons/io";
 import { Howl } from "howler";
 import { RiPauseCircleFill } from "react-icons/ri";
+import { FaBackwardStep, FaForwardStep } from "react-icons/fa6";
 
 const Playback = () => {
     const {
@@ -11,6 +12,8 @@ const Playback = () => {
         songTrack, setSongTrack,
         isPlaying, setIsPlaying,
         artist, setArtist,
+        queue, setQueue,
+        currentIndex, setCurrentIndex
     } = useContext(SongContext);
 
     const [soundPlayed, setSoundPlayed] = useState(null);
@@ -48,6 +51,34 @@ const Playback = () => {
         }
     }, [songTrack]);
 
+    const playNextSong = () => {
+        if(queue.length > 0 && currentIndex < queue.length - 1){
+            const nextSong = queue[currentIndex+1];
+
+            if(nextSong){
+                setSongName(nextSong.name);
+                setSongThumbnail(nextSong.thumbnail);
+                setSongTrack(nextSong.track);
+                setArtist(nextSong.artistFirstName + " " + nextSong.artistSecondName);
+                setCurrentIndex(currentIndex + 1);
+            }
+        }
+    }
+
+    const playPrevSong = () => {
+        if(queue.length > 0 && currentIndex > 0){
+            const prevSong = queue[currentIndex-1];
+
+            if(prevSong){
+                setSongName(prevSong.name);
+                setSongThumbnail(prevSong.thumbnail);
+                setSongTrack(prevSong.track);
+                setArtist(prevSong.artistFirstName + " " + prevSong.artistSecondName);
+                setCurrentIndex(currentIndex - 1);
+            }
+        }
+    }
+
     return (
         <div className="h-[70px] bg-black w-full absolute bottom-0 text-white max-h-[14vh] px-4 pb-4 flex gap-3 mt-3">
             {songName ? 
@@ -68,10 +99,12 @@ const Playback = () => {
             </div>
             }
 
-            <div className="w-1/2 h-full justify-center items-center flex">
+            <div className="w-1/2 h-full justify-center gap-2 items-center flex">
+                <button onClick={playPrevSong} className="text-2xl text-white/40"><FaBackwardStep /></button>
                 <button onClick={togglePlayback} className="text-5xl">
                     {isPlaying ? <RiPauseCircleFill /> : <IoIosPlayCircle />}
                 </button>
+                <button onClick={playNextSong} className="text-2xl text-white/40"><FaForwardStep /></button>
             </div>
 
             <div className="w-1/4 h-full"></div>

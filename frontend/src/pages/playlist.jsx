@@ -12,6 +12,7 @@ import { LuCircleMinus } from "react-icons/lu";
 import { PlaylistContext } from "../utils/playlistContext";
 import { SearchContext } from "../utils/searchContext";
 import { SearchPage } from "../components/search_Page";
+import { SongContext } from "../utils/songContext";
 
 const Playlist = () => {
     const {playlistId} = useParams()
@@ -24,6 +25,7 @@ const Playlist = () => {
     const menuRef = useRef(null)
     const navigate = useNavigate()
     const {inSearch, setInSearch} = useContext(SearchContext)
+    const {queue, setQueue} = useContext(SongContext)
 
     const {deleted, setDeleted} = useContext(PlaylistContext)
 
@@ -150,6 +152,7 @@ const Playlist = () => {
                                     thumbnail={song.thumbnail}
                                     trackUrl={song.track}
                                     index={index}
+                                    queueGiven={songs}
                                     />
                                 ))
                                 :

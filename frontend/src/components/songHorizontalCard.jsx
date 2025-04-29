@@ -10,7 +10,7 @@ import { LuLoaderCircle } from "react-icons/lu";
 import { useLocation, useNavigate } from "react-router-dom";
 
 
-const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecondName,trackUrl}) => {
+const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecondName,trackUrl,queueGiven}) => {
 
     const [duration, setDuration] = useState("");
     const [addSong,setAddSong] = useState(false);
@@ -24,12 +24,16 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
     const [songInPlaylist, setSongInPlaylist] = useState([])
     const location = useLocation()
 
+
+
     const {
         songName, setSongName,
         songThumbnail, setSongThumbnail,
         songTrack,setSongTrack,
         isPlaying, setIsPlaying,
         artist, setArtist,
+        queue, setQueue,
+        currentIndex, setCurrentIndex,
     } = useContext(SongContext)
 
     const fetchDuration = async () => {
@@ -55,6 +59,13 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
         setSongThumbnail(thumbnail)
         setSongTrack(trackUrl)
         setArtist(artistFirstName + " " + artistSecondName)
+        if(queueGiven && queueGiven.length > 0){
+            setQueue(queueGiven)
+            setCurrentIndex(index)
+
+            console.log("queue given is", queueGiven)
+            console.log("current index is", index)
+        }
 
     }
 
