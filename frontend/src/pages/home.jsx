@@ -4,15 +4,18 @@ import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
 import PlaylistCard from "../components/PlaylistCard";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthenticatedGETReq } from "../utils/server.helpers";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { SearchContext, SearchProvider } from "../utils/searchContext";
+import { SearchPage } from "../components/search_Page";
 
 const Home = () => {
 
     const [cookie] = useCookies(["token"])
     const navigate = useNavigate()
     const [artists, setArtists] = useState([])
+    const {inSearch,setInSearch,searchData,setSearchData} = useContext(SearchContext)
 
     useEffect(() => {
         if(!cookie.token){
@@ -30,6 +33,10 @@ const Home = () => {
         }
     }
 
+    useEffect(() => {
+        if(searchData.length==0){setInSearch(false)}
+    },[searchData])
+
 
 
 
@@ -40,7 +47,12 @@ const Home = () => {
                 
                 <div className="w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg p-6 flex gap-2 flex-col overflow-auto custom-scrollbar">
 
-                    <div className="space-y-3 h-fit overflow-scroll scrollbar-hide flex-nowrap min-h-fit">
+                    {
+                        inSearch ? 
+                        <div className=""><SearchPage/></div>
+                        :
+                        <>
+                        <div className="space-y-3 h-fit overflow-scroll scrollbar-hide flex-nowrap min-h-fit">
                         <div className="text-white font-semibold text-xl">Popular Artists</div>
                         <div className="seciton flex gap-2 h-fit overflow-x-auto scrollbar-hide shadow-inner">
                             {artists.length === 0 ?
@@ -53,55 +65,57 @@ const Home = () => {
                                 ))
                             }
                         </div>
-                    </div>
-
-                    <div className="space-y-3 h-fit overflow-scroll scrollbar-hide flex-nowrap min-h-fit">
-                        <div className="text-white font-semibold text-xl">Popular Artists</div>
-                        <div className="seciton flex gap-2 h-fit overflow-x-auto scrollbar-hide shadow-inner">
-                            <ArtistCard/>
-                            <ArtistCard/>
-                            <ArtistCard/>
-                            <ArtistCard/>
-                            <ArtistCard/>
-                            <ArtistCard/>
-                            <ArtistCard/>
-                            <ArtistCard/>
-                            <ArtistCard/>
-                            <ArtistCard/>
-                            <ArtistCard/>
                         </div>
-                    </div>
 
-                    <div className="space-y-3 h-fit overflow-scroll scrollbar-hide flex-nowrap min-h-fit">
-                        <div className="text-white font-semibold text-xl">Popular Artists</div>
-                        <div className="seciton flex gap-2 h-fit overflow-x-auto scrollbar-hide shadow-inner">
-                            <ArtistCard/>
-                            <ArtistCard/>
-                            <ArtistCard/>
-                            <ArtistCard/>
-                            <ArtistCard/>
-                            <ArtistCard/>
-                            <ArtistCard/>
-                            <ArtistCard/>
-                            <ArtistCard/>
-                            <ArtistCard/>
-                            <ArtistCard/>
+                        <div className="space-y-3 h-fit overflow-scroll scrollbar-hide flex-nowrap min-h-fit">
+                            <div className="text-white font-semibold text-xl">Popular Artists</div>
+                            <div className="seciton flex gap-2 h-fit overflow-x-auto scrollbar-hide shadow-inner">
+                                <ArtistCard/>
+                                <ArtistCard/>
+                                <ArtistCard/>
+                                <ArtistCard/>
+                                <ArtistCard/>
+                                <ArtistCard/>
+                                <ArtistCard/>
+                                <ArtistCard/>
+                                <ArtistCard/>
+                                <ArtistCard/>
+                                <ArtistCard/>
+                            </div>
                         </div>
+
+                        <div className="space-y-3 h-fit overflow-scroll scrollbar-hide flex-nowrap min-h-fit">
+                            <div className="text-white font-semibold text-xl">Popular Artists</div>
+                            <div className="seciton flex gap-2 h-fit overflow-x-auto scrollbar-hide shadow-inner">
+                                <ArtistCard/>
+                                <ArtistCard/>
+                                <ArtistCard/>
+                                <ArtistCard/>
+                                <ArtistCard/>
+                                <ArtistCard/>
+                                <ArtistCard/>
+                                <ArtistCard/>
+                                <ArtistCard/>
+                                <ArtistCard/>
+                                <ArtistCard/>
+                            </div>
+                            
+                        </div>
+
                         
-                    </div>
-
-                    
-                    <div className="w-full h-[0.6px] bg-white/20 flex-shrink-0 rounded mt-8"></div>
-                    <div className="flex justify-center items-center pt-6 pb-4 gap-2">
-                        <div className="text-white/60 text-md">Made by Aksh10x</div>
-                        <a target="_blank" 
-                        rel="noopener noreferrer" 
-                        href="https://github.com/Aksh10x" className="text-white text-2xl flex items-center"><FaGithub /></a>
-                        <a target="_blank" 
-                        rel="noopener noreferrer" 
-                        href="https://www.linkedin.com/in/akshath-surwase-867842274/"
-                        className="text-white text-2xl flex items-center"><FaLinkedin /></a>
-                    </div>
+                        <div className="w-full h-[0.6px] bg-white/20 flex-shrink-0 rounded mt-8"></div>
+                        <div className="flex justify-center items-center pt-6 pb-4 gap-2">
+                            <div className="text-white/60 text-base">Made by Aksh10x</div>
+                            <a target="_blank" 
+                            rel="noopener noreferrer" 
+                            href="https://github.com/Aksh10x" className="text-white text-2xl flex items-center"><FaGithub /></a>
+                            <a target="_blank" 
+                            rel="noopener noreferrer" 
+                            href="https://www.linkedin.com/in/akshath-surwase-867842274/"
+                            className="text-white text-2xl flex items-center"><FaLinkedin /></a>
+                        </div> 
+                    </>
+                    }
                 </div>
                 
             </div>

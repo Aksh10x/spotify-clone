@@ -145,7 +145,7 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
         <>
         <div className="w-full text-white flex h-[60px] hover:bg-white/10 rounded-md items-center p-2 cursor-pointer mt-1 group">
             <div className="w-[5%] text-center text-white/60 group-hover:text-white relative">
-                <div className="group-hover:hidden">{index +1}</div>
+                <div className="group-hover:hidden text-sm">{index +1}</div>
                 <button className="group-hover:block hidden hover:flex justify-center items-center text-2xl absolute h-full -top-3 left-3"
                 onClick={() => playSong(name,thumbnail,trackUrl,artistFirstName,artistSecondName)}
                 ><IoIosPlay /></button>

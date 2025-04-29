@@ -255,11 +255,97 @@ const getRandomArtists= asyncErrorHandler(async(req,res)=>{
                 secondName: 1,
                 avatar: 1
             }
-        }
+        }    
     ])
 
     return res.status(200).json(
         new ApiResponse(200,artists,"Random artists fetched successfully")
+    )
+})
+
+const Search = asyncErrorHandler(async(req,res) => {
+
+    const query = req.query.q 
+    const currentUser = req.user
+
+    const userExists = await User.findById(currentUser._id)
+
+    if(!userExists){
+        throw new ApiError(404, "Unauthorized access")
+    }
+
+    if(query.trim()===""){
+        throw new ApiError(400,"Search query is a required field")
+    }
+
+    const searchedArtists = await User.aggregate([
+        {$match: {
+            isArtist: true,
+            $or: [
+                {username: {$regex: query, $options: "i"}},
+                {firstName: {$regex: query, $options: "i"}},
+                {secondName: {$regex: query, $options: "i"}}
+            ]
+        }},
+        { $project: {
+            _id:1,
+            firstName: 1,
+            secondName: 1,
+            avatar: 1,
+        }},
+        {$limit : 4
+        }
+    ])
+
+    const searchedProfiles = await User.aggregate([
+        {$match: {
+            isArtist: false,
+            $or: [
+                {username: {$regex: query, $options: "i"}},
+                {firstName: {$regex: query, $options: "i"}},
+                {secondName: {$regex: query, $options: "i"}}
+            ]
+        }},
+        { $project: {
+            _id:1,
+            firstName: 1,
+            secondName: 1,
+            avatar: 1,
+        }},
+        {$limit : 4
+        }
+    ])
+
+    const searchedSongs = await Song.aggregate([
+        { $match: {
+            name: {$regex: query, $options: "i"}
+        }},
+        {$lookup:{
+            from: "users",
+            localField: "artist",
+            foreignField: "_id",
+            as: "owner"
+        }},
+        {$unwind: "$owner"},
+        {$addFields: {
+            artistFirstName: "$owner.firstName",
+            artistSecondName: "$owner.secondName"
+        }},
+        {$project: {
+            _id: 1,
+            name: 1,
+            thumbnail: 1,
+            track: 1,
+            artistFirstName: 1,
+            artistSecondName: 1
+        }},
+        {$limit : 4
+        }
+    ])
+
+    return res.status(200).json(
+        new ApiResponse(200,{searchedArtists, searchedProfiles, searchedSongs},"Search results fetched successfully")
+
     )
 })
 
@@ -271,5 +357,6 @@ export {
     ToggleArtist,
     becomeArtist,
     editUserDetails,
-    getRandomArtists
+    getRandomArtists,
+    Search
 }

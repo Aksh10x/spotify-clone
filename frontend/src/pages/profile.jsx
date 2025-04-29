@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
 import { AuthenticatedGETReq, AuthenticatedPATCHReq, AuthenticatedPOSTFormReq, getAudioDurationFromURL } from "../utils/server.helpers.js";
@@ -10,6 +10,8 @@ import { CgClose } from "react-icons/cg";
 import HorizontalCard from "../components/songHorizontalCard.jsx";
 import { BiPlus } from "react-icons/bi";
 import PlaylistCard from "../components/PlaylistCard.jsx";
+import { SearchContext } from "../utils/searchContext.jsx";
+import { SearchPage } from "../components/search_Page.jsx";
 
 const Profile = () => {
 
@@ -35,6 +37,7 @@ const Profile = () => {
     const [playlistName, setPlaylistName] = useState("My Playlist")
     const [playlistDesc, setPlaylistDesc] = useState("")
     const [loading, setLoading] = useState(false)
+    const {inSearch,setInSearch,searchData,setSearchData} = useContext(SearchContext)
 
     async function DataFetch(){
         const res = await AuthenticatedGETReq("/user/get-user")
@@ -168,97 +171,104 @@ const Profile = () => {
             <div className="w-full h-[calc(100vh-68px)] max-w-[2000px] rounded-lg text-black bg-black relative pt-0 flex gap-2">
                 
                 <div className="w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg flex gap-2 flex-col overflow-y-auto custom-scrollbar justify-evenly">
-                    <div className="w-full bg-gradient-to-b from-white/25 to-white/5 min-h-[280px] px-6 py-3 flex justify-end flex-col">
-                        <div className="w-full flex pb-4 ">
-                            {avatar ? 
-                            <img src={avatar} className="h-32 w-32 rounded-full shadow-xl flex justify-center items-center bg-cover"/>
-                            :
-                            <div className="h-32 w-32 rounded-full bg-pink-300 shadow-xl flex justify-center items-center text-5xl font-semibold">
-                            {logo}
-                            </div>}
-                            <div className="px-8 flex flex-col justify-start">
-                                <div className="text-white">Profile</div>
-                                <div className="text-4xl font-bold text-white flex gap-3 justify-center mr-auto">{firstName + " " + secondName}
-                                    <button className="text-white text-2xl  text-opacity-40 hover:text-opacity-100 transition-all group relative" onClick={() => {setPopup(true)
-                                        setEditProfile(true)
-                                    }}><BsThreeDots />
-                                    <div className="opacity-0 group-hover:opacity-100 text-sm absolute top-0 left-8 w-[100px] transition-all bg-black bg-opacity-35 rounded-sm py-1 font-light">Edit Profile</div>
-                                    </button>
-                                </div>
-                                <div className="text-white text-opacity-35 font-semibold text-sm">@{username}</div>
-                                <button className="mr-auto mt-4 text-black font-semibold bg-white px-4 py-3 rounded-full hover:bg-opacity-90 transition-all hover:scale-105"
-                                onClick={() => {setPopup(true)}}
-                                >{isArtist ? <p>Delete Artist</p> : <p>Become an Artist</p>}</button>
-                            </div>
-                        </div>
-                    </div>
-                    {isArtist && 
-                        <div className="p-6 ">
-                            <div className="text-white font-semibold text-2xl">Your Songs</div>
-                            <div className="text-sm font-normal text-opacity-60 text-white mb-2">Visible to everybody</div>
-                            <div className="flex flex-col w-full max-h-[200px] overflow-y-scroll scrollbar-hide">
-                            {songs && songs.length > 0 ? 
-                                songs?.map((song, index) => (
-                                    <HorizontalCard
-                                    songId={song._id} 
-                                    name={song.name} 
-                                    artistFirstName={song.artistFirstName}
-                                    artistSecondName={song.artistSecondName}
-                                    thumbnail={song.thumbnail}
-                                    trackUrl={song.track}
-                                    index={index}
-                                    />
-                                ))
+                    {
+                        inSearch ? 
+                        <div className="p-6"><SearchPage/></div>
+                        :
+                        <>
+                        <div className="w-full bg-gradient-to-b from-white/25 to-white/5 min-h-[280px] px-6 py-3 flex justify-end flex-col">
+                            <div className="w-full flex pb-4 ">
+                                {avatar ? 
+                                <img src={avatar} className="h-32 w-32 rounded-full shadow-xl flex justify-center items-center bg-cover"/>
                                 :
-                                <div className="text-sm text-white text-opacity-60">Upload your first song!</div>
-                            }
-                            </div>
-                            <div className="mt-6">
-                                <Link className="mr-auto text-black font-semibold bg-white px-4 py-3 rounded-full hover:bg-opacity-90 transition-all hover:scale-105"
-                                to={"/uploadSong"}
-                                >
-                                    Upload a song
-                                </Link>
+                                <div className="h-32 w-32 rounded-full bg-pink-300 shadow-xl flex justify-center items-center text-5xl font-semibold">
+                                {logo}
+                                </div>}
+                                <div className="px-8 flex flex-col justify-start">
+                                    <div className="text-white">Profile</div>
+                                    <div className="text-4xl font-bold text-white flex gap-3 justify-center mr-auto">{firstName + " " + secondName}
+                                        <button className="text-white text-2xl  text-opacity-40 hover:text-opacity-100 transition-all group relative" onClick={() => {setPopup(true)
+                                            setEditProfile(true)
+                                        }}><BsThreeDots />
+                                        <div className="opacity-0 group-hover:opacity-100 text-sm absolute top-0 left-8 w-[100px] transition-all bg-black bg-opacity-35 rounded-sm py-1 font-light">Edit Profile</div>
+                                        </button>
+                                    </div>
+                                    <div className="text-white text-opacity-35 font-semibold text-sm">@{username}</div>
+                                    <button className="mr-auto mt-4 text-black font-semibold bg-white px-4 py-3 rounded-full hover:bg-opacity-90 transition-all hover:scale-105"
+                                    onClick={() => {setPopup(true)}}
+                                    >{isArtist ? <p>Delete Artist</p> : <p>Become an Artist</p>}</button>
+                                </div>
                             </div>
                         </div>
-                    }
+                        {isArtist && 
+                            <div className="p-6 ">
+                                <div className="text-white font-semibold text-2xl">Your Songs</div>
+                                <div className="text-sm font-normal text-opacity-60 text-white mb-2">Visible to everybody</div>
+                                <div className="flex flex-col w-full max-h-[200px] overflow-y-scroll scrollbar-hide">
+                                {songs && songs.length > 0 ? 
+                                    songs?.map((song, index) => (
+                                        <HorizontalCard
+                                        songId={song._id} 
+                                        name={song.name} 
+                                        artistFirstName={song.artistFirstName}
+                                        artistSecondName={song.artistSecondName}
+                                        thumbnail={song.thumbnail}
+                                        trackUrl={song.track}
+                                        index={index}
+                                        />
+                                    ))
+                                    :
+                                    <div className="text-sm text-white text-opacity-60">Upload your first song!</div>
+                                }
+                                </div>
+                                <div className="mt-6">
+                                    <Link className="mr-auto text-black font-semibold bg-white px-4 py-3 rounded-full hover:bg-opacity-90 transition-all hover:scale-105"
+                                    to={"/uploadSong"}
+                                    >
+                                        Upload a song
+                                    </Link>
+                                </div>
+                            </div>
+                        }
 
-                    <div className="text-white p-6 text-2xl w-full min-h-[350px]">
-                        <div className="font-semibold">Public Playlists</div>
-                        <div className="text-sm font-normal text-opacity-60 text-white">Visible to everybody</div>
-                        <div className="h-fit flex mt-3 overflow-x-scroll scrollbar-hide">
-                            {playlists && playlists.length > 0 ? 
-                                <>
-                                <div className="min-w-[190px] min-h-[200px] relative p-3 hover:bg-white/10 rounded-lg transition-all cursor-pointer group"
-                                onClick={() => {
-                                    setNewPlaylist(true)
-                                }}
-                                >
-                                    <div className="h-[165px] w-full rounded-lg shadow-xl bg-gradient-to-br from-purple-500 via-purple-400 to-white flex justify-center items-center text-6xl"> 
-                                        <BiPlus/>
-                                    </div>
-                                    <div className="text-white text-lg mt-2">New Playlist</div>
-                                    <div className="text-white text-opacity-25 font-semibold text-sm mt-1"></div>
-                                </div>   
-                                {playlists.map((playlist) => (  
-                                    <PlaylistCard image={playlist.thumbnail} name={playlist.name} owner={playlist.owner} id={playlist._id}/>
-                                ))}
-                                </>
-                            :
-                                <div className="min-w-[190px] h-[45%] relative p-3 hover:bg-white/10 rounded-lg transition-all cursor-pointer group"
-                                onClick={() => {
-                                    setNewPlaylist(true)
-                                }}
-                                >
-                                    <div className="h-[70%] w-full min-h-[170px] rounded-lg shadow-xl bg-gradient-to-br from-purple-500 via-purple-400 to-white flex justify-center items-center text-6xl"> 
-                                        <BiPlus/>
-                                    </div>
-                                    <div className="text-white text-lg mt-2">New Playlist</div>
-                                    <div className="text-white text-opacity-25 font-semibold text-sm mt-1"></div>
-                                </div>   
-                            }
+                        <div className="text-white p-6 text-2xl w-full min-h-[350px]">
+                            <div className="font-semibold">Public Playlists</div>
+                            <div className="text-sm font-normal text-opacity-60 text-white">Visible to everybody</div>
+                            <div className="h-fit flex mt-3 overflow-x-scroll scrollbar-hide">
+                                {playlists && playlists.length > 0 ? 
+                                    <>
+                                    <div className="min-w-[190px] min-h-[200px] relative p-3 hover:bg-white/10 rounded-lg transition-all cursor-pointer group"
+                                    onClick={() => {
+                                        setNewPlaylist(true)
+                                    }}
+                                    >
+                                        <div className="h-[165px] w-full rounded-lg shadow-xl bg-gradient-to-br from-purple-500 via-purple-400 to-white flex justify-center items-center text-6xl"> 
+                                            <BiPlus/>
+                                        </div>
+                                        <div className="text-white text-lg mt-2">New Playlist</div>
+                                        <div className="text-white text-opacity-25 font-semibold text-sm mt-1"></div>
+                                    </div>   
+                                    {playlists.map((playlist) => (  
+                                        <PlaylistCard image={playlist.thumbnail} name={playlist.name} owner={playlist.owner} id={playlist._id}/>
+                                    ))}
+                                    </>
+                                :
+                                    <div className="min-w-[190px] h-[45%] relative p-3 hover:bg-white/10 rounded-lg transition-all cursor-pointer group"
+                                    onClick={() => {
+                                        setNewPlaylist(true)
+                                    }}
+                                    >
+                                        <div className="h-[70%] w-full min-h-[170px] rounded-lg shadow-xl bg-gradient-to-br from-purple-500 via-purple-400 to-white flex justify-center items-center text-6xl"> 
+                                            <BiPlus/>
+                                        </div>
+                                        <div className="text-white text-lg mt-2">New Playlist</div>
+                                        <div className="text-white text-opacity-25 font-semibold text-sm mt-1"></div>
+                                    </div>   
+                                }
+                            </div>
                         </div>
-                    </div>
+                        </>
+                    }
 
                 </div>
             </div>

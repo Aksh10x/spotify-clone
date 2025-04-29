@@ -1,7 +1,7 @@
 import { FaCirclePlay } from "react-icons/fa6";
 import { AiOutlineUser } from "react-icons/ai";
 
-const ArtistCard = ({name,avatar}) => {
+const ProfileCard = ({name,avatar}) => {
     return (
         <div className="flex-shrink-0 w-[185px] h-[250px] relative p-6 bg-black bg-opacity-15 hover:bg-white rounded-lg hover:bg-opacity-15 transition-all cursor-pointer group">
             {
@@ -18,8 +18,7 @@ const ArtistCard = ({name,avatar}) => {
                     
                     </div>
                     <div className="text-white text-base mt-2">{name}</div>
-                    <div className="text-white text-opacity-25 text-sm mt-1">Artist</div>
-                    <div className="absolute right-4 top-[50%] text-green-500 bg-gray-950 text-5xl rounded-full shadow-xl text-opacity-0 group-hover:text-opacity-100 bg-opacity-0 group-hover:bg-opacity-100 transition-all"><FaCirclePlay /></div>
+                    <div className="text-white text-opacity-25 text-sm mt-1">Profile</div>
                 </>
                 :
                 <>
@@ -30,11 +29,10 @@ const ArtistCard = ({name,avatar}) => {
                     </div>
                     <div className="bg-white/40 animate-pulse w-[65%] h-[10px] mt-2 rounded-md"></div>
                     <div className="bg-white/25 w-[30%] h-[6px] mt-1 rounded-md"></div>
-                    <div className="absolute right-4 top-[50%] text-green-500 bg-gray-950 text-5xl rounded-full shadow-xl text-opacity-0 group-hover:text-opacity-100 bg-opacity-0 group-hover:bg-opacity-100 transition-all"><FaCirclePlay /></div>
                 </>
             }
         </div>
     );
 }
  
-export default ArtistCard;
+export default ProfileCard;

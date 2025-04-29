@@ -2,7 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { AuthenticatedGETReq } from "../utils/server.helpers";
 import { PiMusicNotesSimple } from "react-icons/pi";
 import { Link } from "react-router-dom";
-import { PlaylistContext } from "../utils/playlistContext";
+import { PlaylistContext } from "../utils/playlistContext"
+import { SearchContext } from "../utils/searchContext";
 
 const Library = () => {
 
@@ -11,6 +12,7 @@ const Library = () => {
     const [loading, setLoading] = useState(true);
 
     const {deleted, setDeleted} = useContext(PlaylistContext)
+    const {inSearch, setInSearch} = useContext(SearchContext)
 
     async function DataFetch(){
         const res = await AuthenticatedGETReq("/user/get-user")
@@ -45,6 +47,7 @@ const Library = () => {
             {playlists && playlists.length > 0 ? (
               playlists.map((playlist) => (
                 <Link
+                  onClick={() => setInSearch(false)}
                   to={`/playlist/${playlist._id}`}
                   key={playlist._id}
                   className="min-w-full flex-shrink xl:h-[75px] lg:h-[65px] rounded-md flex p-[8px] hover:bg-white/10 gap-2 cursor-pointer"
