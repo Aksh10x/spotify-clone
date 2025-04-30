@@ -293,8 +293,6 @@ const Search = asyncErrorHandler(async(req,res) => {
             secondName: 1,
             avatar: 1,
         }},
-        {$limit : 4
-        }
     ])
 
     const searchedProfiles = await User.aggregate([
@@ -312,8 +310,6 @@ const Search = asyncErrorHandler(async(req,res) => {
             secondName: 1,
             avatar: 1,
         }},
-        {$limit : 4
-        }
     ])
 
     const searchedSongs = await Song.aggregate([
@@ -339,8 +335,6 @@ const Search = asyncErrorHandler(async(req,res) => {
             artistFirstName: 1,
             artistSecondName: 1
         }},
-        {$limit : 4
-        }
     ])
 
     return res.status(200).json(

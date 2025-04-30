@@ -31,9 +31,9 @@ export const SearchPage = () => {
 
     return(
         <div className="w-full h-full text-5xl flex flex-col gap-2">
-            <div className="flex flex-col gap-2 w-full overflow-x-auto scrollbar-hide">
+            <div className="flex flex-col gap-2 w-full scrollbar-hide">
                 <div className="text-2xl font-semibold text-white">Songs</div>
-                <div className="flex flex-col w-full scrollbar-hide">
+                <div className="flex flex-col w-full max-h-[200px] overflow-y-auto custom-scrollbar">
                     {searchedSongs.length > 0 ? (
                         searchedSongs?.map((song,index) => (
                             <HorizontalCard 
@@ -55,7 +55,7 @@ export const SearchPage = () => {
                 </div>
             </div>
             <div className="flex flex-col gap-2 w-full overflow-x-auto scrollbar-hide">
-                <div className="text-2xl font-semibold text-white">Artists</div>
+                <div className="text-2xl font-semibold text-white overflow-x-auto scrollbar-hide">Artists</div>
                 <div className="flex w-full overflow-x-auto scrollbar-hide gap-2">
                     {searchedArtists.length > 0 ? (
                         searchedArtists?.map((artist,index) => (
