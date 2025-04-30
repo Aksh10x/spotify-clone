@@ -25,7 +25,16 @@ const Playlist = () => {
     const menuRef = useRef(null)
     const navigate = useNavigate()
     const {inSearch, setInSearch} = useContext(SearchContext)
-    const {queue, setQueue} = useContext(SongContext)
+    const {
+        playingId, setPlayingId,
+        songName, setSongName,
+        songThumbnail, setSongThumbnail,
+        songTrack,setSongTrack,
+        isPlaying, setIsPlaying,
+        artist, setArtist,
+        queue, setQueue,
+        currentIndex, setCurrentIndex,
+    } = useContext(SongContext)
 
     const {deleted, setDeleted} = useContext(PlaylistContext)
 
@@ -36,7 +45,7 @@ const Playlist = () => {
             setThumbnail(res.data?.[0].thumbnail)
             setName(res.data?.[0].name)
             setDescription(res.data?.[0].description)
-            setSongNumber(res.data?.[0].songs.length)
+            setSongNumber(res.data?.[0]?.songs.length)
             setSongs(res.data?.[0].songs)
         }else{
             alert("Error loading playlist.")
@@ -119,7 +128,16 @@ const Playlist = () => {
 
 
                         <div className="flex min-h-[80px] w-full items-center px-4 gap-6">
-                            <div className="text-4xl w-14 h-14 flex justify-center items-center bg-green-500 text-gray-950 rounded-full shadow-xl pl-1 hover:scale-105 transition-all cursor-pointer hover:bg-green-400"><IoIosPlay /></div>
+                            <button onClick={() => {if(songs.length > 0){
+                                setSongTrack(songs[0].track)
+                                setPlayingId(songs[0]._id)
+                                setSongName(songs[0].name)
+                                setSongThumbnail(songs[0].thumbnail)
+                                setArtist(songs[0].artistFirstName + " " + songs[0].artistSecondName)
+                                setIsPlaying(true)
+                                setQueue(songs)
+                                setCurrentIndex(0)
+                                }}} className="text-4xl w-14 h-14 flex justify-center items-center bg-green-500 text-gray-950 rounded-full shadow-xl pl-1 hover:scale-105 transition-all cursor-pointer hover:bg-green-400"><IoIosPlay /></button>
                             <button onClick={() => setDeletePopUp((prev) => !prev)} className="text-white/60 relative text-2xl transition-all cursor-pointer group"><div className="group-hover:scale-105 group-hover:text-white"><BsThreeDots/></div>
                                 {deletePopUp && 
                                 (<div ref={menuRef} className="absolute left-8 top-[-5px] bg-black min-w-[160px] rounded-sm shadow-xl">

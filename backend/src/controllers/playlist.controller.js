@@ -57,6 +57,18 @@ const createPlaylist = asyncErrorHandler(async(req,res) => {
 const getPlaylist = asyncErrorHandler(async(req,res) => {
     const {playlistId} = req.params
 
+    const playlistExists = await Playlist.findById(playlistId)
+
+    if(!playlistExists){
+        throw new ApiError(404,"Playlist does not exist, not found")
+    }
+
+    if(playlistExists.songs.length === 0){
+        return res.status(200).json(
+            new ApiResponse(200,[playlistExists],"Playlist fetched successfully")
+        )
+    }
+
     const playlist = await Playlist.aggregate([
         {
             $match: {
@@ -67,13 +79,17 @@ const getPlaylist = asyncErrorHandler(async(req,res) => {
             $project: {
                 name: 1,
                 songs: 1,
+                description: 1,
+                thumbnail: 1,
+                owner: 1,
             },
         },
         {
             $unwind: {
-                path: "$songs",
-                includeArrayIndex: "orderIndex", // Save the original index
-            },
+              path: "$songs",
+              includeArrayIndex: "orderIndex",
+              preserveNullAndEmptyArrays: true
+            }
         },
         {
             $lookup: {
@@ -115,6 +131,9 @@ const getPlaylist = asyncErrorHandler(async(req,res) => {
         {
             $group: {
                 _id: "$_id",
+                description: { $first: "$description" },
+                thumbnail: { $first: "$thumbnail" },
+                owner: { $first: "$owner" },
                 name: { $first: "$name" },
                 songs: {
                     $push: {

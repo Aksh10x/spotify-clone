@@ -34,6 +34,48 @@ code {
   background: rgba(255, 255, 255, 0.4);
 }
 
+.volumeBar{
+  --bar-bg: white;
+  --seek-before-width: 130px;
+  --seek-before-color: rgb(255, 255, 255);
+
+  appearance: none;
+  background: rgba(255, 255, 255, 0.4);
+  height: 5px;
+  border-radius: 4px;
+  width: 130px;
+  
+}
+
+.volumeBar::before{
+  content: "";
+  height:5px;
+  width: var(--seek-before-width);
+  background-color: var(--seek-before-color);
+  border-radius: 4px;
+  position: absolute;
+  top:12px;
+  left:0;
+  
+  cursor: pointer;
+}
+
+.volumeBar::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  width:13px;
+  height:13px;
+  border-radius: 6.5px;
+  z-index: 100;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0) ;
+  cursor:pointer;
+  box-sizing: border-box;
+}
+
+
+
+
+
 
 
 

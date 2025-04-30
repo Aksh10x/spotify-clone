@@ -1,10 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { SongContext } from "../utils/songContext";
 import { IoIosPlayCircle } from "react-icons/io";
 import { Howl } from "howler";
 import { RiPauseCircleFill } from "react-icons/ri";
 import { FaBackwardStep, FaForwardStep } from "react-icons/fa6";
-import { IoRepeatOutline, IoShuffleOutline } from "react-icons/io5";
+import { IoRepeatOutline, IoShuffleOutline, IoVolumeHighOutline, IoVolumeMuteOutline } from "react-icons/io5";
+import { TiVolumeUp } from "react-icons/ti";
 
 const Playback = () => {
     const {
@@ -21,6 +22,8 @@ const Playback = () => {
     const [soundPlayed, setSoundPlayed] = useState(null);
     const [repeat, setRepeat] = useState(false);
     const [shuffle, setShuffle] = useState(false);
+    const [volume, setVolume] = useState(1);
+    const volumeRef = useRef();
 
     const togglePlayback = () => {
         if (soundPlayed) {
@@ -42,6 +45,7 @@ const Playback = () => {
         const sound = new Howl({
             src: [songSrc],
             html5: true,
+            volume: volume,
             onend: () => {
                 playNextSong();
             },
@@ -172,6 +176,15 @@ const Playback = () => {
         setCurrentIndex(0);
     };
 
+    const changeVolume = () => {
+        const newVolume = volumeRef.current.value;
+        volumeRef.current.style.setProperty('--seek-before-width',`${volumeRef.current.value/1*100}%`);
+        setVolume(newVolume);
+        if (soundPlayed) {
+            soundPlayed.volume(newVolume);
+        }
+    }
+
     return (
         <div className="h-[70px] bg-black w-full absolute bottom-0 text-white max-h-[14vh] px-4 pb-4 flex gap-3 mt-3">
             {songName ? 
@@ -216,7 +229,22 @@ const Playback = () => {
                 ><IoRepeatOutline /></button>
             </div>
 
-            <div className="w-1/4 h-full"></div>
+            <div className="w-1/4 h-full flex justify-center items-center">
+            <button className="transition-all text-white/40 text-2xl flex justify-center items-center mt-1 mr-2 hover:text-white"
+            onClick={() => {setVolume(prev => prev == 0 ? 1 : 0)
+                volumeRef.current.value = volume == 0 ? 1 : 0;
+                changeVolume()
+            }}>
+            {volume == 0 ? <IoVolumeMuteOutline /> : <IoVolumeHighOutline />}</button>
+            <div className="relative">
+                <input type="range" defaultValue={volume} min="0" max="1" step="0.01"
+                ref={volumeRef}
+                onChange={
+                    changeVolume
+                }
+                className="volumeBar"></input>
+            </div>    
+            </div>
         </div>
     );
 };
