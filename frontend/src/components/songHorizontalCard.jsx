@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthenticatedGETReq, AuthenticatedPATCHReq, AuthenticatedPOSTReq, getAudioDurationFromURL } from "../utils/server.helpers";
-import { IoIosPlay } from "react-icons/io";
+import { IoIosPause, IoIosPlay } from "react-icons/io";
 import { SongContext } from "../utils/songContext";
 import { FaCheck} from "react-icons/fa6";
 import { BiPlusCircle } from "react-icons/bi";
@@ -65,11 +65,7 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
         if(queueGiven && queueGiven.length > 0){
             setQueue(queueGiven)
             setCurrentIndex(index)
-
-            console.log("queue given is", queueGiven)
-            console.log("current index is", index)
         }
-
     }
 
     async function DataFetch(){
@@ -159,10 +155,17 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
         <>
         <div className="w-full text-white flex h-[60px] hover:bg-white/10 rounded-md items-center p-2 cursor-pointer mt-1 group">
             <div className="w-[5%] text-center text-white/60 group-hover:text-white relative">
-                <div className={`group-hover:hidden text-sm flex justify-center items-center ${songId == playingId ? "text-green-500 text-xl" : "text-white/60"}`}>{songId == playingId ? <FiBarChart2 /> : index +1 }</div>
-                <button className="group-hover:block hidden hover:flex justify-center items-center text-2xl absolute h-full -top-3 left-3"
-                onClick={() => playSong(name,thumbnail,trackUrl,artistFirstName,artistSecondName)}
-                ><IoIosPlay /></button>
+                {
+                    songId == playingId ?
+                    <div className="text-green-500 text-xl flex justify-center items-center"><FiBarChart2 /></div> :
+                    <>
+                        <div className={`group-hover:hidden text-sm flex justify-center items-center text-white/60`}>{index +1 }</div>
+                        <button className="group-hover:block hidden hover:flex justify-center items-center text-2xl absolute h-full -top-3 left-3"
+                        onClick={() => playSong(name,thumbnail,trackUrl,artistFirstName,artistSecondName)}
+                        ><IoIosPlay />
+                        </button>
+                    </>
+                }
             </div>
             <img src={thumbnail} className="w-10 h-10 rounded-sm"/>
             <div className="flex flex-col ml-4 flex-grow">

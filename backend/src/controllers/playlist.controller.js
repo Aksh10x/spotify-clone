@@ -64,25 +64,36 @@ const getPlaylist = asyncErrorHandler(async(req,res) => {
             },
         },
         {
+            $project: {
+                name: 1,
+                songs: 1,
+            },
+        },
+        {
+            $unwind: {
+                path: "$songs",
+                includeArrayIndex: "orderIndex", // Save the original index
+            },
+        },
+        {
             $lookup: {
-                from: "songs", 
-                localField: "songs", 
-                foreignField: "_id", 
-                as: "songs",
-                pipeline: [ 
+                from: "songs",
+                let: { songId: "$songs" },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: { $eq: ["$_id", "$$songId"] },
+                        },
+                    },
                     {
                         $lookup: {
-                            from: "users", 
+                            from: "users",
                             localField: "artist",
-                            foreignField: "_id", 
+                            foreignField: "_id",
                             as: "artistDetails",
                         },
                     },
-                    {
-                        $unwind: {
-                            path: "$artistDetails", 
-                        },
-                    },
+                    { $unwind: "$artistDetails" },
                     {
                         $addFields: {
                             artistFirstName: "$artistDetails.firstName",
@@ -91,13 +102,46 @@ const getPlaylist = asyncErrorHandler(async(req,res) => {
                     },
                     {
                         $project: {
-                            artistDetails: 0, // Exclude the artistDetails field from the output
+                            artistDetails: 0,
                         },
                     },
                 ],
+                as: "songDetails",
             },
         },
-    ]);
+        {
+            $unwind: "$songDetails",
+        },
+        {
+            $group: {
+                _id: "$_id",
+                name: { $first: "$name" },
+                songs: {
+                    $push: {
+                        $mergeObjects: [
+                            "$songDetails",
+                            { orderIndex: "$orderIndex" }
+                        ],
+                    },
+                },
+            },
+        },
+        {
+            $addFields: {
+                songs: {
+                    $sortArray: {
+                        input: "$songs",
+                        sortBy: { orderIndex: 1 }, // sort by the original array order
+                    },
+                },
+            },
+        },
+        {
+            $project: {
+                "songs.orderIndex": 0, // Clean up
+            },
+        },
+    ]);    
     
 
     if(!playlist){
@@ -143,8 +187,6 @@ const getUserPlaylists = asyncErrorHandler(async(req,res) => {
 const addSongToPlaylist = asyncErrorHandler(async(req,res) => {
     const currentUser = req.user
     const {songId, playlists} = req.body
-
-    console.log(playlists)
 
     for (let i = 0; i < playlists.length; i++) {
         const playlist = await Playlist.findById(playlists[i].id)
