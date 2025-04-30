@@ -92,14 +92,14 @@ const Playback = () => {
         }
 
         if(queue.length==0){
-            if(repeat){
-                soundPlayed.seek(0);
-                soundPlayed.play();
-            }else{
-                setSongTrack(null)
-                setIsPlaying(false);
-                setPlayingId(null);
-            }
+            setIsPlaying(false);
+            setPlayingId(null);
+            setSongName(null);
+            setSongThumbnail(null);
+            setSongTrack(null);
+            setArtist(null);
+            setCurrentIndex(0);
+            
 
         }
     }
