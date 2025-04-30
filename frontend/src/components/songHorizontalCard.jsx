@@ -185,8 +185,8 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
 
         {
         addSong && 
-        <div className="bg-black absolute h-[calc(100vh-130px)] w-[100vw] z-10 top-0 left-0 backdrop-blur-sm bg-opacity-20 flex justify-center items-center">
-            <div className="bg-black w-[40%] h-[80%] rounded-xl relative">
+        <div className="bg-black absolute h-[calc(100vh-130px)] w-[100%] z-10 top-0 left-0 backdrop-blur-sm bg-opacity-20 flex justify-center items-center overflow-hidden">
+            <div className="bg-black w-[50%] h-[80%] rounded-xl relative">
                 <div className="w-full h-full bg-white bg-opacity-10 rounded-xl flex flex-col p-8 gap-4">
                     <div className="text-white font-semibold text-xl flex justify-between items-start">Add to playlist
                         <button onClick={() => {
@@ -240,7 +240,7 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
                             addToPlaylist()
                             setLoading(true)
 
-                        }} className="bg-white rounded-full font-semibold py-2 px-4 absolute right-4 bottom-3">Done</button>
+                        }} className="bg-white rounded-full font-semibold py-2 px-4 absolute right-4 bottom-3 text-black">Done</button>
                     </div>
                 </div>
             </div>

@@ -68,7 +68,7 @@ const Home = () => {
                         </div>
 
                         <div className="space-y-3 h-fit overflow-scroll scrollbar-hide flex-nowrap min-h-fit">
-                            <div className="text-white font-semibold text-xl">Popular Artists</div>
+                            <div className="text-white font-semibold text-xl">Summer Hits</div>
                             <div className="seciton flex gap-2 h-fit overflow-x-auto scrollbar-hide shadow-inner">
                                 <ArtistCard/>
                                 <ArtistCard/>
@@ -85,7 +85,7 @@ const Home = () => {
                         </div>
 
                         <div className="space-y-3 h-fit overflow-scroll scrollbar-hide flex-nowrap min-h-fit">
-                            <div className="text-white font-semibold text-xl">Popular Artists</div>
+                            <div className="text-white font-semibold text-xl">Popular Podcasts</div>
                             <div className="seciton flex gap-2 h-fit overflow-x-auto scrollbar-hide shadow-inner">
                                 <ArtistCard/>
                                 <ArtistCard/>
