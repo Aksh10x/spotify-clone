@@ -66,15 +66,48 @@ const Playback = () => {
 
     const playNextSong = () => {
         if(queue.length > 0 && currentIndex < queue.length - 1){
-            const nextSong = queue[currentIndex+1];
+            if(shuffle){
+                let index;
+                do {
+                    index = Math.floor(Math.random() * queue.length);
+                } while (index === currentIndex && queue.length > 1);
+                const nextSong = queue[index];
+                if(nextSong){
+                    setPlayingId(nextSong._id);
+                    setSongName(nextSong.name);
+                    setSongThumbnail(nextSong.thumbnail);
+                    setSongTrack(nextSong.track);
+                    setArtist(nextSong.artistFirstName + " " + nextSong.artistSecondName);
+                    setCurrentIndex(index);
+                }
+            }else{
+                const nextSong = queue[currentIndex+1];
+                if(nextSong){
+                    setPlayingId(nextSong._id);
+                    setSongName(nextSong.name);
+                    setSongThumbnail(nextSong.thumbnail);
+                    setSongTrack(nextSong.track);
+                    setArtist(nextSong.artistFirstName + " " + nextSong.artistSecondName);
+                    setCurrentIndex(currentIndex + 1);
+                }
+            }
 
+            
+        }
+
+        if(currentIndex === queue.length - 1 && shuffle){
+            let index;
+                do {
+                    index = Math.floor(Math.random() * queue.length);
+                } while (index === currentIndex && queue.length > 1);
+            const nextSong = queue[index];
             if(nextSong){
                 setPlayingId(nextSong._id);
                 setSongName(nextSong.name);
                 setSongThumbnail(nextSong.thumbnail);
                 setSongTrack(nextSong.track);
                 setArtist(nextSong.artistFirstName + " " + nextSong.artistSecondName);
-                setCurrentIndex(currentIndex + 1);
+                setCurrentIndex(index);
             }
         }
 
@@ -91,16 +124,8 @@ const Playback = () => {
             }
         }
 
-        if(queue.length==0){
-            setIsPlaying(false);
-            setPlayingId(null);
-            setSongName(null);
-            setSongThumbnail(null);
-            setSongTrack(null);
-            setArtist(null);
-            setCurrentIndex(0);
-            
-
+        if(!queue || queue.length==0){
+            stopPlayback();
         }
     }
 
@@ -131,6 +156,21 @@ const Playback = () => {
             }
         }
     }
+
+    const stopPlayback = () => {
+        if (soundPlayed) {
+            soundPlayed.stop();
+            soundPlayed.unload();
+        }
+        setSoundPlayed(null);
+        setIsPlaying(false);
+        setPlayingId(null);
+        setSongName(null);
+        setSongThumbnail(null);
+        setSongTrack(null);
+        setArtist(null);
+        setCurrentIndex(0);
+    };
 
     return (
         <div className="h-[70px] bg-black w-full absolute bottom-0 text-white max-h-[14vh] px-4 pb-4 flex gap-3 mt-3">
