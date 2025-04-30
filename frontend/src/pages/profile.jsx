@@ -470,6 +470,7 @@ const Profile = () => {
                         <div className="text-sm font-semibold">Playlist Name</div>
                         <input className="w-full px-3 bg-transparent rounded h-[35px] transition bg-white bg-opacity-15 hover:bg-opacity-20 text-sm "
                         type="text" 
+                        maxLength={100}
                         onChange={(e) => {setPlaylistName(e.target.value)}}
                         defaultValue={playlistName}
                         ></input>
@@ -477,6 +478,7 @@ const Profile = () => {
                         <div className="text-sm font-semibold mt-2">Description</div>
                         <textarea className="w-full px-3 bg-transparent rounded max-h-[115px] min-h-[115px] transition bg-white bg-opacity-15 hover:bg-opacity-20 text-sm p-2"
                         type="text" 
+                        maxLength={200}
                         onChange={(e) => {setPlaylistDesc(e.target.value)}}
                         defaultValue={playlistDesc}
                         ></textarea>

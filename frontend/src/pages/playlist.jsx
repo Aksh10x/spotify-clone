@@ -83,7 +83,7 @@ const Playlist = () => {
     return (
         <div className="absolute right-0 lg:w-[75.5%] md:w-[75%] sm:w-[75%] 2xl:w-[82%] h-[calc(100%-75px)] flex justify-center bg-white/5 overflow-hidden">
             <div className="w-full h-[calc(100vh-68px)] max-w-[2000px] text-black bg-black relative pt-0 flex gap-2">
-                <div className="w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg flex gap-2 flex-col overflow-y-auto custom-scrollbar">
+                <div className="w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg flex gap-2 flex-col overflow-y-auto custom-scrollbar relative">
 
                     
                     {
@@ -91,11 +91,11 @@ const Playlist = () => {
                         <div className="p-6"><SearchPage/></div>
                         :
                         <>
-                        <div className="w-full bg-gradient-to-b rounded-t-lg from-white/40 to-white/10 min-h-[200px]  px-5 pb-3 pt-6 flex justify-end flex-col">
+                        <div className="w-full bg-gradient-to-b rounded-t-lg from-white/40 to-white/10  px-5 pb-3 pt-6 flex justify-end flex-col">
                     
                             <div className="w-full flex pb-2">
                                 
-                                <div className="h-full flex items-center">
+                                <div className="h-full flex items-end">
                                 {thumbnail ? 
                                     <div className="h-36 w-36 bg-pink-300 rounded-md shadow-xl flex justify-center items-center text-5xl font-semibold">
                                         <img src={thumbnail} className="h-full w-36 rounded-md"/>
@@ -109,7 +109,7 @@ const Playlist = () => {
 
 
                                 
-                                <div className="px-8 flex flex-col justify-start gap-2 max-w-[calc(100%-200px)]">
+                                <div className="px-8 flex flex-col justify-end gap-2 max-w-[calc(100%-200px)]">
                                     <div className="text-white text-sm">Playlist</div>
                                     <div className="text-white font-bold text-4xl max-w-full overflow-hidden break-all">
                                         {name}

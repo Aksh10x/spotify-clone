@@ -214,11 +214,11 @@ const Playback = () => {
                     setShuffle((prev) => !prev);
                 }}
                 ><IoShuffleOutline /></button>
-                <button onClick={playPrevSong} className="text-2xl text-white/40"><FaBackwardStep /></button>
-                <button onClick={togglePlayback} className="text-5xl">
+                <button onClick={playPrevSong} className="text-2xl text-white/40 hover:text-white transition-all"><FaBackwardStep /></button>
+                <button onClick={togglePlayback} className="text-5xl hover:scale-105 transition-all hover:text-white/90">
                     {isPlaying ? <RiPauseCircleFill /> : <IoIosPlayCircle />}
                 </button>
-                <button onClick={playNextSong} className="text-2xl text-white/40"><FaForwardStep /></button>
+                <button onClick={playNextSong} className="text-2xl text-white/40 hover:text-white transition-all"><FaForwardStep /></button>
                 <button className={`relative left-3 text-3xl transition-all ${repeat ? "text-green-500" : "text-white/40"}`}
                 onClick={() => {
                     if(shuffle){
@@ -229,7 +229,7 @@ const Playback = () => {
                 ><IoRepeatOutline /></button>
             </div>
 
-            <div className="w-1/4 h-full flex justify-center items-center">
+            <div className="w-1/4 h-full flex justify-end items-center px-6">
             <button className="transition-all text-white/40 text-2xl flex justify-center items-center mt-1 mr-2 hover:text-white"
             onClick={() => {setVolume(prev => prev == 0 ? 1 : 0)
                 volumeRef.current.value = volume == 0 ? 1 : 0;
