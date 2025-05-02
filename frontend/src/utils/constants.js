@@ -1,1 +1,1 @@
-export const server = "http://localhost:8080/api"
+export const server = "https://spotify-clone-backend-zv91.onrender.com"
