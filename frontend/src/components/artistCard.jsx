@@ -1,10 +1,15 @@
 import { FaCirclePlay } from "react-icons/fa6";
 import { AiOutlineUser } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import { SearchContext } from "../utils/searchContext";
+import { useContext } from "react";
 
 const ArtistCard = ({id,name,avatar}) => {
+    const {inSearch, setInSearch} = useContext(SearchContext)
     return (
-        <Link to={"/profile/"+id} className="flex-shrink-0 w-[185px] h-[250px] relative p-6 bg-black bg-opacity-15 hover:bg-white rounded-lg hover:bg-opacity-15 transition-all cursor-pointer group">
+        <Link to={"/profile/"+id}
+        onClick={()=>{setInSearch(false)}}
+         className="flex-shrink-0 w-[185px] h-[250px] relative p-6 bg-black bg-opacity-15 hover:bg-white rounded-lg hover:bg-opacity-15 transition-all cursor-pointer group">
             {
                 name  ? 
                 <>

@@ -23,9 +23,11 @@ const Playlist = () => {
     const [songs, setSongs] = useState([])
     const [deletePopUp, setDeletePopUp] = useState(false)
     const [owner, setOwner] = useState("")
+    const [ownerId, setOwnerId] = useState("")
     const menuRef = useRef(null)
     const navigate = useNavigate()
     const {inSearch, setInSearch} = useContext(SearchContext)
+    const [userId, setUserId] = useState("")
     const {
         playingId, setPlayingId,
         songName, setSongName,
@@ -39,6 +41,11 @@ const Playlist = () => {
 
     const {deleted, setDeleted} = useContext(PlaylistContext)
 
+    async function userIdFetch(){
+        const res = await AuthenticatedGETReq("/user/get-user")
+        setUserId(res.data._id)
+    }
+
     const fetchData = async() => {
         const res = await AuthenticatedGETReq(`/playlist/get-playlist/${playlistId}`)
         console.log(res)
@@ -47,6 +54,7 @@ const Playlist = () => {
             setName(res.data?.playlist[0].name)
             setDescription(res.data?.playlist[0].description)
             setSongNumber(res.data?.playlist[0]?.songs.length)
+            setOwnerId(res.data?.playlist[0].owner)
             setSongs(res.data?.playlist[0].songs)
             setOwner(res.data?.ownerName)
         }else{
@@ -81,6 +89,7 @@ const Playlist = () => {
 
     useEffect(() => {
         fetchData()
+        userIdFetch()
     },[playlistId])
     return (
         <div className="absolute right-0 lg:w-[75.5%] md:w-[75%] sm:w-[75%] 2xl:w-[82%] h-[calc(100%-75px)] flex justify-center bg-white/5 overflow-hidden">
@@ -140,7 +149,9 @@ const Playlist = () => {
                                 setQueue(songs)
                                 setCurrentIndex(0)
                                 }}} className="text-4xl w-14 h-14 flex justify-center items-center bg-green-500 text-gray-950 rounded-full shadow-xl pl-1 hover:scale-105 transition-all cursor-pointer hover:bg-green-400"><IoIosPlay /></button>
-                            <button onClick={() => setDeletePopUp((prev) => !prev)} className="text-white/60 relative text-2xl transition-all cursor-pointer group"><div className="group-hover:scale-105 group-hover:text-white"><BsThreeDots/></div>
+                            {
+                                ownerId === userId && 
+                                <button onClick={() => setDeletePopUp((prev) => !prev)} className="text-white/60 relative text-2xl transition-all cursor-pointer group"><div className="group-hover:scale-105 group-hover:text-white"><BsThreeDots/></div>
                                 {deletePopUp && 
                                 (<div ref={menuRef} className="absolute left-8 top-[-5px] bg-black min-w-[160px] rounded-sm shadow-xl">
                                     <div className="w-full h-full bg-white/15 flex flex-col items-start rounded-sm shadow-xl">
@@ -148,7 +159,8 @@ const Playlist = () => {
                                     </div>
                                 </div>
                                 )}
-                            </button>
+                                </button>
+                            }
                         </div>
 
                         <div className="px-4 text-white/60 flex flex-col items-center">
