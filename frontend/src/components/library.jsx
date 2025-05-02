@@ -42,8 +42,8 @@ const Library = () => {
         fetchPlaylists()
     },[id,deleted])
     return (
-        <div className="w-full h-[90%] rounded-lg text-white flex flex-grow">
-          <div className="flex flex-col w-full p-[8px] overflow-auto scrollbar-hide max-h-[95%] rounded-lg">
+        <div className="w-full h-[90%] rounded-lg text-white flex flex-grow overflow-x-hidden">
+          <div className="flex flex-col w-full p-[8px] overflow-y-auto overflow-x-hidden scrollbar-hide max-h-[95%] rounded-lg">
             {playlists && playlists.length > 0 ? (
               playlists.map((playlist) => (
                 <Link
