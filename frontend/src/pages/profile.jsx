@@ -168,9 +168,9 @@ const Profile = () => {
         <>
         <div className="absolute lg:w-[75.5%] md:w-[75%] sm:w-[75%] 2xl:w-[82%] right-0 h-[calc(100%-75px)] overflow-hidden flex justify-center bg-white bg-opacity-5">
             
-            <div className="w-full h-[calc(100vh-68px)] max-w-[2000px] rounded-lg text-black bg-black relative pt-0 flex gap-2">
+            <div className="w-full h-[calc(100vh-68px)] max-w-[1500px] rounded-lg text-black bg-black relative pt-0 flex gap-2">
                 
-                <div className={`w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg flex gap-2 flex-col overflow-y-auto custom-scrollbar ${inSearch ? "" : "justify-evenly"}`}>
+                <div className={`w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg flex gap-2 flex-col overflow-y-auto custom-scrollbar ${inSearch ? "" : "justify-start"}`}>
                     {
                         inSearch ? 
                         <div className="p-6"><SearchPage/></div>

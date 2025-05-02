@@ -47,7 +47,7 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
           setDuration(`${minutes}:${seconds < 10 ? "0" : ""}${seconds}`);
         } catch (error) {
           console.error(error);
-          setDuration("N/A");
+          setDuration("0:00");
         }
     };
 
