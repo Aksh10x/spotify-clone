@@ -125,7 +125,7 @@ const OtherProfile = () => {
                         </div>
                         {isArtist && 
                             <div className="p-6 ">
-                                <div className="text-white font-semibold text-2xl">Your Songs</div>
+                                <div className="text-white font-semibold text-2xl">Songs</div>
                                 <div className="text-sm font-normal text-opacity-60 text-white mb-2">Visible to everybody</div>
                                 <div className="flex flex-col w-full max-h-[200px] overflow-y-scroll scrollbar-hide">
                                 {songs && songs.length > 0 ? 
