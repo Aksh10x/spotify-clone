@@ -7,7 +7,7 @@ dotenv.config({
 })
 
 
-const port = process.env.PORT
+const port = process.env.PORT || 4000
 
 dbConnect().then(() => {
     app.listen(port, () => {
