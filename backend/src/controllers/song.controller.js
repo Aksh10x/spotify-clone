@@ -192,6 +192,22 @@ const getOthersSongs = asyncErrorHandler(async(req,res) => {
     )
 })
 
+const whosTheArtist = asyncErrorHandler(async(req,res) => {
+    const {songId} = req.params
+
+    const song = await Song.findById(songId)
+
+    if(!song){
+        throw new ApiError(404,"Song does not exist, not found")
+    }
+
+    res.status(200).json(
+        new ApiResponse(200,song.artist,"Artist fetched successfully")
+    )
+
+})
+
+
 
 
 export {
@@ -199,5 +215,6 @@ export {
     getMySongs,
     searchByName,
     searchByArtist,
-    getOthersSongs
+    getOthersSongs,
+    whosTheArtist
 }

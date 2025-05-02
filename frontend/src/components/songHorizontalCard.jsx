@@ -7,7 +7,7 @@ import { BiPlusCircle } from "react-icons/bi";
 import { CgClose } from "react-icons/cg";
 import { PiMusicNotesSimple } from "react-icons/pi";
 import { LuLoaderCircle } from "react-icons/lu";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FiBarChart2 } from "react-icons/fi";
 
 
@@ -24,6 +24,7 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
     const [toast, setToast] = useState("")
     const [songInPlaylist, setSongInPlaylist] = useState([])
     const location = useLocation()
+    const [artistId, setArtistId] = useState("")
 
 
 
@@ -86,6 +87,7 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
 
     useEffect(() => {
         DataFetch()
+        getArtistId(songId)
     },[])
 
     useEffect(() => {
@@ -143,6 +145,15 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
         
     };
     
+    const getArtistId = async (songId) => {
+        const res = await AuthenticatedGETReq(`/song/whos-the-artist/${songId}`)
+        if(res.success){
+            setArtistId(res.data)
+        }else{
+            return null
+        }
+    }
+    
 
     useEffect(() => {
         console.log("im enetring the set song exists effect and song id is", songToAdd)
@@ -171,7 +182,7 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
             <div className="flex flex-col ml-4 flex-grow">
                 <p className={` text-sm ${songId == playingId ? "text-green-500" : "text-white"}`}>{name}</p>    
             </div>
-            <p className="text-white/60 hover:underline text-sm w-[25%] group-hover:text-white">{artistFirstName + " " + artistSecondName}</p>
+            <Link to={`/profile/${artistId}`} className="text-white/60 hover:underline text-sm w-[25%] group-hover:text-white">{artistFirstName + " " + artistSecondName}</Link>
             <p className="text-white/60 text-sm w-[10%] text-center group-hover:text-white">{duration}</p>
             <div onClick={() => {
                 setSongToAdd(songId)

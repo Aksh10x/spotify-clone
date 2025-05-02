@@ -109,7 +109,7 @@ const Playlist = () => {
                                 <div className="h-full flex items-end">
                                 {thumbnail ? 
                                     <div className="h-36 w-36 bg-pink-300 rounded-md shadow-xl flex justify-center items-center text-5xl font-semibold">
-                                        <img src={thumbnail} className="h-full w-36 rounded-md"/>
+                                        <img src={thumbnail} className="h-full w-36 rounded-md object-cover object-center"/>
                                     </div>
                                     :
                                     <div className="h-36 w-36 text-7xl bg-black/50 rounded-md shadow-xl flex justify-center items-center font-semibold text-white/60">

@@ -25,6 +25,8 @@ export const SearchPage = () => {
         }
     }
 
+    
+
     useEffect ( () => {
         SearchQuery(searchData)
     },[searchData])

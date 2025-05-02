@@ -84,7 +84,9 @@ const Navbar = () => {
                     <button className="text-black font-semibold bg-white px-3 py-2 rounded-full hover:bg-opacity-90 transition-all hover:scale-105 text-sm"
                     onClick={delCookie}
                     >Logout</button>
-                    <Link to={"/profile"} className="w-[35px] h-[35px] text-xl bg-pink-300 rounded-full flex items-center text-black justify-center font-semibold">{logo}
+                    <Link to={"/profile"}
+                    onClick={() => { setInSearch(false) }}
+                    className="w-[35px] h-[35px] text-xl bg-pink-300 rounded-full flex items-center text-black justify-center font-semibold">{logo}
 
                     </Link> 
             </div>

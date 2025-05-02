@@ -96,7 +96,7 @@ const OtherProfile = () => {
             
             <div className="w-full h-[calc(100vh-68px)] max-w-[2000px] rounded-lg text-black bg-black relative pt-0 flex gap-2">
                 
-                <div className={`w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg flex gap-2 flex-col overflow-y-auto custom-scrollbar ${inSearch ? "" : "justify-evenly"}`}>
+                <div className={`w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg flex gap-2 flex-col overflow-y-auto custom-scrollbar ${inSearch ? "" : "justify-start"}`}>
                     {
                         inSearch ? 
                         <div className="p-6"><SearchPage/></div>

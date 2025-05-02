@@ -6,6 +6,8 @@ import { RiPauseCircleFill } from "react-icons/ri";
 import { FaBackwardStep, FaForwardStep } from "react-icons/fa6";
 import { IoRepeatOutline, IoShuffleOutline, IoVolumeHighOutline, IoVolumeMuteOutline } from "react-icons/io5";
 import { TiVolumeUp } from "react-icons/ti";
+import { AuthenticatedGETReq } from "../utils/server.helpers";
+import { Link } from "react-router-dom";
 
 const Playback = () => {
     const {
@@ -24,6 +26,7 @@ const Playback = () => {
     const [shuffle, setShuffle] = useState(false);
     const [volume, setVolume] = useState(1);
     const volumeRef = useRef();
+    const [artistId, setArtistId] = useState(null);
 
     const togglePlayback = () => {
         if (soundPlayed) {
@@ -58,6 +61,7 @@ const Playback = () => {
     };
 
     useEffect(() => {
+        getArtistId(playingId);
         if (soundPlayed) {
             soundPlayed.stop();
             soundPlayed.unload();
@@ -176,6 +180,15 @@ const Playback = () => {
         setCurrentIndex(0);
     };
 
+    const getArtistId = async (playingId) => {
+        const res = await AuthenticatedGETReq(`/song/whos-the-artist/${playingId}`)
+        if(res.success){
+            setArtistId(res.data)
+        }else{
+            return null
+        }
+    }
+
     const changeVolume = () => {
         const newVolume = volumeRef.current.value;
         volumeRef.current.style.setProperty('--seek-before-width',`${volumeRef.current.value/1*100}%`);
@@ -189,10 +202,12 @@ const Playback = () => {
         <div className="h-[70px] bg-black w-full absolute bottom-0 text-white max-h-[14vh] px-4 pb-4 flex gap-3 mt-3 justify-between">
             {songName ? 
             <div className="flex justify-start items-center gap-3 w-1/4">
-                <img src={songThumbnail} className="h-[57px] rounded-md max-w-[57px] w-full" alt="Song Thumbnail" />
+                <img src={songThumbnail} className="h-[57px] rounded-md max-w-[57px] w-full object-cover object-center" alt="Song Thumbnail" />
                 <div className="flex flex-col justify-center items-start h-full">
                     <p className="text-sm hover:underline cursor-pointer">{songName}</p>
-                    <p className="text-xs text-white/60 hover:text-white hover:underline cursor-pointer flex justify-center items-center">{artist}</p>
+                    <Link 
+                    to={`/profile/${artistId}`}
+                    className="text-xs text-white/60 hover:text-white hover:underline cursor-pointer flex justify-center items-center">{artist}</Link>
                 </div>
             </div>
             :
