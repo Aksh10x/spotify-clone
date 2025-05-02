@@ -179,7 +179,7 @@ const Profile = () => {
                         <div className="w-full bg-gradient-to-b from-white/25 to-white/5 min-h-[280px] px-6 py-3 flex justify-end flex-col">
                             <div className="w-full flex pb-4 ">
                                 {avatar ? 
-                                <img src={avatar} className="h-32 w-32 rounded-full shadow-xl flex justify-center items-center bg-cover"/>
+                                <img src={avatar} className="h-32 w-32 rounded-full shadow-xl flex justify-center items-center object-center object-cover"/>
                                 :
                                 <div className="h-32 w-32 rounded-full bg-pink-300 shadow-xl flex justify-center items-center text-5xl font-semibold">
                                 {logo}
@@ -301,7 +301,7 @@ const Profile = () => {
                             </input>
                             {avatar ?
                             <label for="pfpInput" className="bg-black relative w-40 h-40 text-7xl text-white text-opacity-50 bg-opacity-15 rounded-full flex flex-col justify-center items-center cursor-pointer group shadow-lg">
-                                <img src={avatar} className="h-36 w-36 rounded-full shadow-xl flex justify-center items-center"/>
+                                <img src={avatar} className="h-36 w-36 rounded-full shadow-xl shadow-black object-cover object-center"/>
                                 <div className="absolute group-hover:visible invisible w-36 h-36 bg-black bg-opacity-45 transition-all flex justify-center items-center rounded-full"><BsPencil/></div>
                                 {file && <div className="text-xs text-green-400 absolute -bottom-4">Picture uploaded!</div>}
                             </label>
@@ -389,7 +389,7 @@ const Profile = () => {
                             </input>
                             {(!deletePhoto) ?
                             <label for="pfpInput" className="bg-black relative w-40 h-40 text-7xl text-white text-opacity-50 bg-opacity-15 rounded-full flex flex-col justify-center items-center cursor-pointer group shadow-lg">
-                                <img src={avatar} className="h-36 w-36 rounded-full shadow-xl flex justify-center items-center"/>
+                                <img src={avatar} className="h-36 w-36 rounded-full shadow-xl object-center object-cover"/>
                                 <div className="absolute group-hover:visible invisible w-36 h-36 bg-black bg-opacity-45 transition-all flex justify-center items-center rounded-full"><BsPencil/></div>
                                 {file && <div className="text-xs text-green-400 absolute -bottom-4">Picture uploaded!</div>}
                             </label>

@@ -61,7 +61,7 @@ const Home = () => {
                                 )) 
                                 :
                                 artists.map((artist, index) => (
-                                    <ArtistCard name={artist.firstName + " " + artist.secondName} avatar={artist.avatar} key={index}/>
+                                    <ArtistCard name={artist.firstName + " " + artist.secondName} id={artist._id} avatar={artist.avatar} key={index}/>
                                 ))
                             }
                         </div>

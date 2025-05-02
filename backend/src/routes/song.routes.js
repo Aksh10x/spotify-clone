@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createSong, getMySongs, searchByArtist, searchByName } from "../controllers/song.controller.js";
+import { createSong, getMySongs, searchByArtist, searchByName, getOthersSongs } from "../controllers/song.controller.js";
 import passport from "passport";
 import { upload } from "../middlewares/multer.js";
 
@@ -23,5 +23,7 @@ router.route("/get-my-songs").get(passport.authenticate("jwt", {session: false})
 router.route("/search-song-name").post(passport.authenticate("jwt", {session: false}), searchByName)
 
 router.route("/search-song-artist/:artistId").get(passport.authenticate("jwt", {session: false}), searchByArtist)
+
+router.route("/get-others-songs/:userId").get(passport.authenticate("jwt", {session: false}), getOthersSongs)
 
 export default router

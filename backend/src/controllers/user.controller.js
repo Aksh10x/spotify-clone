@@ -32,9 +32,14 @@ const Register = asyncErrorHandler(async(req,res) => {
     }
 
     const userByEmailExists = await User.findOne({email: email}) 
+    const userByUsernameExists = await User.findOne({username: username}) 
 
     if(userByEmailExists){
         throw new ApiError(403,"User with this email already exists")
+    }
+
+    if(userByUsernameExists){
+        throw new ApiError(403,"User with this username already exists")
     }
 
     const newUser = await User.create({
@@ -126,6 +131,26 @@ const getUserDetails = asyncErrorHandler(async(req, res) => {
 
     return res.status(200).json(
         new ApiResponse(200,currentUser,"User details fetched successfully")
+    )
+});
+
+const getOtherUserDetails = asyncErrorHandler(async(req, res) => {
+
+    const currentUser = req.user
+    const userId = req.params.userId
+
+    if(!currentUser){
+        throw new ApiError(404,"User does not exist")
+    }
+
+    const user = await User.findById(userId).select("-password")
+
+    if(!user){
+        throw new ApiError(404,"User does not exist")
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200,user,"User details fetched successfully")
     )
 });
 
@@ -352,5 +377,6 @@ export {
     becomeArtist,
     editUserDetails,
     getRandomArtists,
-    Search
+    Search,
+    getOtherUserDetails
 }

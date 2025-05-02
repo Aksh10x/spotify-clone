@@ -1,15 +1,16 @@
 import { FaCirclePlay } from "react-icons/fa6";
 import { AiOutlineUser } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
-const ProfileCard = ({name,avatar}) => {
+const ProfileCard = ({id,name,avatar}) => {
     return (
-        <div className="flex-shrink-0 w-[185px] h-[250px] relative p-6 bg-black bg-opacity-15 hover:bg-white rounded-lg hover:bg-opacity-15 transition-all cursor-pointer group">
+        <Link className="flex-shrink-0 w-[185px] h-[250px] relative p-6 bg-black bg-opacity-15 hover:bg-white rounded-lg hover:bg-opacity-15 transition-all cursor-pointer group">
             {
                 name  ? 
                 <>
                     <div className="h-[70%] w-full"> 
                     {avatar ? 
-                        <img src={avatar} className="rounded-full h-full w-full"/>
+                        <img src={avatar} className="rounded-full h-full w-full object-cover object-center"/>
                         :
                         <div className="rounded-full w-full h-full bg-white/15 flex justify-center items-center text-[100px] text-white/40">
                             <AiOutlineUser />
@@ -31,7 +32,7 @@ const ProfileCard = ({name,avatar}) => {
                     <div className="bg-white/25 w-[30%] h-[6px] mt-1 rounded-md"></div>
                 </>
             }
-        </div>
+        </Link>
     );
 }
  

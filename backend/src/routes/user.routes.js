@@ -8,7 +8,8 @@ import {
     becomeArtist,
     editUserDetails,
     getRandomArtists,
-    Search
+    Search,
+    getOtherUserDetails
     
  } from "../controllers/user.controller.js";
 import passport from "passport";
@@ -33,5 +34,7 @@ router.route("/edit-details").post(passport.authenticate("jwt",{session: false})
 router.route("/get-random-artists").get(passport.authenticate("jwt",{session: false}), getRandomArtists)
 
 router.route("/search").get(passport.authenticate("jwt",{session: false}), Search)
+
+router.route("/get-other-user/:userId").get(passport.authenticate("jwt",{session: false}), getOtherUserDetails)
 
 export default router;

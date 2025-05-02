@@ -22,6 +22,7 @@ const Playlist = () => {
     const [songNumber, setSongNumber] = useState(0)
     const [songs, setSongs] = useState([])
     const [deletePopUp, setDeletePopUp] = useState(false)
+    const [owner, setOwner] = useState("")
     const menuRef = useRef(null)
     const navigate = useNavigate()
     const {inSearch, setInSearch} = useContext(SearchContext)
@@ -42,11 +43,12 @@ const Playlist = () => {
         const res = await AuthenticatedGETReq(`/playlist/get-playlist/${playlistId}`)
         console.log(res)
         if(res.success){
-            setThumbnail(res.data?.[0].thumbnail)
-            setName(res.data?.[0].name)
-            setDescription(res.data?.[0].description)
-            setSongNumber(res.data?.[0]?.songs.length)
-            setSongs(res.data?.[0].songs)
+            setThumbnail(res.data?.playlist[0].thumbnail)
+            setName(res.data?.playlist[0].name)
+            setDescription(res.data?.playlist[0].description)
+            setSongNumber(res.data?.playlist[0]?.songs.length)
+            setSongs(res.data?.playlist[0].songs)
+            setOwner(res.data?.ownerName)
         }else{
             alert("Error loading playlist.")
         }
@@ -116,7 +118,7 @@ const Playlist = () => {
                                     </div>
                                     <div className="text-white text-opacity-40 text-sm">{description}</div>
                                     <div className="flex gap-1 items-center">
-                                        <p className="text-white text-xs font-semibold">Akshath Surwase</p>
+                                        <p className="text-white text-xs font-semibold">{owner}</p>
                                         <p className="text-sm text-white/40">•</p>
                                         <p className="text-sm text-white/40">{songNumber} Songs</p>
                                     </div>

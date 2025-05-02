@@ -13,6 +13,7 @@ import Sidebar from "./components/sidebar";
 import Navbar from "./components/navbar";
 import { PlaylistProvider } from "./utils/playlistContext";
 import { SearchProvider } from "./utils/searchContext";
+import OtherProfile from "./pages/otherProfile";
 
 function App() {
 
@@ -40,6 +41,7 @@ function App() {
           <Route path="/home" element={<Home/>} />
           <Route path="*" element={<Navigate to={"/signup"} />} />
           <Route path="/playlist/:playlistId" element={<Playlist/>}/>
+          <Route path="/profile/:userId" element={<OtherProfile/>}/>
         </Routes> 
         <Playback/>
         </>
@@ -51,6 +53,7 @@ function App() {
           <Route path="/profile" element={<Profile/>} />
           <Route path="/uploadSong" element={<Upload/>} />
           <Route path="/home" element={<Home/>} />
+          <Route path="/playlist/:playlistId" element={<Playlist/>}/>
           <Route path="*" element={<Navigate to={"/signup"} />} />
         </Routes> 
         </>

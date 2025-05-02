@@ -190,7 +190,7 @@ const Playback = () => {
             {songName ? 
             <div className="flex justify-start items-center gap-3 w-1/4">
                 <img src={songThumbnail} className="h-[57px] rounded-md max-w-[57px] w-full" alt="Song Thumbnail" />
-                <div className="flex flex-col justify-center h-full">
+                <div className="flex flex-col justify-center items-start h-full">
                     <p className="text-sm hover:underline cursor-pointer">{songName}</p>
                     <p className="text-xs text-white/60 hover:text-white hover:underline cursor-pointer flex justify-center items-center">{artist}</p>
                 </div>

@@ -138,9 +138,66 @@ const searchByArtist = asyncErrorHandler(async(req,res) => {
     )
 })
 
+const getOthersSongs = asyncErrorHandler(async(req,res) => {
+    const currentUser = req.user
+
+    const {userId} = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        throw new ApiError(400, "Invalid User ID");
+    }
+
+    const user = await User.findById(new mongoose.Types.ObjectId(userId))
+
+    if(!user){
+        throw new ApiError(404,"User does not exist, not found")
+    }
+
+    const userSongs = await Song.aggregate([
+        {
+            $match: {
+                artist: new mongoose.Types.ObjectId(user._id)
+            }
+        },
+        {
+            $lookup:{
+                from: "users",
+                localField: "artist",
+                foreignField: "_id",
+                as: "owner"
+            }
+        },
+        {
+            $unwind: "$owner"
+        },
+        {
+            $addFields: {
+                artistFirstName: "$owner.firstName",
+                artistSecondName: "$owner.secondName"
+            }
+        },
+        {
+            $project: {
+                artistFirstName: 1,
+                artistSecondName: 1,
+                track: 1,
+                thumbnail: 1,
+                name: 1,
+            }
+        }
+    ])
+
+    return res.status(200).json(
+        new ApiResponse(200,userSongs,"Songs fetched successfully")
+    )
+})
+
+
+
 export {
     createSong,
     getMySongs,
     searchByName,
-    searchByArtist
+    searchByArtist,
+    getOthersSongs
 }

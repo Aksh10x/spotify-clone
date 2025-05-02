@@ -59,7 +59,7 @@ export const SearchPage = () => {
                 <div className="flex w-full overflow-x-auto scrollbar-hide gap-2">
                     {searchedArtists.length > 0 ? (
                         searchedArtists?.map((artist,index) => (
-                            <ArtistCard name={artist.firstName + " " + artist.secondName} avatar={artist.avatar} key={index}/>
+                            <ArtistCard id={artist._id} name={artist.firstName + " " + artist.secondName} avatar={artist.avatar} key={index}/>
                         )
                     ))
                     :
@@ -74,7 +74,7 @@ export const SearchPage = () => {
                 <div className="flex w-full overflow-x-auto scrollbar-hide gap-2">
                     {searchedProfiles.length > 0 ? (
                         searchedProfiles?.map((profile,index) => (
-                            <ProfileCard name={profile.firstName + " " + profile.secondName} avatar={profile.avatar} key={index}/>
+                            <ProfileCard id={profile._id} name={profile.firstName + " " + profile.secondName} avatar={profile.avatar} key={index}/>
                         )
                     ))
                     :

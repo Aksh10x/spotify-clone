@@ -64,8 +64,9 @@ const getPlaylist = asyncErrorHandler(async(req,res) => {
     }
 
     if(playlistExists.songs.length === 0){
+        const owner = await User.findById(playlistExists.owner)
         return res.status(200).json(
-            new ApiResponse(200,[playlistExists],"Playlist fetched successfully")
+            new ApiResponse(200,{playlist: [playlistExists], owner: owner.firstName + " " + owner.secondName},"Playlist fetched successfully")
         )
     }
 
@@ -82,6 +83,7 @@ const getPlaylist = asyncErrorHandler(async(req,res) => {
                 description: 1,
                 thumbnail: 1,
                 owner: 1,
+
             },
         },
         {
@@ -161,6 +163,8 @@ const getPlaylist = asyncErrorHandler(async(req,res) => {
             },
         },
     ]);    
+
+    const owner = await User.findById(playlist[0].owner)
     
 
     if(!playlist){
@@ -168,7 +172,7 @@ const getPlaylist = asyncErrorHandler(async(req,res) => {
     }
 
     return res.status(200).json(
-        new ApiResponse(200, playlist, "Playlist fetched successfully")
+        new ApiResponse(200, {playlist: playlist, ownerName: owner.firstName + " " + owner.secondName}, "Playlist fetched successfully")
     )
 })
 
