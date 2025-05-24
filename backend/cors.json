@@ -1,6 +1,6 @@
 [
   {
-    "origin": ["http://localhost:3000", "http://localhost:8080"],
+    "origin": ["http://localhost:3000", "http://localhost:8080", "https://spotifyclone-xi-nine.vercel.app", "https://spotify-clone-backend-zv91.onrender.com"],
     "method": ["GET", "HEAD", "PUT", "POST", "DELETE"],
     "responseHeader": ["Content-Type", "Content-Length", "Content-Range", "Content-Disposition"],
     "maxAgeSeconds": 3600
