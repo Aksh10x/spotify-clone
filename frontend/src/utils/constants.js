@@ -1,1 +1,1 @@
-export const server = "https://spotify-clone-beryl-five.vercel.app/api"
+export const server = "https://spotify-clone-backend-zv91.onrender.com/api"
