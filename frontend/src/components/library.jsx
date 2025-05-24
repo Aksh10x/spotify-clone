@@ -22,7 +22,6 @@ const Library = () => {
     const fetchPlaylists = async() => {
         setLoading(true)
         const res = await AuthenticatedGETReq(`/playlist/user-playlists/${id}`)
-        console.log(res)
         if(res.success){
             const plists = res.data
             if(plists.length == 0){

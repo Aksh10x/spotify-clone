@@ -37,19 +37,18 @@ const LogIn = () => {
     const Login = async(userData) => {
 
         const res = await UnauthenticatedPOSTReq("/user/login",userData)
-
-        console.log(res?.data?.token)
+        setIsLoading(true)
 
         if(res.success){
             const date = new Date()
-            date.setDate(date.getDate() + 30)
+            date.setDate(date.getDate() + 10)
             setCookie("token", res.data.token, {path: "/", expires: date})
-            setIsLoading(true)
             setTimeout(() => {
                 navigate("/home")
             },3000)
         }
         else{
+            setIsLoading(false)
             setErrMessage(res.message)
         }
     }

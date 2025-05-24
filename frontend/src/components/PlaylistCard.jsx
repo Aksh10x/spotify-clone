@@ -7,7 +7,7 @@ const PlaylistCard = ({image,name,owner,id}) => {
         <Link to={`/playlist/${id}`} className="min-w-[190px] max-w-[190px] h-[45%] relative p-3 hover:bg-white/10 rounded-lg transition-all cursor-pointer group">
             <div className="h-[70%] w-full rounded-lg shadow-xl"> 
                 {image ? 
-                    <img src={image} className="rounded-lg h-full w-full bg-cover min-h-[165px]"/>
+                    <img src={image} className="rounded-lg h-full w-full bg-cover min-h-[165px] object-cover object-center"/>
                     :
                     <div className="min-w-full h-full min-h-[165px] flex justify-center items-center text-7xl bg-white/5 rounded-md  text-white/60"><PiMusicNotesSimple /></div>
                 }

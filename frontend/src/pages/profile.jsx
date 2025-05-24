@@ -57,7 +57,6 @@ const Profile = () => {
 
     const fetchPlaylists = async() => {
         const res = await AuthenticatedGETReq(`/playlist/user-playlists/${id}`)
-        console.log(res)
         if(res.success){
             const plists = res.data
             setPlaylists(plists)
@@ -72,7 +71,6 @@ const Profile = () => {
     const fetchUserSongs = async() => {
         const res = await AuthenticatedGETReq("/song/get-my-songs")
         setSongs(res.data)
-        console.log(songs)
     }
 
     //get all details
@@ -82,7 +80,6 @@ const Profile = () => {
         setTimeout(() => {
             DataFetch()
         },1500)
-        console.log(playlists)
     },[isArtist]) 
 
 
@@ -150,7 +147,6 @@ const Profile = () => {
         const res = await AuthenticatedPOSTFormReq("/playlist/create",formData)
         setLoading(false)
         if(res.success){
-            console.log(res)
             setNewPlaylist(false)
             window.location.reload()
         }
@@ -213,9 +209,11 @@ const Profile = () => {
                                         artistFirstName={song.artistFirstName}
                                         artistSecondName={song.artistSecondName}
                                         thumbnail={song.thumbnail}
-                                        trackUrl={song.track}
+                                        duration={song.duration}
+                                        hlsUrl={song.hlsUrl}
                                         index={index}
                                         queueGiven={null}
+                                        
                                         />
                                     ))
                                     :

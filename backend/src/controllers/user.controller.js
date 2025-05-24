@@ -356,7 +356,8 @@ const Search = asyncErrorHandler(async(req,res) => {
             _id: 1,
             name: 1,
             thumbnail: 1,
-            track: 1,
+            hlsUrl: 1,
+            duration: 1,
             artistFirstName: 1,
             artistSecondName: 1
         }},

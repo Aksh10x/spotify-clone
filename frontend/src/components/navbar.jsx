@@ -40,7 +40,6 @@ const Navbar = () => {
 
     async function DataFetch(){
         const res = await AuthenticatedGETReq("/user/get-user")
-        console.log(res)
         const first = res?.data?.firstName?.[0]
         const second = res?.data?.secondName?.[0] || ""
         setLogo(`${first}${second}`)

@@ -25,9 +25,7 @@ const OtherProfile = () => {
     const [error,setError] = useState(false)
 
     async function DataFetch(){
-        console.log("id", userId)
         const res = await AuthenticatedGETReq(`/user/get-other-user/${userId}`)
-        console.log("pofile fetch:", res)
         if(!res.success){
             alert("Error loading user data.")
             setError(true)
@@ -50,7 +48,6 @@ const OtherProfile = () => {
 
     const fetchPlaylists = async() => {
         const res = await AuthenticatedGETReq(`/playlist/user-playlists/${userId}`)
-        console.log(res)
         if(res.success){
             const plists = res.data
             setPlaylists(plists)
@@ -67,7 +64,6 @@ const OtherProfile = () => {
         const res = await AuthenticatedGETReq("/song/get-others-songs/"+userId)
 
         setSongs(res.data)
-        console.log(songs)
     }
 
     useEffect(() => {
@@ -76,7 +72,6 @@ const OtherProfile = () => {
         setTimeout(() => {
             DataFetch()
         },1500)
-        console.log(playlists)
     },[isArtist]) 
 
     if(isLoading){
@@ -136,9 +131,10 @@ const OtherProfile = () => {
                                         artistFirstName={song.artistFirstName}
                                         artistSecondName={song.artistSecondName}
                                         thumbnail={song.thumbnail}
-                                        trackUrl={song.track}
+                                        duration={song.duration}
                                         index={index}
                                         queueGiven={null}
+                                        hlsUrl={song.hlsUrl}
                                         />
                                     ))
                                     :

@@ -1,68 +1,57 @@
-import { useContext, useEffect, useState } from "react";
-import { AuthenticatedGETReq, AuthenticatedPATCHReq, AuthenticatedPOSTReq, getAudioDurationFromURL } from "../utils/server.helpers";
-import { IoIosPause, IoIosPlay } from "react-icons/io";
-import { SongContext } from "../utils/songContext";
-import { FaCheck} from "react-icons/fa6";
-import { BiPlusCircle } from "react-icons/bi";
-import { CgClose } from "react-icons/cg";
-import { PiMusicNotesSimple } from "react-icons/pi";
-import { LuLoaderCircle } from "react-icons/lu";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FiBarChart2 } from "react-icons/fi";
+import React, { useEffect, useRef, useState } from 'react';
+import { useContext } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { AuthenticatedGETReq, AuthenticatedPOSTReq } from '../utils/server.helpers';
+import { SongContext } from '../utils/songContext';
+import { FiBarChart2 } from 'react-icons/fi';
+import { IoIosPlay } from 'react-icons/io';
+import { BiPlusCircle } from 'react-icons/bi';
+import { CgClose } from 'react-icons/cg';
+import { FaCheck } from 'react-icons/fa';
+import { LuLoaderCircle } from 'react-icons/lu';
+import { PiMusicNotesSimple } from 'react-icons/pi';
 
 
-const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecondName,trackUrl,queueGiven}) => {
-
-    const [duration, setDuration] = useState("");
-    const [addSong,setAddSong] = useState(false);
+const HorizontalCard = ({songId, index, thumbnail, name, artistFirstName, artistSecondName, hlsUrl, queueGiven, duration}) => {
+    const [addSong, setAddSong] = useState(false);
     const [playlists, setPlaylists] = useState([])
-    const [id,setId] = useState("")
-    const [songToAdd,setSongToAdd] = useState("")
-    const [playlistsSelected,setPlaylistsSelected] = useState([])
-    const [playlistError,setPlaylistError] = useState("")
-    const [loading,setLoading] = useState(false)
+    const [id, setId] = useState("")
+    const [songToAdd, setSongToAdd] = useState("")
+    const [playlistsSelected, setPlaylistsSelected] = useState([])
+    const [playlistError, setPlaylistError] = useState("")
+    const [loading, setLoading] = useState(false)
     const [toast, setToast] = useState("")
     const [songInPlaylist, setSongInPlaylist] = useState([])
     const location = useLocation()
     const [artistId, setArtistId] = useState("")
-
-
+    const [formattedDuration, setFormattedDuration] = useState("0:00");
 
     const {
         playingId, setPlayingId,
         songName, setSongName,
         songThumbnail, setSongThumbnail,
-        songTrack,setSongTrack,
         isPlaying, setIsPlaying,
         artist, setArtist,
         queue, setQueue,
         currentIndex, setCurrentIndex,
+        setSongHlsUrl
     } = useContext(SongContext)
 
-    const fetchDuration = async () => {
-        try {
-          const durationInSeconds = await getAudioDurationFromURL(trackUrl);
-          const minutes = Math.floor(durationInSeconds / 60);
-          const seconds = Math.floor(durationInSeconds % 60);
-          setDuration(`${minutes}:${seconds < 10 ? "0" : ""}${seconds}`);
-        } catch (error) {
-          console.error(error);
-          setDuration("0:00");
-        }
-    };
-
     useEffect(() => {
-        if (trackUrl) {
-          fetchDuration();
+        if (duration) {
+            const minutes = Math.floor(duration / 60);
+            const seconds = Math.floor(duration % 60);
+            setFormattedDuration(`${minutes}:${seconds < 10 ? "0" : ""}${seconds}`);
         }
-    }, [trackUrl]);
+    }, [duration]);
 
-    const playSong = (name,thumbnail,trackUrl,artistFirstName,artistSecondName) => {
+    const playSong = (name, thumbnail, hlsUrl, artistFirstName, artistSecondName) => {
         setPlayingId(songId)
         setSongName(name)
         setSongThumbnail(thumbnail)
-        setSongTrack(trackUrl)
+        setSongHlsUrl(hlsUrl)
         setArtist(artistFirstName + " " + artistSecondName)
+        
         if(queueGiven && queueGiven.length > 0){
             setQueue(queueGiven)
             setCurrentIndex(index)
@@ -76,7 +65,6 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
 
     const fetchPlaylists = async() => {
         const res = await AuthenticatedGETReq(`/playlist/user-playlists/${id}`)
-        console.log(res)
         if(res.success){
             const plists = res.data
             setPlaylists(plists)
@@ -104,12 +92,10 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
     };
 
     const addToPlaylist = async () => {
-        console.log(playlistsSelected)
         const data = await AuthenticatedPOSTReq("/playlist/add-song-playlist", {
             songId: songToAdd,
             playlists: playlistsSelected
         })
-        console.log(data)
         if(data.success){
             setToast("Song added to selected playlists!")
         }else{
@@ -156,7 +142,6 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
     
 
     useEffect(() => {
-        console.log("im enetring the set song exists effect and song id is", songToAdd)
         if(!songToAdd) return;
         songExists(songToAdd)
     },[addSong, songToAdd])
@@ -172,7 +157,7 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
                     <>
                         <div className={`group-hover:hidden text-sm flex justify-center items-center text-white/60`}>{index +1 }</div>
                         <button className="group-hover:block hidden hover:flex justify-center items-center text-2xl absolute h-full -top-3 left-3"
-                        onClick={() => playSong(name,thumbnail,trackUrl,artistFirstName,artistSecondName)}
+                        onClick={() => playSong(name, thumbnail, hlsUrl, artistFirstName, artistSecondName)}
                         ><IoIosPlay />
                         </button>
                     </>
@@ -183,7 +168,7 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
                 <p className={` text-sm ${songId == playingId ? "text-green-500" : "text-white"}`}>{name}</p>    
             </div>
             <Link to={`/profile/${artistId}`} className="text-white/60 hover:underline text-sm w-[25%] group-hover:text-white">{artistFirstName + " " + artistSecondName}</Link>
-            <p className="text-white/60 text-sm w-[10%] text-center group-hover:text-white">{duration}</p>
+            <p className="text-white/60 text-sm w-[10%] text-center group-hover:text-white">{formattedDuration}</p>
             <div onClick={() => {
                 setSongToAdd(songId)
                 setTimeout(() => setAddSong(true), 1500)
@@ -200,14 +185,7 @@ const HorizontalCard = ({songId,index,thumbnail,name,artistFirstName,artistSecon
             <div className="bg-black w-[50%] h-[80%] rounded-xl relative">
                 <div className="w-full h-full bg-white bg-opacity-10 rounded-xl flex flex-col p-8 gap-4">
                     <div className="text-white font-semibold text-xl flex justify-between items-start">Add to playlist
-                        <button onClick={() => {
-                            setAddSong(false)
-                            setPlaylistError("")
-                            setLoading(false)
-                            setPlaylistsSelected([])
-                            setSongToAdd("")
-                            setSongInPlaylist([])
-                        }}
+                        <button onClick={() => { playSong(name, thumbnail, hlsUrl, artistFirstName, artistSecondName)}}
                             className="text-base text-white text-opacity-55 hover:text-opacity-100 transition-all"><CgClose/>
                         </button>
                     </div>    

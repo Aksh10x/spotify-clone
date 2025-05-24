@@ -19,7 +19,6 @@ export const SearchPage = () => {
             setSearchedSongs(res.data.searchedSongs)
             setSearchedArtists(res.data.searchedArtists)
             setSearchedProfiles(res.data.searchedProfiles)
-            console.log(res.data)
         }else{
             alert("Error loading search results.")
         }
@@ -44,8 +43,9 @@ export const SearchPage = () => {
                                 artistFirstName={song.artistFirstName}
                                 artistSecondName={song.artistSecondName}
                                 thumbnail={song.thumbnail}
-                                trackUrl={song.track}
+                                duration={song.duration}
                                 index={index}
+                                hlsUrl={song.hlsUrl}
                             />
                         )
                     ))

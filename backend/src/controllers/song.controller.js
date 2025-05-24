@@ -4,8 +4,9 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import asyncErrorHandler from "../utils/asyncErrorHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { convertToHLS } from "../utils/hlsConverter.js";
 import mongoose from "mongoose";
-
+import fs from "fs";
 
 const createSong = asyncErrorHandler(async(req,res) => {
     
@@ -36,26 +37,49 @@ const createSong = asyncErrorHandler(async(req,res) => {
         throw new ApiError(401, "Artist does not exist")
     }
 
-    const thumbnail = await uploadOnCloudinary(thumbnailLocalPath)
-    const track = await uploadOnCloudinary(trackLocalPath)
+    try {
+        const thumbnail = await uploadOnCloudinary(thumbnailLocalPath)
+        
+        if(!thumbnail){
+            throw new ApiError(400,"Thumbnail upload failed")
+        }
+        
+        const songId = new mongoose.Types.ObjectId();
+        
+        const hlsData = await convertToHLS(trackLocalPath, songId.toString());
 
+        const createdSong = await Song.create({
+            _id: songId,
+            name,
+            thumbnail: thumbnail.url,
+            hlsUrl: hlsData.masterUrl,
+            duration: hlsData.duration,
+            artist: artistId,
+        });
 
-    if(!(thumbnail || track)){
-        throw new ApiError(400,"Thumbnail and track are required")
+        cleanupFiles([thumbnailLocalPath, trackLocalPath]);
+
+        return res.status(200).json(
+            new ApiResponse(200, createdSong, "Song successfully uploaded")
+        );
+    } catch (error) {
+        cleanupFiles([thumbnailLocalPath, trackLocalPath]);
+        throw error; 
     }
-
-    const createdSong = await Song.create({
-        name,
-        thumbnail: thumbnail.url,
-        track: track.url,
-        artist: artistId,
-    })
-
-    return res.status(200).json(
-        new ApiResponse(200,createdSong,"Song successfully uploaded")
-    )
-
 })
+
+const cleanupFiles = (filePaths) => {
+    filePaths.forEach(path => {
+        if (path && fs.existsSync(path)) {
+            try {
+                fs.unlinkSync(path);
+                console.log(`Successfully deleted temporary file: ${path}`);
+            } catch (err) {
+                console.error(`Failed to delete temporary file ${path}:`, err);
+            }
+        }
+    });
+};
 
 const getMySongs = asyncErrorHandler(async(req,res) => {
     const currentUser = req.user
@@ -89,9 +113,10 @@ const getMySongs = asyncErrorHandler(async(req,res) => {
             $project: {
                 artistFirstName: 1,
                 artistSecondName: 1,
-                track: 1,
+                duration: 1,
                 thumbnail: 1,
                 name: 1,
+                hlsUrl: 1
             }
         }
     ])
@@ -180,9 +205,10 @@ const getOthersSongs = asyncErrorHandler(async(req,res) => {
             $project: {
                 artistFirstName: 1,
                 artistSecondName: 1,
-                track: 1,
+                duration: 1,
                 thumbnail: 1,
                 name: 1,
+                hlsUrl: 1
             }
         }
     ])

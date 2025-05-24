@@ -57,11 +57,15 @@ const createPlaylist = asyncErrorHandler(async(req,res) => {
 const getPlaylist = asyncErrorHandler(async(req,res) => {
     const {playlistId} = req.params
 
+    console.log("playlistId", playlistId)
+
     const playlistExists = await Playlist.findById(playlistId)
 
     if(!playlistExists){
         throw new ApiError(404,"Playlist does not exist, not found")
     }
+
+    console.log(playlistExists)
 
     if(playlistExists.songs.length === 0){
         const owner = await User.findById(playlistExists.owner)
@@ -165,6 +169,8 @@ const getPlaylist = asyncErrorHandler(async(req,res) => {
     ]);    
 
     const owner = await User.findById(playlist[0].owner)
+
+
     
 
     if(!playlist){

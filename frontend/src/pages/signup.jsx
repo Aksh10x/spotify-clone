@@ -89,7 +89,6 @@ const SignUp = () => {
     const signUp = async(userData) => {
             
             const res = await UnauthenticatedPOSTReq("/user/register",userData)
-            console.log(res)
             if(res.success){
                 const date = new Date()
                 date.setDate(date.getDate() + 30)

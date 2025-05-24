@@ -14,7 +14,11 @@ const songSchema = new Schema({
         type: String,
         required: true
     },
-    track: {
+    duration: {
+        type: Number,
+        default: 0
+    },
+    hlsUrl: {
         type: String,
         required: true
     }

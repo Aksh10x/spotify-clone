@@ -32,11 +32,11 @@ const Playlist = () => {
         playingId, setPlayingId,
         songName, setSongName,
         songThumbnail, setSongThumbnail,
-        songTrack,setSongTrack,
         isPlaying, setIsPlaying,
         artist, setArtist,
         queue, setQueue,
         currentIndex, setCurrentIndex,
+        songHlsUrl, setSongHlsUrl
     } = useContext(SongContext)
 
     const {deleted, setDeleted} = useContext(PlaylistContext)
@@ -48,7 +48,6 @@ const Playlist = () => {
 
     const fetchData = async() => {
         const res = await AuthenticatedGETReq(`/playlist/get-playlist/${playlistId}`)
-        console.log(res)
         if(res.success){
             setThumbnail(res.data?.playlist[0].thumbnail)
             setName(res.data?.playlist[0].name)
@@ -140,7 +139,7 @@ const Playlist = () => {
 
                         <div className="flex min-h-[80px] w-full items-center px-4 gap-6">
                             <button onClick={() => {if(songs.length > 0){
-                                setSongTrack(songs[0].track)
+                                setSongHlsUrl(songs[0].hlsUrl)
                                 setPlayingId(songs[0]._id)
                                 setSongName(songs[0].name)
                                 setSongThumbnail(songs[0].thumbnail)
@@ -182,9 +181,10 @@ const Playlist = () => {
                                     artistFirstName={song.artistFirstName}
                                     artistSecondName={song.artistSecondName}
                                     thumbnail={song.thumbnail}
-                                    trackUrl={song.track}
+                                    duration={song.duration}
                                     index={index}
                                     queueGiven={songs}
+                                    hlsUrl={song.hlsUrl}
                                     />
                                 ))
                                 :
