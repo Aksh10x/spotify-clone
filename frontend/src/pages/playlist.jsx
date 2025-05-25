@@ -117,10 +117,11 @@ const Playlist = () => {
         userIdFetch();
     },[playlistId]);
 
-    if(!playlistId){
+    if(!name){
         return(
             <div className="absolute right-0 lg:w-[75.5%] md:w-[75%] sm:w-[75%] 2xl:w-[82%] h-[calc(100%-75px)] flex justify-center bg-white/5 overflow-hidden">
                 <div className="w-full h-[calc(100vh-68px)] max-w-[1500px] text-black bg-black relative pt-0 flex gap-2">
+                    <div className="w-full h-[calc(100%-75px)] bg-white bg-opacity-5 rounded-lg flex gap-2 flex-col overflow-y-auto custom-scrollbar relative"></div>
                 </div>
             </div>
         );
