@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@shadcn/ui": "^0.0.4",
+    "colorthief": "^2.6.0",
     "cra-template": "1.2.0",
     "hls.js": "^1.6.2",
     "howler": "^2.2.4",

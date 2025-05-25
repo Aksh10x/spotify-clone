@@ -13,21 +13,26 @@ import { PlaylistContext } from "../utils/playlistContext";
 import { SearchContext } from "../utils/searchContext";
 import { SearchPage } from "../components/search_Page";
 import { SongContext } from "../utils/songContext";
+import { useDominantColor } from "../utils/useDominantColor";
 
 const Playlist = () => {
-    const {playlistId} = useParams()
-    const [thumbnail, setThumbnail] = useState("")
-    const [name, setName] = useState("")
-    const [description, setDescription] = useState("")
-    const [songNumber, setSongNumber] = useState(0)
-    const [songs, setSongs] = useState([])
-    const [deletePopUp, setDeletePopUp] = useState(false)
-    const [owner, setOwner] = useState("")
-    const [ownerId, setOwnerId] = useState("")
-    const menuRef = useRef(null)
-    const navigate = useNavigate()
-    const {inSearch, setInSearch} = useContext(SearchContext)
-    const [userId, setUserId] = useState("")
+    const {playlistId} = useParams();
+    const [thumbnail, setThumbnail] = useState("");
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
+    const [songNumber, setSongNumber] = useState(0);
+    const [songs, setSongs] = useState([]);
+    const [deletePopUp, setDeletePopUp] = useState(false);
+    const [owner, setOwner] = useState("");
+    const [ownerId, setOwnerId] = useState("");
+    const menuRef = useRef(null);
+    const navigate = useNavigate();
+    const {inSearch, setInSearch} = useContext(SearchContext);
+    const [userId, setUserId] = useState("");
+    
+    // Get dominant color from the thumbnail
+    const { dominantColor, isLoading } = useDominantColor(thumbnail);
+    
     const {
         playingId, setPlayingId,
         songName, setSongName,
@@ -37,59 +42,81 @@ const Playlist = () => {
         queue, setQueue,
         currentIndex, setCurrentIndex,
         songHlsUrl, setSongHlsUrl
-    } = useContext(SongContext)
+    } = useContext(SongContext);
 
-    const {deleted, setDeleted} = useContext(PlaylistContext)
+    const {deleted, setDeleted} = useContext(PlaylistContext);
 
     async function userIdFetch(){
-        const res = await AuthenticatedGETReq("/user/get-user")
-        setUserId(res.data._id)
+        const res = await AuthenticatedGETReq("/user/get-user");
+        setUserId(res.data._id);
     }
 
     const fetchData = async() => {
-        const res = await AuthenticatedGETReq(`/playlist/get-playlist/${playlistId}`)
+        const res = await AuthenticatedGETReq(`/playlist/get-playlist/${playlistId}`);
         if(res.success){
-            setThumbnail(res.data?.playlist[0].thumbnail)
-            setName(res.data?.playlist[0].name)
-            setDescription(res.data?.playlist[0].description)
-            setSongNumber(res.data?.playlist[0]?.songs.length)
-            setOwnerId(res.data?.playlist[0].owner)
-            setSongs(res.data?.playlist[0].songs)
-            setOwner(res.data?.ownerName)
+            setThumbnail(res.data?.playlist[0].thumbnail);
+            setName(res.data?.playlist[0].name);
+            setDescription(res.data?.playlist[0].description);
+            setSongNumber(res.data?.playlist[0]?.songs.length);
+            setOwnerId(res.data?.playlist[0].owner);
+            setSongs(res.data?.playlist[0].songs);
+            setOwner(res.data?.ownerName);
         }else{
-            alert("Error loading playlist.")
+            alert("Error loading playlist.");
         }
     }
 
     useEffect(() => {
         const handleMouseClick = (event) => {
             if(menuRef.current && !menuRef.current.contains(event.target)){
-                setDeletePopUp(false)
+                setDeletePopUp(false);
             }
         }
 
         if(deletePopUp){
-            document.addEventListener("mousedown", handleMouseClick)
+            document.addEventListener("mousedown", handleMouseClick);
         }
 
         return () => {
-            document.removeEventListener("mousedown",handleMouseClick)
+            document.removeEventListener("mousedown",handleMouseClick);
         }
-    },[deletePopUp])
+    },[deletePopUp]);
 
     const deletePlaylist = async() => {
-        const res = await AuthenticatedDELETEReq(`/playlist/delete-playlist/${playlistId}`)
+        const res = await AuthenticatedDELETEReq(`/playlist/delete-playlist/${playlistId}`);
 
         if(res.success){
-            setDeleted((prev) => !prev)
-            navigate("/home")
+            setDeleted((prev) => !prev);
+            navigate("/home");
         }
     }
 
+    const getGradientStyle = () => {
+        if (isLoading || !thumbnail) {
+            return { 
+                background: 'linear-gradient(to bottom, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%)' 
+            };
+        }
+        
+        const [r, g, b] = dominantColor;
+        return {
+            background: `linear-gradient(to bottom, rgba(${r},${g},${b},0.6) 0%, rgba(18,18,18,1) 100%)`
+        };
+    };
+
+    const getTextColorClass = () => {
+        if (!thumbnail || isLoading) return "";
+        
+        const [r, g, b] = dominantColor;
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        return brightness > 125 ? "text-black" : "";
+    };
+
     useEffect(() => {
-        fetchData()
-        userIdFetch()
-    },[playlistId])
+        fetchData();
+        userIdFetch();
+    },[playlistId]);
+    
     return (
         <div className="absolute right-0 lg:w-[75.5%] md:w-[75%] sm:w-[75%] 2xl:w-[82%] h-[calc(100%-75px)] flex justify-center bg-white/5 overflow-hidden">
             <div className="w-full h-[calc(100vh-68px)] max-w-[1500px] text-black bg-black relative pt-0 flex gap-2">
@@ -101,14 +128,21 @@ const Playlist = () => {
                         <div className="p-6"><SearchPage/></div>
                         :
                         <>
-                        <div className="w-full bg-gradient-to-b rounded-t-lg from-white/40 to-white/10  px-5 pb-3 pt-6 flex justify-end flex-col">
+                        <div 
+                            className="w-full rounded-t-lg px-5 pb-3 pt-6 flex justify-end flex-col transition-all duration-500"
+                            style={getGradientStyle()}
+                        >
                     
                             <div className="w-full flex pb-2">
                                 
                                 <div className="h-full flex items-end">
                                 {thumbnail ? 
                                     <div className="h-36 w-36 bg-pink-300 rounded-md shadow-xl flex justify-center items-center text-5xl font-semibold">
-                                        <img src={thumbnail} className="h-full w-36 rounded-md object-cover object-center"/>
+                                        <img 
+                                            src={thumbnail} 
+                                            className="h-full w-36 rounded-md object-cover object-center"
+                                            crossOrigin="anonymous"
+                                        />
                                     </div>
                                     :
                                     <div className="h-36 w-36 text-7xl bg-black/50 rounded-md shadow-xl flex justify-center items-center font-semibold text-white/60">
@@ -117,22 +151,19 @@ const Playlist = () => {
                                 }
                                 </div>
 
-
                                 
                                 <div className="px-8 flex flex-col justify-end gap-2 max-w-[calc(100%-200px)]">
-                                    <div className="text-white text-sm">Playlist</div>
-                                    <div className="text-white font-bold text-4xl max-w-full overflow-hidden break-all">
+                                    <div className={`text-white ${getTextColorClass()} text-sm`}>Playlist</div>
+                                    <div className={`text-white ${getTextColorClass()} font-bold text-4xl max-w-full overflow-hidden break-all`}>
                                         {name}
                                     </div>
-                                    <div className="text-white text-opacity-40 text-sm">{description}</div>
+                                    <div className={`text-white ${getTextColorClass()} text-opacity-40 text-sm`}>{description}</div>
                                     <div className="flex gap-1 items-center">
-                                        <p className="text-white text-xs font-semibold">{owner}</p>
-                                        <p className="text-sm text-white/40">•</p>
-                                        <p className="text-sm text-white/40">{songNumber} Songs</p>
+                                        <p className={`text-white ${getTextColorClass()} text-xs font-semibold`}>{owner}</p>
+                                        <p className={`text-sm text-white/40 ${getTextColorClass()}`}>•</p>
+                                        <p className={`text-sm text-white/40 ${getTextColorClass()}`}>{songNumber} Songs</p>
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
 
@@ -176,6 +207,7 @@ const Playlist = () => {
                             {songs && songs.length > 0 ? 
                                 songs?.map((song, index) => (
                                     <HorizontalCard 
+                                    key={song._id}
                                     songId={song._id}
                                     name={song.name} 
                                     artistFirstName={song.artistFirstName}
@@ -194,10 +226,8 @@ const Playlist = () => {
                     </>
                     }
                     
-
                 </div>
             </div>
-        
         </div>
     );
 }
