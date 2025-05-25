@@ -116,6 +116,15 @@ const Playlist = () => {
         fetchData();
         userIdFetch();
     },[playlistId]);
+
+    if(!playlistId){
+        return(
+            <div className="absolute right-0 lg:w-[75.5%] md:w-[75%] sm:w-[75%] 2xl:w-[82%] h-[calc(100%-75px)] flex justify-center bg-white/5 overflow-hidden">
+                <div className="w-full h-[calc(100vh-68px)] max-w-[1500px] text-black bg-black relative pt-0 flex gap-2">
+                </div>
+            </div>
+        );
+    }
     
     return (
         <div className="absolute right-0 lg:w-[75.5%] md:w-[75%] sm:w-[75%] 2xl:w-[82%] h-[calc(100%-75px)] flex justify-center bg-white/5 overflow-hidden">
