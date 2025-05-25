@@ -181,56 +181,82 @@ const HorizontalCard = ({songId, index, thumbnail, name, artistFirstName, artist
 
         {
         addSong && 
-        <div className="bg-black absolute h-[calc(100vh-130px)] w-[100%] z-10 top-0 left-0 backdrop-blur-sm bg-opacity-20 flex justify-center items-center overflow-hidden">
-            <div className="bg-black w-[50%] h-[80%] rounded-xl relative">
-                <div className="w-full h-full bg-white bg-opacity-10 rounded-xl flex flex-col p-8 gap-4">
-                    <div className="text-white font-semibold text-xl flex justify-between items-start">Add to playlist
-                        <button onClick={() => {
-                            setAddSong(false)}}
-                            className="text-base text-white text-opacity-55 hover:text-opacity-100 transition-all"><CgClose/>
+        <div className="fixed top-[60px] lg:w-[75.5%] md:w-[75%] sm:w-[75%] 2xl:w-[82%] right-0 bottom-[83px] z-50 flex items-center justify-center">
+            <div 
+                className="absolute inset-0 bg-black/20"
+                onClick={() => setAddSong(false)}
+            ></div>
+            <div className="bg-[#121212] shadow-lg shadow-black  w-[500px] max-w-[90%] rounded-xl border border-white/10 z-10">
+                <div className="w-full h-full bg-white/5 rounded-xl flex flex-col p-6 gap-4">
+                    <div className="text-white font-semibold text-xl flex justify-between items-center">
+                        Add to playlist
+                        <button 
+                            onClick={() => setAddSong(false)}
+                            className="text-white/60 hover:text-white p-2 rounded-full hover:bg-white/10 transition-all"
+                        >
+                            <CgClose size={20}/>
                         </button>
                     </div>    
-                    <div className="flex flex-col w-full p-[8px] overflow-auto scrollbar-hide max-h-[95%]">
+                    <div className="flex flex-col w-full max-h-[60vh] overflow-auto scrollbar-hide">
                         {playlists && playlists.length > 0 ? 
                             playlists.map((playlist, index) => (
-                                <div className="w-[100%] h-[65px] rounded-md flex p-[8px] hover:bg-white/10 gap-2  cursor-pointer">
+                                <div key={playlist._id} className="w-full p-2 rounded-md flex items-center hover:bg-white/10 gap-3 cursor-pointer">
+                                    {/* Existing playlist item content */}
                                     {playlist.thumbnail ? 
-                                        <img src={playlist.thumbnail} className="h-full rounded-sm max-w-[50px]"/>
+                                        <img src={playlist.thumbnail} className="h-12 w-12 rounded-sm object-cover object-center"/>
                                         :
-                                        <div className="w-[50px] min-h-[50px] h-full flex justify-center items-center text-lg bg-white/5 rounded-sm text-white/60"><PiMusicNotesSimple /></div>
+                                        <div className="w-12 h-12 flex justify-center items-center text-lg bg-white/5 rounded-sm text-white/60">
+                                            <PiMusicNotesSimple />
+                                        </div>
                                     }
-                                    <div className="flex flex-col justify-center items-start flex-grow">
-                                        <div className="text-white text-sm truncate overflow-hidden text-ellipsis w-[200px]">
-                                        {playlist.name}
+                                    <div className="flex flex-col justify-center flex-grow">
+                                        <div className="text-white text-sm truncate">
+                                            {playlist.name}
                                         </div>
                                         <div className="text-white/60 text-xs">{playlist.owner}</div>
                                     </div>
-                                    <div className="flex justify-center items-center w-[7%]">
-                                        <input type="checkbox" class="hidden peer" id={playlist._id}
-                                        onChange={handleCheckboxChange
-                                        }
-                                        defaultChecked={!!songInPlaylist[index]}
-                                        ></input>
-                                        <label for={playlist._id}
-                                        className={`w-[20px] h-[20px] cursor-pointer border-[1px] border-white/60 rounded-full peer-checked:bg-green-500 peer-checked:border-green-500 text-white/50 text-xs justify-center items-center flex`}
+                                    <div className="flex justify-center items-center pr-2">
+                                        <input 
+                                            type="checkbox" 
+                                            className="hidden peer" 
+                                            id={playlist._id}
+                                            onChange={handleCheckboxChange}
+                                            defaultChecked={!!songInPlaylist[index]}
+                                        />
+                                        <label 
+                                            htmlFor={playlist._id}
+                                            className="w-5 h-5 cursor-pointer border border-white/60 rounded-full 
+                                                    peer-checked:bg-green-500 peer-checked:border-green-500 
+                                                    flex items-center justify-center transition-all"
                                         >
-                                            <FaCheck/>
+                                            <FaCheck className="text-white text-[10px]"/>
                                         </label>
                                     </div>
                                 </div>
                             ))
                             :
-                            <div></div>
+                            <div className="text-white/60 text-center py-4">No playlists found. Create a playlist first.</div>
                         }
                     </div>
-                    <div className="flex justify-between w-full h-[70px]">
-                        {loading && <div className="text-5xl text-green-500 animate-spin"><LuLoaderCircle/></div>}
-                        {playlistError && <p className="text-xs text-red-500 font-semibold">{playlistError}</p>}
-                        <button onClick={() => {
-                            addToPlaylist()
-                            setLoading(true)
-
-                        }} className="bg-white rounded-full font-semibold py-2 px-4 absolute right-4 bottom-3 text-black">Done</button>
+                    <div className="flex justify-between items-center pt-4 border-t border-white/10 mt-2">
+                        {loading && 
+                            <div className="text-green-500 flex items-center">
+                                <LuLoaderCircle className="animate-spin mr-2" />
+                                <span className="text-sm">Adding to playlist...</span>
+                            </div>
+                        }
+                        {playlistError && 
+                            <p className="text-sm text-red-500">{playlistError}</p>
+                        }
+                        <button 
+                            onClick={() => {
+                                addToPlaylist();
+                                setLoading(true);
+                            }} 
+                            className="ml-auto bg-white rounded-full font-semibold py-2 px-6 text-black hover:scale-105 transition-transform"
+                        >
+                            Done
+                        </button>
                     </div>
                 </div>
             </div>
