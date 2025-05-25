@@ -371,7 +371,9 @@ const Playback = () => {
           <button onClick={playPrevSong} className="text-xl text-white/40 hover:text-white transition-all">
             <FaBackwardStep />
           </button>
-          <button onClick={togglePlayback} className="text-4xl hover:scale-105 transition-all hover:text-white/90">
+          <button onClick={togglePlayback}
+          disabled={!songHlsUrl}
+          className="text-4xl hover:scale-105 transition-all hover:text-white/90">
             {isPlaying ? <RiPauseCircleFill /> : <IoIosPlayCircle />}
           </button>
           <button onClick={playNextSong} className="text-xl text-white/40 hover:text-white transition-all">
