@@ -220,9 +220,11 @@ const Playback = () => {
   }, [seekValue]);
 
   const playNextSong = () => {
+    setSeekValue(0);
     if(seekRef.current){
     seekRef.current.style.setProperty('--seek-before-width', `0%`);
     }
+
     if (queue.length > 0 && currentIndex < queue.length - 1) {
       if (shuffle) {
         let index;
@@ -261,6 +263,7 @@ const Playback = () => {
   };
 
   const playPrevSong = () => {
+    setSeekValue(0);
     if(seekRef.current){
       seekRef.current.style.setProperty('--seek-before-width', `0%`);
     }  
