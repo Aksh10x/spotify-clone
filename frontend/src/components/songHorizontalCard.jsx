@@ -185,7 +185,8 @@ const HorizontalCard = ({songId, index, thumbnail, name, artistFirstName, artist
             <div className="bg-black w-[50%] h-[80%] rounded-xl relative">
                 <div className="w-full h-full bg-white bg-opacity-10 rounded-xl flex flex-col p-8 gap-4">
                     <div className="text-white font-semibold text-xl flex justify-between items-start">Add to playlist
-                        <button onClick={() => { playSong(name, thumbnail, hlsUrl, artistFirstName, artistSecondName)}}
+                        <button onClick={() => {
+                            setAddSong(false)}}
                             className="text-base text-white text-opacity-55 hover:text-opacity-100 transition-all"><CgClose/>
                         </button>
                     </div>    
