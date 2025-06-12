@@ -338,21 +338,32 @@ const Search = asyncErrorHandler(async(req,res) => {
     ])
 
     const searchedSongs = await Song.aggregate([
-        { $match: {
-            name: {$regex: query, $options: "i"}
-        }},
-        {$lookup:{
+    { 
+        $lookup:{
             from: "users",
             localField: "artist",
             foreignField: "_id",
             as: "owner"
-        }},
-        {$unwind: "$owner"},
-        {$addFields: {
+        }
+    },
+    { $unwind: "$owner" },
+    { 
+        $match: {
+            $or: [
+                { name: {$regex: query, $options: "i"} },
+                { "owner.firstName": {$regex: query, $options: "i"} },
+                { "owner.secondName": {$regex: query, $options: "i"} }
+            ]
+        }
+    },
+    {
+        $addFields: {
             artistFirstName: "$owner.firstName",
             artistSecondName: "$owner.secondName"
-        }},
-        {$project: {
+        }
+    },
+    {
+        $project: {
             _id: 1,
             name: 1,
             thumbnail: 1,
@@ -360,8 +371,9 @@ const Search = asyncErrorHandler(async(req,res) => {
             duration: 1,
             artistFirstName: 1,
             artistSecondName: 1
-        }},
-    ])
+        }
+    },
+])
 
     return res.status(200).json(
         new ApiResponse(200,{searchedArtists, searchedProfiles, searchedSongs},"Search results fetched successfully")
