@@ -87,20 +87,23 @@ const SignUp = () => {
     }
 
     const signUp = async(userData) => {
-            
-            const res = await UnauthenticatedPOSTReq("/user/register",userData)
-            if(res.success){
-                const date = new Date()
-                date.setDate(date.getDate() + 30)
-                setCookie("token", res.data.token, {path: "/", expires: date})
-                setIsLoading(true)
-                setTimeout(() => {
-                    navigate("/home")
-                },3000)
-            }
-            else{
-                setFinalError(res.message)
-            }
+        setIsLoading(true)
+        
+        const res = await UnauthenticatedPOSTReq("/user/register",userData)
+        if(res.success){
+            const date = new Date()
+            date.setDate(date.getDate() + 30)
+            setCookie("token", res.data.token, {path: "/", expires: date})
+            setTimeout(() => {
+                navigate("/home")
+            },3000)
+            setIsLoading(false)
+
+        }
+        else{
+            setIsLoading(false)
+            setFinalError(res.message)
+        }
         
     }
     
