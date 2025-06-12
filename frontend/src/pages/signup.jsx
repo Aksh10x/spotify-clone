@@ -186,7 +186,8 @@ const SignUp = () => {
                             >
                             </input>
                             <button className="absolute right-3 top-3 text-white text-opacity-40 text-2xl font-semibold
-                            hover:scale-110 hover:text-white transition" onClick={() => setIsPassword((prev) => !prev)}>
+                            hover:scale-110 hover:text-white transition" onClick={() => setIsPassword((prev) => !prev)}
+                            >
                                 {isPassword ? <IoEyeOffOutline /> : <IoEyeOutline /> }
 
                             </button>
