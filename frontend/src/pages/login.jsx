@@ -35,9 +35,9 @@ const LogIn = () => {
     }
 
     const Login = async(userData) => {
-
-        const res = await UnauthenticatedPOSTReq("/user/login",userData)
         setIsLoading(true)
+        const res = await UnauthenticatedPOSTReq("/user/login",userData)
+        
 
         if(res.success){
             const date = new Date()
