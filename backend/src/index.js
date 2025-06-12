@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import dbConnect from "./db/dbConnect.js";
 import { app } from "./app.js";
+import { connectRedis } from "./utils/redisClient.js";
 
 dotenv.config({
     path: "./.env",
@@ -9,14 +10,16 @@ dotenv.config({
 
 const port = process.env.PORT || 4000
 
-dbConnect().then(() => {
-    app.listen(port, () => {
-        console.log("Listening on port ",port)
+Promise.all([dbConnect(), connectRedis()])
+    .then(() => {
+        app.listen(port, () => {
+            console.log("Listening on port ", port)
+        })
     })
-}).catch( (error) => {
-    console.log("Database error occured", error)
-}
-)
+    .catch((error) => {
+        console.log("Database or Redis connection error occurred", error)
+        process.exit(1)
+    })
 
 
 //Passport jwt
