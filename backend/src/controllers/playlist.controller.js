@@ -215,90 +215,78 @@ const getUserPlaylists = asyncErrorHandler(async(req,res) => {
     )
 })
 
-const clearPlaylistCache = async (playlistId) => {
+const clearPlaylistCacheSimple = async (playlistId) => {
     if (!isRedisConnected()) return;
     
     try {
-        let keys = [];
-        let cursor = 0;
-
-        do {
-            const result = await redisClient.scan(cursor, {
-                MATCH: `playlist-detail:*${playlistId}*`,
-                COUNT: 100
-            });
-            
-            cursor = result.cursor;
-            keys = keys.concat(result.keys);
-        } while (cursor !== 0);
+        const keysToDelete = [];
         
-        cursor = 0;
+        // get all keys matching patterns
+        const patterns = [
+            `playlist-detail:*${playlistId}*`,
+            `user-playlists:*`
+        ];
         
-        do {
-            const result = await redisClient.scan(cursor, {
-                MATCH: `user-playlists:*`,
-                COUNT: 100
-            });
-            
-            cursor = result.cursor;
-            keys = keys.concat(result.keys);
-        } while (cursor !== 0);
-        
-        if (keys.length > 0) {
-            await redisClient.del(keys);
-            console.log(`Cleared ${keys.length} keys related to playlist ${playlistId}`);
+        for (const pattern of patterns) {
+            const keys = await redisClient.keys(pattern);
+            keysToDelete.push(...keys);
         }
+        
+        // remove duplicates
+        const uniqueKeys = [...new Set(keysToDelete)];
+        
+        if (uniqueKeys.length > 0) {
+            await redisClient.del(...uniqueKeys);
+            console.log(`Cleared ${uniqueKeys.length} cache keys for playlist ${playlistId}`);
+        }
+        
     } catch (error) {
         console.error('Error clearing playlist cache:', error);
     }
 };
 
-const addSongToPlaylist = asyncErrorHandler(async(req,res) => {
-    const currentUser = req.user
-    const {songId, playlists} = req.body
+
+const addSongToPlaylist = asyncErrorHandler(async(req, res) => {
+    const currentUser = req.user;
+    const {songId, playlists} = req.body;
     const modifiedPlaylists = new Set();
 
     for (let i = 0; i < playlists.length; i++) {
-        const playlist = await Playlist.findById(playlists[i].id)
+        const playlist = await Playlist.findById(playlists[i].id);
 
         if(!playlist){
-            throw new ApiError(404,"Playlist doesnt exist, not found")
+            throw new ApiError(404, "Playlist doesn't exist, not found");
         }
 
-        if(playlist.owner.toString() != currentUser._id.toString() && 
-        !playlist.collaborators.includes(currentUser._id)){
-            throw new ApiError(401,"User does not own playlist")
+        if(playlist.owner.toString() !== currentUser._id.toString() && 
+           !playlist.collaborators.includes(currentUser._id)){
+            throw new ApiError(401, "User does not own playlist");
         }
-
-        const song = await Song.findById(songId)
 
         if(playlists[i].add){
-
+            const song = await Song.findById(songId);
             if(!song){
-                throw new ApiError(404,"Song doesnt exist, not found")
+                throw new ApiError(404, "Song doesn't exist, not found");
             }
 
-            playlist.songs.push(songId)
-
-            await playlist.save({validateBeforeSave: false})
-            modifiedPlaylists.add(playlist._id.toString());
-        }else{
+            playlist.songs.push(songId);
+        } else {
             playlist.songs = playlist.songs.filter(id => id.toString() !== songId.toString());
+        }
 
-            await playlist.save({validateBeforeSave: false})
-            modifiedPlaylists.add(playlist._id.toString());
-        }       
+        await playlist.save({validateBeforeSave: false});
+        modifiedPlaylists.add(playlist._id.toString());
     }
 
     // clear cache for all modified playlists
     for (const playlistId of modifiedPlaylists) {
-        await clearPlaylistCache(playlistId);
+        await clearPlaylistCacheSimple(playlistId);
     }
 
     return res.status(200).json(
-        new ApiResponse(200,{}, "Song added/removed to/from playlist successfully")
-    )
-})
+        new ApiResponse(200, {}, "Song added/removed to/from playlist successfully")
+    );
+});
 
 const songExistsInPlaylist = asyncErrorHandler(async(req,res) => {
     const {songId, playlistId} = req.body
