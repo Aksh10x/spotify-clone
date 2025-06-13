@@ -218,10 +218,10 @@ const getUserPlaylists = asyncErrorHandler(async(req,res) => {
 const clearPlaylistCache = async (playlistId) => {
     if (!isRedisConnected()) return;
     
-    try{
-        let cursor = 0;
+    try {
         let keys = [];
-        
+        let cursor = 0;
+
         do {
             const result = await redisClient.scan(cursor, {
                 MATCH: `playlist-detail:*${playlistId}*`,
@@ -231,6 +231,8 @@ const clearPlaylistCache = async (playlistId) => {
             cursor = result.cursor;
             keys = keys.concat(result.keys);
         } while (cursor !== 0);
+        
+        cursor = 0;
         
         do {
             const result = await redisClient.scan(cursor, {
