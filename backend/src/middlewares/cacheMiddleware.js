@@ -90,3 +90,7 @@ export const clearAllCache = async () => {
         console.error('Error clearing all cache:', error);
     }
 };
+
+export const isRedisConnected = () => {
+    return redisClient && redisClient.isOpen;
+};

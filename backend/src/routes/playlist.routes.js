@@ -22,7 +22,7 @@ router.route("/create").post(
 
 router.route("/add-song-playlist").post(
     passport.authenticate("jwt", {session: false}),
-    clearCache("playlist-detail"),
+    // clearCache("playlist-detail"),  cache clearance is handled in controller
     addSongToPlaylist
 );
 

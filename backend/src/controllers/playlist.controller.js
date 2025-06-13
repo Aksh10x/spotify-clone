@@ -6,6 +6,8 @@ import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import asyncErrorHandler from "../utils/asyncErrorHandler.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
+import { redisClient } from "../utils/redisClient.js";
+import { isRedisConnected } from "../middlewares/cacheMiddleware.js";
 
 const createPlaylist = asyncErrorHandler(async(req,res) => {
     const currentUser = req.user
@@ -213,9 +215,46 @@ const getUserPlaylists = asyncErrorHandler(async(req,res) => {
     )
 })
 
+const clearPlaylistCache = async (playlistId) => {
+    if (!isRedisConnected()) return;
+    
+    try{
+        let cursor = 0;
+        let keys = [];
+        
+        do {
+            const result = await redisClient.scan(cursor, {
+                MATCH: `playlist-detail:*${playlistId}*`,
+                COUNT: 100
+            });
+            
+            cursor = result.cursor;
+            keys = keys.concat(result.keys);
+        } while (cursor !== 0);
+        
+        do {
+            const result = await redisClient.scan(cursor, {
+                MATCH: `user-playlists:*`,
+                COUNT: 100
+            });
+            
+            cursor = result.cursor;
+            keys = keys.concat(result.keys);
+        } while (cursor !== 0);
+        
+        if (keys.length > 0) {
+            await redisClient.del(keys);
+            console.log(`Cleared ${keys.length} keys related to playlist ${playlistId}`);
+        }
+    } catch (error) {
+        console.error('Error clearing playlist cache:', error);
+    }
+};
+
 const addSongToPlaylist = asyncErrorHandler(async(req,res) => {
     const currentUser = req.user
     const {songId, playlists} = req.body
+    const modifiedPlaylists = new Set();
 
     for (let i = 0; i < playlists.length; i++) {
         const playlist = await Playlist.findById(playlists[i].id)
@@ -240,11 +279,18 @@ const addSongToPlaylist = asyncErrorHandler(async(req,res) => {
             playlist.songs.push(songId)
 
             await playlist.save({validateBeforeSave: false})
+            modifiedPlaylists.add(playlist._id.toString());
         }else{
             playlist.songs = playlist.songs.filter(id => id.toString() !== songId.toString());
 
             await playlist.save({validateBeforeSave: false})
+            modifiedPlaylists.add(playlist._id.toString());
         }       
+    }
+
+    // clear cache for all modified playlists
+    for (const playlistId of modifiedPlaylists) {
+        await clearPlaylistCache(playlistId);
     }
 
     return res.status(200).json(
