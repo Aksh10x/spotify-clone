@@ -74,6 +74,10 @@ const OtherProfile = () => {
         },1500)
     },[isArtist]) 
 
+    useEffect(() => {
+        DataFetch()
+    },[])
+
     if(isLoading){
         return (
             

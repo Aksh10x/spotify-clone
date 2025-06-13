@@ -82,6 +82,10 @@ const Profile = () => {
         },1500)
     },[isArtist]) 
 
+    useEffect(() => {
+        DataFetch()
+    })
+
 
     const toggleArtist = async() => {
         const res = await AuthenticatedPATCHReq("/user/toggle-artist")
