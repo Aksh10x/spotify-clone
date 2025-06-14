@@ -29,7 +29,7 @@ const Profile = () => {
     const [isError, setIsError] = useState(false)
     const [editProfile, setEditProfile] = useState(false)
     const [deletePhoto, setDeletePhoto] = useState(false)
-    const [songs,setSongs] = useState([])
+    const [songs,setSongs] = useState(Array.from({ length: 6 }, () => ({})))
     const [playlists, setPlaylists] = useState([])
     const [newPlaylist, setNewPlaylist] = useState(false)
 
@@ -166,6 +166,7 @@ const Profile = () => {
 
     return (
         <>
+        
         <div className="absolute lg:w-[75.5%] md:w-[75%] sm:w-[75%] 2xl:w-[82%] right-0 h-[calc(100%-75px)] overflow-hidden flex justify-center bg-white bg-opacity-5">
             
             <div className="w-full h-[calc(100vh-68px)] max-w-[1500px] rounded-lg text-black bg-black relative pt-0 flex gap-2">
@@ -205,7 +206,7 @@ const Profile = () => {
                                 <div className="text-white font-semibold text-2xl">Your Songs</div>
                                 <div className="text-sm font-normal text-opacity-60 text-white mb-2">Visible to everybody</div>
                                 <div className="flex flex-col w-full max-h-[200px] overflow-y-scroll scrollbar-hide">
-                                {songs && songs.length > 0 ? 
+                                {songs ? 
                                     songs?.map((song, index) => (
                                         <HorizontalCard
                                         songId={song._id} 

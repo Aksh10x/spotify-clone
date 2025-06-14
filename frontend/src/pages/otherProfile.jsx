@@ -19,7 +19,7 @@ const OtherProfile = () => {
     const [logo,setLogo] = useState("")
     const [id,setId] = useState("")
     const [avatar, setAvatar] = useState("")
-    const [songs,setSongs] = useState([])
+    const [songs,setSongs] = useState(Array.from({ length: 6 }, () => ({})))
     const [playlists, setPlaylists] = useState([])
     const {inSearch} = useContext(SearchContext)
     const [error,setError] = useState(false)
@@ -74,6 +74,8 @@ const OtherProfile = () => {
         },1500)
     },[isArtist]) 
 
+    
+
     useEffect(() => {
         DataFetch()
     },[])
@@ -127,7 +129,7 @@ const OtherProfile = () => {
                                 <div className="text-white font-semibold text-2xl">Songs</div>
                                 <div className="text-sm font-normal text-opacity-60 text-white mb-2">Visible to everybody</div>
                                 <div className="flex flex-col w-full max-h-[200px] overflow-y-scroll scrollbar-hide">
-                                {songs && songs.length > 0 ? 
+                                {songs ? 
                                     songs?.map((song, index) => (
                                         <HorizontalCard
                                         songId={song._id} 

@@ -147,9 +147,9 @@ const HorizontalCard = ({songId, index, thumbnail, name, artistFirstName, artist
     },[addSong, songToAdd])
 
 
-    return (
+    if(songId) {return (
         <>
-        <div className="w-full text-white flex h-[60px] hover:bg-white/10 rounded-md items-center p-2 cursor-pointer mt-1 group">
+        <div className="w-full text-white flex min-h-[60px] hover:bg-white/10 rounded-md items-center p-2 cursor-pointer mt-1 group">
             <div className="w-[5%] text-center text-white/60 group-hover:text-white relative">
                 {
                     songId == playingId ?
@@ -263,7 +263,25 @@ const HorizontalCard = ({songId, index, thumbnail, name, artistFirstName, artist
         </div>
         }
         </>
+    )};
+
+    return (
+        <div className="w-full text-white flex min-h-[60px] hover:bg-white/10 rounded-md items-center p-2 cursor-pointer mt-1 group bg-gray-700/15 animate-pulse">
+            <div className="w-[5%] text-center text-white/60 group-hover:text-white relative">
+                <p className='h-4 w-4 bg-white/10 animate-pulse rounded-md ml-auto mr-6'></p>
+            </div>
+            <div className="w-10 h-10 rounded-sm bg-white/15"></div>
+            <div className="flex flex-col ml-4 flex-grow">
+                <p className={` text-sm w-[35%] h-4 rounded-full bg-white/10`}></p>    
+            </div>
+            <div to={`/profile/${artistId}`} className="text-white/60 hover:underline text-sm w-[20%] mr-6 bg-white/10 h-4 rounded-full"></div>
+            <p className="text-white/60 text-sm w-[10%] h-4 text-center group-hover:text-white">
+            <div className='w-[40%] h-full rounded-md bg-white/5 animate-pulse'></div>
+            </p>
+            <div className="text-white/60 w-5 mr-8 opacity-0 group-hover:opacity-100 transition-all text-xl bg-white/5 rounded-full h-5"></div>
+        </div>
     );
+
 }
  
 export default HorizontalCard;
