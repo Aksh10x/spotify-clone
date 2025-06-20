@@ -219,27 +219,25 @@ const clearPlaylistCacheSimple = async (playlistId) => {
     if (!isRedisConnected()) return;
     
     try {
-        const keysToDelete = [];
-        
-        // get all keys matching patterns
         const patterns = [
             `playlist-detail:*${playlistId}*`,
-            `user-playlists:*`
+            `user-playlists:*`,
+            `playlists:*`
         ];
         
+        let allKeys = [];
         for (const pattern of patterns) {
             const keys = await redisClient.keys(pattern);
-            keysToDelete.push(...keys);
+            allKeys = allKeys.concat(keys);
         }
         
         // remove duplicates
-        const uniqueKeys = [...new Set(keysToDelete)];
+        const uniqueKeys = [...new Set(allKeys)];
         
         if (uniqueKeys.length > 0) {
             await redisClient.del(...uniqueKeys);
             console.log(`Cleared ${uniqueKeys.length} cache keys for playlist ${playlistId}`);
         }
-        
     } catch (error) {
         console.error('Error clearing playlist cache:', error);
     }
@@ -273,7 +271,6 @@ const addSongToPlaylist = asyncErrorHandler(async(req, res) => {
         } else {
             playlist.songs = playlist.songs.filter(id => id.toString() !== songId.toString());
         }
-
         await playlist.save({validateBeforeSave: false});
         modifiedPlaylists.add(playlist._id.toString());
     }

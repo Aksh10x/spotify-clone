@@ -13,7 +13,7 @@ import {
 } from "../controllers/user.controller.js";
 import passport from "passport";
 import { upload } from "../middlewares/multer.js";
-import { cacheMiddleware, clearCache } from "../middlewares/cacheMiddleware.js";
+import { cacheMiddleware, clearMultipleCache } from "../middlewares/cacheMiddleware.js";
 
 const router = new Router();
 
@@ -23,20 +23,20 @@ router.route("/login").post(Login);
 
 router.route("/toggle-artist").patch(
     passport.authenticate("jwt", {session: false}),
-    clearCache("user"), 
+    clearMultipleCache(["user", "user-profile", "random-artists"]), 
     ToggleArtist
 );
 
 router.route("/become-artist").post(
     passport.authenticate("jwt", {session: false}),
-    clearCache("user"),
+    clearMultipleCache(["user", "user-profile", "random-artists"]),
     upload.single("avatar"),
     becomeArtist
 );
 
 router.route("/edit-details").post(
     passport.authenticate("jwt", {session: false}),
-    clearCache("user"), 
+    clearMultipleCache(["user", "user-profile", "other-user"]), 
     upload.single("avatar"),
     editUserDetails
 );

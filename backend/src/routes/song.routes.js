@@ -2,13 +2,13 @@ import { Router } from "express";
 import { createSong, getMySongs, searchByArtist, searchByName, getOthersSongs, whosTheArtist } from "../controllers/song.controller.js";
 import passport from "passport";
 import { upload } from "../middlewares/multer.js";
-import { cacheMiddleware, clearCache } from "../middlewares/cacheMiddleware.js";
+import { cacheMiddleware, clearMultipleCache } from "../middlewares/cacheMiddleware.js";
 
 const router = new Router();
 
 router.route("/create").post(
     passport.authenticate("jwt", {session: false}),
-    clearCache("songs"),
+    clearMultipleCache(["songs", "user-songs", "artist-songs", "user-public-songs"]),
     upload.fields([
         { name: "thumbnail", maxCount: 1 },
         { name: "track", maxCount: 1 }

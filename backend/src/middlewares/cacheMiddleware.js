@@ -21,11 +21,9 @@ export const cacheMiddleware = (prefix, expireTime = 1800) => {
                 console.log(`Cache hit for ${cacheKey}`);
                 return res.status(200).send(JSON.parse(cachedData));
             }
-            
             console.log(`Cache miss for ${cacheKey}`);
             
             const originalSend = res.send;
-
             res.send = function(data){
                 try {
                     const statusCode = res.statusCode;
@@ -50,33 +48,49 @@ export const cacheMiddleware = (prefix, expireTime = 1800) => {
 };
 
 /**
- * Clear cache by pattern
+ * Clear cache by pattern - using keys instead of scan for reliability
  * @param {string} pattern - Pattern to match cache keys
  */
-export const clearCache = (pattern) =>{
-    return async (req, res, next) =>{
+export const clearCache = (pattern) => {
+    return async (req, res, next) => {
         try {
-            let cursor = 0;
-            let keys = [];
+            const keys = await redisClient.keys(`${pattern}:*`);
             
-            do{
-                const result = await redisClient.scan(cursor, {
-                    MATCH: `${pattern}:*`,
-                    COUNT: 100
-                });
-                
-                cursor = result.cursor;
-                keys = keys.concat(result.keys);
-            }while (cursor !== 0);
-            
-            if(keys.length > 0){
-                await redisClient.del(keys);
+            if (keys.length > 0) {
+                await redisClient.del(...keys);
                 console.log(`Cleared ${keys.length} keys matching pattern: ${pattern}:*`);
             }
             
             next();
-        } catch(error){
+        } catch (error) {
             console.error('Error clearing cache:', error);
+            next();
+        }
+    };
+};
+
+/**
+ * Clear multiple cache patterns
+ * @param {Array<string>} patterns - Array of patterns to match cache keys
+ */
+export const clearMultipleCache = (patterns) => {
+    return async (req, res, next) => {
+        try {
+            let allKeys = [];
+            
+            for (const pattern of patterns) {
+                const keys = await redisClient.keys(`${pattern}:*`);
+                allKeys = allKeys.concat(keys);
+            }
+            if (allKeys.length > 0) {
+                const uniqueKeys = [...new Set(allKeys)];
+                await redisClient.del(...uniqueKeys);
+                console.log(`Cleared ${uniqueKeys.length} keys from patterns: ${patterns.join(', ')}`);
+            }
+            
+            next();
+        } catch (error) {
+            console.error('Error clearing multiple cache patterns:', error);
             next();
         }
     };
