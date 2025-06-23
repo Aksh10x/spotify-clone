@@ -9,7 +9,7 @@ const PlaylistCard = ({image,name,owner,id}) => {
                 {image ? 
                     <img src={image} className="rounded-lg h-full w-full bg-cover max-w-[165px] max-h-[165px] aspect-square object-cover object-center"/>
                     :
-                    <div className="min-w-full h-full max-h-[165px] flex justify-center items-center text-7xl bg-white/5 rounded-md  text-white/60"><PiMusicNotesSimple /></div>
+                    <div className="w-[165px] h-[165px] flex justify-center items-center text-7xl bg-white/5 rounded-md  text-white/60"><PiMusicNotesSimple /></div>
                 }
             </div>
             <div className="text-white text-lg mt-2 hover:underline truncate">{name || "Playlist"}</div>
