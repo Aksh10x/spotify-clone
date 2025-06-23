@@ -63,7 +63,7 @@ const Library = () => {
                   )}
                   <div className="flex flex-col justify-center items-start max-w-full w-full">
                     <div className="text-white md:text-[9px] lg:text-sm truncate overflow-hidden text-ellipsis md:max-w-[60%]">
-                      {playlist.name}
+                      {"Playlist • " + playlist.name}
                     </div>
                     <div className="text-white/60 lg:text-xs md:text-[7px] md:-mt-1 xl:mt-1">{playlist.owner}</div>
                   </div>
