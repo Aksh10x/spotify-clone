@@ -105,7 +105,7 @@ const Home = () => {
                         
                         <div className="w-full h-[0.6px] bg-white/20 flex-shrink-0 rounded mt-8"></div>
                         <div className="flex justify-center items-center pt-6 pb-4 gap-2">
-                            <div className="text-white/60 text-base">Made by Aksh10x</div>
+                            <div className="text-white/60 text-base">Developed by Akshath Surwase</div>
                             <a target="_blank" 
                             rel="noopener noreferrer" 
                             href="https://github.com/Aksh10x" className="text-white text-2xl flex items-center"><FaGithub /></a>
